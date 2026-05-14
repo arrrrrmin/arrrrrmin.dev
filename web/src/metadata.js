@@ -38,6 +38,7 @@ export const pages = [
     pages: [
       { name: "Visualising Climate Logo", path: "/learning_from_pros/visualising_climate" },
       { name: "WSJ made an analysis of Epstein mails", path: "/learning_from_pros/wsj_epstein_mails" },
+      { name: "NZZ scrolly telling economic crisis", path: "/learning_from_pros/nzz_economic_crisis" },
     ]
   },
   {
