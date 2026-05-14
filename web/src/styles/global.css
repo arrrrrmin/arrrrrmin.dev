@@ -1,0 +1,152 @@
+@import url("observablehq:default.css");
+@import url("observablehq:theme-air.css");
+
+@import url("../sentient.css");
+
+:root {
+  --serif:
+    "Sentient-Variable", "Iowan Old Style", "Apple Garamond", "Palatino Linotype",
+    "Times New Roman", "Droid Serif", Times, serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+}
+
+body {
+  font-size: 17px;
+  font-weight: 420;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+.card h2 {
+  font-weight: 700;
+}
+
+figure h2,
+h3 {
+  max-width: unset;
+  margin-top: 0rem;
+  margin-bottom: 0.25rem;
+}
+
+#observablehq-center {
+  margin-left: 1.75rem;
+  margin-right: 0.5rem;
+  --observablehq-inset-left: 0rem;
+  --observablehq-inset-right: 0rem;
+}
+
+#observablehq-sidebar-toggle {
+  width: 1.25rem;
+  background-color: var(--theme-background-alt);
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 0.5rem 0.5rem 1rem 0.5rem;
+  }
+}
+
+/** Observable Plot */
+g[aria-label="y-axis label"],
+g[aria-label="x-axis label"] {
+  font-size: 12px;
+}
+
+/** Footer */
+footer>div {
+  margin-top: 1rem;
+  padding: 1rem 0rem;
+  max-width: 640px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--theme-foreground-fainter);
+  display: flex;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/** Useful tools for articles */
+.underline {
+  text-decoration: underline;
+}
+
+/** Profile image */
+.profile-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+/** Animation to replicate visualising conference logo */
+@keyframes visclimate-popup {
+  0% {
+    scale: 0.5
+  }
+
+  100% {
+    scale: 1
+  }
+}
+
+@keyframes visclimate-pulse {
+  0% {
+    scale: 1
+  }
+
+  25% {
+    scale: .975
+  }
+
+  100% {
+    scale: 1
+  }
+}
+
+.visclimate-logo g {
+  scale: 0;
+  animation: visclimate-popup 1s forwards;
+  transform-origin: top left;
+  animation-timing-function: cubic-bezier(.27, 1.24, .64, 1);
+}
+
+.visclimate-logo path {
+  animation: visclimate-pulse 2s infinite;
+  transform-origin: center;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.visclimate-logo text {
+  font-family: var(--sans-serif);
+  animation: visclimate-pulse 2s infinite;
+  transform-origin: center;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visclimate-logo g {
+    animation: none;
+    scale: 1;
+  }
+
+  .visclimate-logo path {
+    animation: none;
+  }
+
+
+  .visclimate-logo text {
+    animation: none;
+  }
+}
