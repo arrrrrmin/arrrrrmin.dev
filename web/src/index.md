@@ -43,3 +43,7 @@ As a freelancer I mostly do data works. Recent projects involed full-stack devel
 ## Contact
 
 I'm interested in working with others, so if you have a project where I might be helpful, tell me about it. Either send me a mail `hello[at]arrrrrmin.dev` but I'm best reachable via [Mastodon](https://chaos.social/@arrrrrmin) or [Bluesky](https://bsky.app/profile/arrrrrmin.dev). If you'r primary platform is LinkedIn I can also handle it, but please notice I don't often visite.
+
+## Privacy
+
+I want to know if this site is used, so I use [Umami](https://github.com/umami-software/umami), a self-hosted and privacy-friendly analytics tool. It collects anonymized usage data (page views, referrer, country, browser) without cookies or personal identifiers. Data is stored on a German server and is not shared with third parties.

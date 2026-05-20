@@ -73,7 +73,10 @@ const head = ({ title, data, path }) => {
   pieces.push(`<meta name="robots" content="${BASE_URL}/robots.txt">`);
   // Post attribution
   pieces.push(`<meta name="fediverse:creator" content="@arrrrrmin@chaos.social">`);
-
+  const isBuild = process.env.npm_lifecycle_event === "build"
+  if (isBuild) {
+    pieces.push(`<script defer src="https://interim.arrrrrmin.dev/delivery" data-website-id="35acc53f-5a8c-4476-976e-c409f905f876" data-host-url="arrrrrmin.dev"></script>`)
+  }
   return pieces.join("\n");
 };
 
