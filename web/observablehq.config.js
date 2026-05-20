@@ -75,7 +75,7 @@ const head = ({ title, data, path }) => {
   pieces.push(`<meta name="fediverse:creator" content="@arrrrrmin@chaos.social">`);
   const isBuild = process.env.npm_lifecycle_event === "build"
   if (isBuild) {
-    pieces.push(`<script defer src="https://interim.arrrrrmin.dev/delivery" data-website-id="35acc53f-5a8c-4476-976e-c409f905f876" data-host-url="arrrrrmin.dev"></script>`)
+    pieces.push(`<script defer src="https://interim.arrrrrmin.dev/delivery" data-website-id="a559becc-c181-40d6-b329-0d3d913851d1" data-host-url="arrrrrmin.dev"></script>`)
   }
   return pieces.join("\n");
 };
