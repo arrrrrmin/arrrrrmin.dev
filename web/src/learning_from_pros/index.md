@@ -13,8 +13,8 @@ keywords:
 # Learning from professionals
 
 This is a section where I like to learn from professional works, by analysing and recreating their charts.
-When I notice room for improvement during recreation I try to find a way to make it better. But I'll mostly
-try to replicate the creation process and find a way to understand the decisions designers made.
+When I notice room for improvement during recreation I try to find a way to make it better, but I mostly
+try to replicate the creation proces. The goal is to find a way to understand the decisions designers made and learn as much as possible.
 
 > **Disclaimer:** Keep in mind that professional might have other reasoning to do visualisation. I act on my own and can analyse something that already exists. Please be aware that creating something from screch is always way harder than recreating it.
 

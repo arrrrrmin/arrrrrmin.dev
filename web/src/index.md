@@ -22,13 +22,18 @@ Pipelines using [DuckDB](https://duckdb.org) and other libraries and data handli
 
 Since this is mainly my private hobby space, I view and analyse data visualisations as often as I can.
 There are multiple sections for the topic. For example I currently learn how visualisations can trick
-readers into misleading, false or suggestive impressions. You can find my journey on that in [Learning chart design](/chart_design/).
+readers into misleading, false or suggestive impressions. You can find my journey (with the focus on 
+misleading datavis) at [Learning chart design](/chart_design/).
 
 ```js
 import {getPagerList} from "/metautils.js"
 ```
 
 ${getPagerList({index: 0})}
+
+Another part of this learning jounrey is to replicate the work of professionals (mostly data-driven journalisn (DDJ)). The goal is to replicate their work from the data research to the final visuals and meanwhile try to find a way through their thought process. On can learn many things (good and bad):
+
+${getPagerList({index: 1})}
 
 Most contents on this site are educational for me and hopefully for others as well. If you want, you can replicate the data used by taking a look at the [Git repository](https://github.com/arrrrrmin/arrrrrmin.dev) where I try to always include the steps to build the data files used.
 

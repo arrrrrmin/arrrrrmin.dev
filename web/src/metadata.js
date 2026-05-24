@@ -22,10 +22,9 @@ const descriptions = [
 
 export const pages = [
   {
-    name: "Learning chart design",
+    name: "Misleading chart design",
     path: "/chart_design/",
     pages: [
-      // { name: "Introduction", path: "/chart_design/" },
       { name: "Charting basics", path: "/chart_design/1_basics" },
       { name: "Efficient chart reading", path: "/chart_design/2_reading" },
       { name: "Misleading axis", path: "/chart_design/3_misleadingpatterns" },
