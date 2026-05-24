@@ -1,5 +1,12 @@
 import { getMetaFromPath, pages } from "./src/metadata.js";
 
+import { readdirSync } from "node:fs";
+
+const fonts = readdirSync("src/fonts")
+  .filter(f => f.endsWith(".woff2"))
+  .map(f => f.replace(/\.woff2$/, ""));
+
+
 const SITE_NAME = "arrrrrmin.dev";
 const BASE_URL = "https://arrrrrmin.dev";
 
@@ -77,6 +84,7 @@ const head = ({ title, data, path }) => {
   if (isBuild) {
     pieces.push(`<script defer src="https://interim.arrrrrmin.dev/delivery" data-website-id="a559becc-c181-40d6-b329-0d3d913851d1"></script>`)
   }
+  pieces.push(`<link rel="stylesheet" href="/fonts.css">`)
   return pieces.join("\n");
 };
 
@@ -96,7 +104,6 @@ export default {
   title: SITE_NAME,
   pages: pages, // see pages in "./src/metadata.js"
   root: "src",
-  head: head, // Content to add to the head of the page, e.g. for a favicon:
   search: true, // activate search
   // The path to the source root.
   // Some additional configuration options and their defaults:
@@ -112,7 +119,6 @@ export default {
   // preserveExtension: false, // drop .html from URLs
   // preserveIndex: false, // drop /index from URLs
   footer: ({ path }) => buildFooter({ path }),
-  style: "/styles/global.css",
   dynamicPaths: [
     // Static things
     "/robots.txt",
@@ -124,10 +130,11 @@ export default {
     "/apple-touch-icon.png",
     // Images
     "/images/arrrrrmin.dev.svg",
+    "fonts.css",
     // Fonts
-    "/sentient.css",
-    "styles/fonts/Sentient-Variable.woff2",
-    "styles/fonts/Sentient-Variable.woff",
+    ...fonts.map(name => `/fonts/${name}.woff2`),
   ],
-  globalStylesheets: ["/styles/global.css"],
+  head: head,
+  style: "global.css",
+  globalStylesheets: ["/global.css"],
 };
