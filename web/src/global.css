@@ -2,12 +2,157 @@
 @import url("observablehq:theme-air.css");
 
 :root {
+  --theme-background: #fcfcfd;
+  --theme-background-alt: #f4f4f6;
+  --theme-foreground: #18181b;
+  --theme-foreground-muted: #3f3f46;
+  --theme-foreground-faint: #71717a;
+  --theme-foreground-fainter: #b8b8bd;
+  --theme-foreground-faintest: #e4e4e7;
+  --theme-foreground-focus: #ff4d6d;
+
+  --serif: "Source Serif 4", "Source Serif 4 Subhead", Iowan Old Style, Georgia, serif;
+  --serif-display: "Source Serif 4 Display", "Source Serif 4", Georgia, serif;
+}
+
+body {
+  font-family: var(--serif);
+  font-feature-settings: "kern", "liga", "onum";
+  /* old-style numerals in prose */
+  hanging-punctuation: first last;
+}
+
+main p,
+main li {
+  max-width: 68ch;
+  line-height: 1.55;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--serif-display);
+  font-feature-settings: "kern", "liga", "lnum";
+  /* lining nums look sharper in headers */
+  letter-spacing: -0.015em;
+  color: var(--theme-foreground);
+}
+
+h1 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1.05;
+  font-weight: 700;
+  margin-bottom: 0.3em;
+}
+
+h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 1.8em;
+}
+
+figure h2 {
+  margin-top: 0;
+}
+
+h1::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  background: var(--theme-foreground-focus);
+  margin-bottom: 1rem;
+}
+
+h3 {
+  color: var(--theme-foreground-focus);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-style: italic;
+}
+
+a {
+  color: var(--theme-foreground);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--theme-foreground-fainter);
+  text-underline-offset: 3px;
+  transition: color 120ms, text-decoration-color 120ms;
+}
+
+/* Blockquotes: pull-quote feel */
+blockquote {
+  border-left: 2px solid var(--theme-foreground-focus);
+  padding-left: 1.2em;
+  margin-left: 0;
+  font-style: italic;
+  color: var(--theme-foreground-muted);
+}
+
+/* Code keeps monospace but warms up */
+code,
+pre {
+  background: var(--theme-background-alt);
+}
+
+/* Sidebar / TOC: lighter, secondary */
+#observablehq-sidebar,
+#observablehq-toc {
+  font-family: var(--sans-serif);
+  font-size: 0.85rem;
+}
+
+/* Selection — instantly feels intentional */
+::selection {
+  background: var(--theme-foreground-focus);
+  color: #fff;
+}
+
+/* Links: gray text, pink underline as a "highlighter" mark */
+a {
+  color: var(--theme-foreground);
+  text-decoration: underline;
+  text-decoration-color: var(--theme-foreground-focus);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--theme-foreground-focus);
+}
+
+summary.observablehq-link {
+  font-size: 15px;
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--theme-foreground-focus);
+  outline-offset: 2px;
+}
+
+
+/* :root {
   --serif:
     "Source Serif 4", "Iowan Old Style", "Apple Garamond", "Palatino Linotype",
     "Times New Roman", "Droid Serif", Times, serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
+  --theme-background: #fdfdfd;
+  --theme-foreground-focus: #4a6a8a;
+  --theme-background-alt: #fdfdfd;
 }
 
+body {
+  font-family: var(--serif);
+  font-size: 18px;
+}
+
+.card {
+  border: 1px dashed var(--theme-foreground-faint);
+} */
+
+/* 
 body {
   font-size: 17px;
   line-height: 1.6;
@@ -50,7 +195,7 @@ h3 {
   .card {
     padding: 0.5rem 0.5rem 1rem 0.5rem;
   }
-}
+} */
 
 /** Observable Plot */
 g[aria-label="y-axis label"],
