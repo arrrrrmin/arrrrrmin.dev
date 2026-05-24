@@ -16,14 +16,12 @@ keywords:
 
 Hi there. I'm arrrrrmin and this is my blog-ish web presence. I'm a data engineer and visualisation enthusiast.
 Be warned this is a bit of tech-nerdy site. You get to see lots of [D3js](https://d3js.org), [Plot](https://observablehq.com/plot/) and [Observable](https://observablehq.com).
-Pipelines using [DuckDB](https://duckdb.org) and other libraries and data handling in general are part of my daily life, so it's always part of what you see here.
+Pipelines using [DuckDB](https://duckdb.org) and other libraries plus data handling in general, are part of my daily life, so it's always part of what you see here.
 
 ## Data visualisations
 
-Since this is mainly my private hobby space, I view and analyse data visualisations as often as I can.
-There are multiple sections for the topic. For example I currently learn how visualisations can trick
-readers into misleading, false or suggestive impressions. You can find my journey (with the focus on 
-misleading datavis) at [Learning chart design](/chart_design/).
+Since this is mainly my private hobby space, I view and analyse data visualisations as often as I can but not as often as I'd like to.
+There are multiple sections for the DataVis topic, for example I currently learn how visualisations can trick readers into misleading, false or suggestive impressions. It's part of a learning jounrey, like almost everthing on this site. You can find my journey (with the focus on misleading datavis) at [Learning chart design](/chart_design/).
 
 ```js
 import {getPagerList} from "/metautils.js"

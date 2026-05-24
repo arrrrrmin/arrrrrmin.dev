@@ -1,18 +1,15 @@
 @import url("observablehq:default.css");
 @import url("observablehq:theme-air.css");
 
-@import url("../sentient.css");
-
 :root {
   --serif:
-    "Sentient-Variable", "Iowan Old Style", "Apple Garamond", "Palatino Linotype",
+    "Source Serif 4", "Iowan Old Style", "Apple Garamond", "Palatino Linotype",
     "Times New Roman", "Droid Serif", Times, serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
 }
 
 body {
   font-size: 17px;
-  font-weight: 420;
   line-height: 1.6;
 }
 
