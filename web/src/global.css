@@ -9,7 +9,7 @@
   --theme-foreground-faint: #71717a;
   --theme-foreground-fainter: #b8b8bd;
   --theme-foreground-faintest: #e4e4e7;
-  --theme-foreground-focus: #ff4d6d;
+  --theme-foreground-focus: #eb5e28;
 
   --serif: "Source Serif 4", "Source Serif 4 Subhead", Iowan Old Style, Georgia, serif;
   --serif-display: "Source Serif 4 Display", "Source Serif 4", Georgia, serif;
@@ -40,7 +40,7 @@ h4 {
 }
 
 h1 {
-  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-size: 2.25rem;
   line-height: 1.05;
   font-weight: 700;
   margin-bottom: 0.3em;
@@ -52,6 +52,7 @@ h2 {
   margin-top: 1.8em;
 }
 
+
 figure h2 {
   margin-top: 0;
 }
@@ -61,15 +62,15 @@ h1::before {
   display: block;
   width: 2.5rem;
   height: 3px;
-  background: var(--theme-foreground-focus);
+  background: var(--theme-foreground);
   margin-bottom: 1rem;
 }
 
 h3 {
-  color: var(--theme-foreground-focus);
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
   font-style: italic;
+  margin-top: 1.4em;
 }
 
 a {
@@ -81,7 +82,6 @@ a {
   transition: color 120ms, text-decoration-color 120ms;
 }
 
-/* Blockquotes: pull-quote feel */
 blockquote {
   border-left: 2px solid var(--theme-foreground-focus);
   padding-left: 1.2em;
@@ -90,26 +90,22 @@ blockquote {
   color: var(--theme-foreground-muted);
 }
 
-/* Code keeps monospace but warms up */
 code,
 pre {
   background: var(--theme-background-alt);
 }
 
-/* Sidebar / TOC: lighter, secondary */
 #observablehq-sidebar,
 #observablehq-toc {
   font-family: var(--sans-serif);
   font-size: 0.85rem;
 }
 
-/* Selection — instantly feels intentional */
 ::selection {
   background: var(--theme-foreground-focus);
   color: #fff;
 }
 
-/* Links: gray text, pink underline as a "highlighter" mark */
 a {
   color: var(--theme-foreground);
   text-decoration: underline;
@@ -118,8 +114,12 @@ a {
   text-underline-offset: 3px;
 }
 
-a:hover {
+a[target="_blank"]::after {
+  content: "↗";
+  font-size: 12px;
+  font-weight: 600px;
   color: var(--theme-foreground-focus);
+  margin-left: 0.2em;
 }
 
 summary.observablehq-link {
@@ -132,70 +132,6 @@ summary.observablehq-link {
   outline-offset: 2px;
 }
 
-
-/* :root {
-  --serif:
-    "Source Serif 4", "Iowan Old Style", "Apple Garamond", "Palatino Linotype",
-    "Times New Roman", "Droid Serif", Times, serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
-  --theme-background: #fdfdfd;
-  --theme-foreground-focus: #4a6a8a;
-  --theme-background-alt: #fdfdfd;
-}
-
-body {
-  font-family: var(--serif);
-  font-size: 18px;
-}
-
-.card {
-  border: 1px dashed var(--theme-foreground-faint);
-} */
-
-/* 
-body {
-  font-size: 17px;
-  line-height: 1.6;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-top: 0;
-  margin-bottom: 0.25rem;
-}
-
-.card h2 {
-  font-weight: 700;
-}
-
-figure h2,
-h3 {
-  max-width: unset;
-  margin-top: 0rem;
-  margin-bottom: 0.25rem;
-}
-
-#observablehq-center {
-  margin-left: 1.75rem;
-  margin-right: 0.5rem;
-  --observablehq-inset-left: 0rem;
-  --observablehq-inset-right: 0rem;
-}
-
-#observablehq-sidebar-toggle {
-  width: 1.25rem;
-  background-color: var(--theme-background-alt);
-}
-
-@media (max-width: 600px) {
-  .card {
-    padding: 0.5rem 0.5rem 1rem 0.5rem;
-  }
-} */
 
 /** Observable Plot */
 g[aria-label="y-axis label"],
@@ -291,4 +227,50 @@ footer>div {
   .visclimate-logo text {
     animation: none;
   }
+}
+
+#observablehq-sidebar>ol,
+#observablehq-sidebar>details,
+#observablehq-sidebar>section {
+  border-bottom: unset;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+input#observablehq-sidebar-toggle {
+  top: auto;
+  height: 36px;
+  width: 36px;
+  left: 2rem;
+  bottom: 0.5rem;
+
+  border-radius: 12%;
+  cursor: pointer;
+  z-index: 101;
+}
+
+label#observablehq-sidebar-backdrop {
+  background: var(--theme-foreground-faintest);
+  opacity: 0.55;
+}
+
+input#observablehq-sidebar-toggle:not(:checked) {
+  background-color: var(--theme-foreground);
+}
+
+input#observablehq-sidebar-toggle::before {
+  background-color: var(--theme-foreground-faintest);
+}
+
+
+input#observablehq-sidebar-toggle:checked {
+  background-color: var(--theme-foreground-faint);
+}
+
+label#observablehq-sidebar-close {
+  width: 0rem;
+}
+
+label#observablehq-sidebar-close::before {
+  display: none;
 }
