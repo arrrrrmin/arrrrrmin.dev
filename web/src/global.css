@@ -9,7 +9,7 @@
   --theme-foreground-faint: #71717a;
   --theme-foreground-fainter: #b8b8bd;
   --theme-foreground-faintest: #e4e4e7;
-  --theme-foreground-focus: #eb5e28;
+  --theme-foreground-focus: #CF497A;
 
   --serif: "Source Serif 4", "Source Serif 4 Subhead", Iowan Old Style, Georgia, serif;
   --serif-display: "Source Serif 4 Display", "Source Serif 4", Georgia, serif;
@@ -70,19 +70,40 @@ h3 {
   font-size: 1.5rem;
   font-weight: 600;
   margin-top: 1.4em;
+  color: var(--theme-foreground);
 }
 
-a {
+h1 a[href],
+h2 a[href],
+h3 a[href],
+h4 a[href] {
+  text-decoration-line: none;
+  color: inherit;
+}
+
+a[href] {
   color: var(--theme-foreground);
   text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: var(--theme-foreground-fainter);
+  text-decoration-color: var(--theme-foreground-focus);
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
-  transition: color 120ms, text-decoration-color 120ms;
+  transition: text-decoration-thickness 120ms ease;
+}
+
+a[href]:hover {
+  text-decoration-thickness: 3px;
+}
+
+a[target="_blank"]::after {
+  content: "↗";
+  font-size: 12px;
+  font-weight: 600px;
+  color: var(--theme-foreground);
+  margin-left: 0.2em;
 }
 
 blockquote {
-  border-left: 2px solid var(--theme-foreground-focus);
+  border-left: 2px solid var(--theme-foreground-muted);
   padding-left: 1.2em;
   margin-left: 0;
   font-style: italic;
@@ -101,24 +122,8 @@ pre {
 }
 
 ::selection {
-  background: var(--theme-foreground-focus);
+  background: var(--theme-foreground-muted);
   color: #fff;
-}
-
-a {
-  color: var(--theme-foreground);
-  text-decoration: underline;
-  text-decoration-color: var(--theme-foreground-focus);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 3px;
-}
-
-a[target="_blank"]::after {
-  content: "↗";
-  font-size: 12px;
-  font-weight: 600px;
-  color: var(--theme-foreground-focus);
-  margin-left: 0.2em;
 }
 
 #observablehq-sidebar a[target="_blank"]::after {
@@ -131,8 +136,9 @@ summary.observablehq-link {
 
 /* Focus ring */
 :focus-visible {
-  outline: 2px solid var(--theme-foreground-focus);
-  outline-offset: 2px;
+  /* outline: 2px solid var(--theme-foreground-focus);
+  outline-offset: 2px; */
+  outline: none;
 }
 
 
@@ -232,6 +238,41 @@ footer>div {
   }
 }
 
+#observablehq-sidebar .observablehq-link a[href],
+#observablehq-toc a[href] {
+  text-decoration-line: none;
+}
+
+#observablehq-sidebar a[href]:hover,
+#observablehq-toc a[href]:hover {
+  color: var(--theme-foreground);
+  text-decoration-line: underline;
+  text-decoration-thickness: 3px;
+}
+
+nav#observablehq-sidebar a[aria-current="page"] {
+  color: var(--theme-foreground-focus);
+  font-weight: 600;
+}
+
+nav#observablehq-sidebar a[aria-current="page"] {
+  position: relative;
+  color: var(--theme-foreground);
+  font-weight: 600;
+  padding-left: 0.9rem;
+}
+
+nav#observablehq-sidebar a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.85em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--theme-foreground-focus);
+}
+
 #observablehq-sidebar>ol,
 #observablehq-sidebar>details,
 #observablehq-sidebar>section {
@@ -252,7 +293,7 @@ input#observablehq-sidebar-toggle {
   z-index: 101;
 }
 
-label#observablehq-sidebar-backdrop {
+#observablehq-sidebar-toggle:checked~label#observablehq-sidebar-backdrop {
   background: var(--theme-foreground-faintest);
   opacity: 0.55;
 }

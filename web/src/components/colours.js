@@ -1,5 +1,5 @@
 export const colours = {
-  light: "#ccc",  accent: "#ff4d6d",
+  light: "#ccc",  accent: "#CF497A",
 }
 
 export const pmk_colours = {
