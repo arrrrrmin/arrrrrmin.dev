@@ -26,7 +26,6 @@ export const pages = [
     path: "/chart_design/",
     pages: [
       { name: "Charting basics", path: "/chart_design/1_basics" },
-      { name: "Efficient chart reading", path: "/chart_design/2_reading" },
       { name: "Misleading axis", path: "/chart_design/3_misleadingpatterns" },
       { name: "Missing data", path: "/chart_design/4_missingdata" },
     ],
@@ -43,7 +42,7 @@ export const pages = [
   {
     name: "Projects",
     open: true,
-    pages: [{ name: "Lanz mining ↗", path: "https://lanz-mining.arrrrrmin.dev/" }],
+    pages: [{ name: "Lanz mining", path: "https://lanz-mining.arrrrrmin.dev/" }],
   },
 ];
 
