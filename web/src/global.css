@@ -2,55 +2,145 @@
 @import url("observablehq:theme-air.css");
 
 :root {
-  --serif:
-    "Source Serif 4", "Iowan Old Style", "Apple Garamond", "Palatino Linotype",
-    "Times New Roman", "Droid Serif", Times, serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
+  --theme-background: #fcfcfd;
+  --theme-background-alt: #f4f4f6;
+  --theme-foreground: #18181b;
+  --theme-foreground-muted: #3f3f46;
+  --theme-foreground-faint: #71717a;
+  --theme-foreground-fainter: #b8b8bd;
+  --theme-foreground-faintest: #e4e4e7;
+  --theme-foreground-focus: #CF497A;
+
+  --serif: "Source Serif 4", "Source Serif 4 Subhead", Iowan Old Style, Georgia, serif;
+  --serif-display: "Source Serif 4 Display", "Source Serif 4", Georgia, serif;
 }
 
 body {
-  font-size: 17px;
-  line-height: 1.6;
+  font-family: var(--serif);
+  font-feature-settings: "kern", "liga", "onum";
+  /* old-style numerals in prose */
+  hanging-punctuation: first last;
+}
+
+main p,
+main li {
+  max-width: 68ch;
+  line-height: 1.55;
 }
 
 h1,
 h2,
 h3,
-h4,
-h5,
-h6 {
-  margin-top: 0;
-  margin-bottom: 0.25rem;
+h4 {
+  font-family: var(--serif-display);
+  font-feature-settings: "kern", "liga", "lnum";
+  /* lining nums look sharper in headers */
+  letter-spacing: -0.015em;
+  color: var(--theme-foreground);
 }
 
-.card h2 {
+h1 {
+  font-size: 2.25rem;
+  line-height: 1.05;
   font-weight: 700;
+  margin-bottom: 0.3em;
 }
 
-figure h2,
+h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 1.8em;
+}
+
+
+figure h2 {
+  margin-top: 0;
+}
+
+h1::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  background: var(--theme-foreground);
+  margin-bottom: 1rem;
+}
+
 h3 {
-  max-width: unset;
-  margin-top: 0rem;
-  margin-bottom: 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.4em;
+  color: var(--theme-foreground);
 }
 
-#observablehq-center {
-  margin-left: 1.75rem;
-  margin-right: 0.5rem;
-  --observablehq-inset-left: 0rem;
-  --observablehq-inset-right: 0rem;
+h1 a[href],
+h2 a[href],
+h3 a[href],
+h4 a[href] {
+  text-decoration-line: none;
+  color: inherit;
 }
 
-#observablehq-sidebar-toggle {
-  width: 1.25rem;
-  background-color: var(--theme-background-alt);
+a[href] {
+  color: var(--theme-foreground);
+  text-decoration: underline;
+  text-decoration-color: var(--theme-foreground-focus);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: text-decoration-thickness 120ms ease;
 }
 
-@media (max-width: 600px) {
-  .card {
-    padding: 0.5rem 0.5rem 1rem 0.5rem;
-  }
+a[href]:hover {
+  text-decoration-thickness: 3px;
 }
+
+a[target="_blank"]::after {
+  content: "↗";
+  font-size: 12px;
+  font-weight: 600px;
+  color: var(--theme-foreground);
+  margin-left: 0.2em;
+}
+
+blockquote {
+  border-left: 2px solid var(--theme-foreground-muted);
+  padding-left: 1.2em;
+  margin-left: 0;
+  font-style: italic;
+  color: var(--theme-foreground-muted);
+}
+
+code,
+pre {
+  background: var(--theme-background-alt);
+}
+
+#observablehq-sidebar,
+#observablehq-toc {
+  font-family: var(--sans-serif);
+  font-size: 0.85rem;
+}
+
+::selection {
+  background: var(--theme-foreground-muted);
+  color: #fff;
+}
+
+#observablehq-sidebar a[target="_blank"]::after {
+  color: currentColor;
+}
+
+summary.observablehq-link {
+  font-size: 15px;
+}
+
+/* Focus ring */
+:focus-visible {
+  /* outline: 2px solid var(--theme-foreground-focus);
+  outline-offset: 2px; */
+  outline: none;
+}
+
 
 /** Observable Plot */
 g[aria-label="y-axis label"],
@@ -146,4 +236,85 @@ footer>div {
   .visclimate-logo text {
     animation: none;
   }
+}
+
+#observablehq-sidebar .observablehq-link a[href],
+#observablehq-toc a[href] {
+  text-decoration-line: none;
+}
+
+#observablehq-sidebar a[href]:hover,
+#observablehq-toc a[href]:hover {
+  color: var(--theme-foreground);
+  text-decoration-line: underline;
+  text-decoration-thickness: 3px;
+}
+
+nav#observablehq-sidebar a[aria-current="page"] {
+  color: var(--theme-foreground-focus);
+  font-weight: 600;
+}
+
+nav#observablehq-sidebar a[aria-current="page"] {
+  position: relative;
+  color: var(--theme-foreground);
+  font-weight: 600;
+  padding-left: 0.9rem;
+}
+
+nav#observablehq-sidebar a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.85em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--theme-foreground-focus);
+}
+
+#observablehq-sidebar>ol,
+#observablehq-sidebar>details,
+#observablehq-sidebar>section {
+  border-bottom: unset;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+input#observablehq-sidebar-toggle {
+  top: auto;
+  height: 36px;
+  width: 36px;
+  left: 2rem;
+  bottom: 0.5rem;
+
+  border-radius: 12%;
+  cursor: pointer;
+  z-index: 101;
+}
+
+#observablehq-sidebar-toggle:checked~label#observablehq-sidebar-backdrop {
+  background: var(--theme-foreground-faintest);
+  opacity: 0.55;
+}
+
+input#observablehq-sidebar-toggle:not(:checked) {
+  background-color: var(--theme-foreground);
+}
+
+input#observablehq-sidebar-toggle::before {
+  background-color: var(--theme-foreground-faintest);
+}
+
+
+input#observablehq-sidebar-toggle:checked {
+  background-color: var(--theme-foreground-faint);
+}
+
+label#observablehq-sidebar-close {
+  width: 0rem;
+}
+
+label#observablehq-sidebar-close::before {
+  display: none;
 }

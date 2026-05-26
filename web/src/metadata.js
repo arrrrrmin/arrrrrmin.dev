@@ -2,7 +2,7 @@
 const default_description = {
   path: "/",
   description:
-    "A blog mostly about learning journeys, data projects and visualisations to educate myself and others to actually creating a meaningful and interactive data exploration experience.",
+    "Learning journeys on data projects and visualisations to educate myself and maybe others. Create meaningful and interactive data exploration experiences.",
 };
 
 // A lazy way to add descriptions to each sites meta
@@ -22,16 +22,6 @@ const descriptions = [
 
 export const pages = [
   {
-    name: "Misleading chart design",
-    path: "/chart_design/",
-    pages: [
-      { name: "Charting basics", path: "/chart_design/1_basics" },
-      { name: "Efficient chart reading", path: "/chart_design/2_reading" },
-      { name: "Misleading axis", path: "/chart_design/3_misleadingpatterns" },
-      { name: "Missing data", path: "/chart_design/4_missingdata" },
-    ],
-  },
-  {
     name: "Learning from professionals",
     path: "/learning_from_pros/",
     pages: [
@@ -41,9 +31,18 @@ export const pages = [
     ]
   },
   {
+    name: "Misleading chart design",
+    path: "/chart_design/",
+    pages: [
+      { name: "Charting basics", path: "/chart_design/1_basics" },
+      { name: "Misleading axis", path: "/chart_design/3_misleadingpatterns" },
+      { name: "Missing data", path: "/chart_design/4_missingdata" },
+    ],
+  },
+  {
     name: "Projects",
     open: true,
-    pages: [{ name: "Lanz mining ↗", path: "https://lanz-mining.arrrrrmin.dev/" }],
+    pages: [{ name: "Lanz mining", path: "https://lanz-mining.arrrrrmin.dev/" }],
   },
 ];
 
