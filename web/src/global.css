@@ -69,7 +69,6 @@ h1::before {
 h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  font-style: italic;
   margin-top: 1.4em;
 }
 
@@ -120,6 +119,10 @@ a[target="_blank"]::after {
   font-weight: 600px;
   color: var(--theme-foreground-focus);
   margin-left: 0.2em;
+}
+
+#observablehq-sidebar a[target="_blank"]::after {
+  color: currentColor;
 }
 
 summary.observablehq-link {
