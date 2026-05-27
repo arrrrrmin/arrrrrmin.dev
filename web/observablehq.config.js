@@ -7,6 +7,9 @@ const fonts = readdirSync("src/fonts")
   .map(f => f.replace(/\.woff2$/, ""));
 
 
+const embeds = readdirSync("src/embeds")
+  .map(f => f.replace(/\.js$/, ""));
+
 const SITE_NAME = "arrrrrmin.dev";
 const BASE_URL = "https://arrrrrmin.dev";
 
@@ -22,12 +25,20 @@ const head = ({ title, data, path }) => {
   let pieces = [];
   let description = getMetaFromPath({ path, meta: "description" });
   let publishedTime = getMetaFromPath({ path, meta: "date" });
+  let preview = getMetaFromPath({ path, meta: "preview" });
+  let [imageWidth, imageHeight] = [512, 512];
+  if (preview) {
+    imageWidth = getMetaFromPath({ path, meta: "previewWidth" });
+    imageHeight = getMetaFromPath({ path, meta: "previewHeight" });
+  } else {
+    preview = "/web-app-manifest-512x512.png";
+
+  }
   let url = BASE_URL;
   const siteName = SITE_NAME;
   const author = "arrrrrmin";
   const type = "website";
   const locale = "en_GB";
-  const [imageWidth, imageHeight] = [512, 512];
 
   pieces.push(`<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">`);
   pieces.push(`<link rel="icon" type="image/svg+xml" href="/favicon.svg">`);
@@ -54,7 +65,7 @@ const head = ({ title, data, path }) => {
   }
 
   pieces.push(`<meta property="og:url" content="${BASE_URL}${path}">`);
-  pieces.push(`<meta property="og:image" content="${BASE_URL}/web-app-manifest-512x512.png">`);
+  pieces.push(`<meta property="og:image" content="${BASE_URL}${preview}">`);
   pieces.push(`<meta property="og:image:width" content="${imageWidth}">`);
   pieces.push(`<meta property="og:image:height" content="${imageHeight}">`);
 
@@ -105,8 +116,6 @@ export default {
   pages: pages, // see pages in "./src/metadata.js"
   root: "src",
   search: true, // activate search
-  // The path to the source root.
-  // Some additional configuration options and their defaults:
   // theme: "default", // try "light", "dark", "slate", etc.
   // header: "", // what to show in the header (HTML)
   // footer: "Built with Observable.", // what to show in the footer (HTML)
@@ -118,6 +127,7 @@ export default {
   // typographer: false, // smart quotes and other typographic improvements
   // preserveExtension: false, // drop .html from URLs
   // preserveIndex: false, // drop /index from URLs
+  head: head,
   footer: ({ path }) => buildFooter({ path }),
   dynamicPaths: [
     // Static things
@@ -133,8 +143,10 @@ export default {
     "fonts.css",
     // Fonts
     ...fonts.map(name => `/fonts/${name}.woff2`),
+    "/embeds/lostindata.svg",
+    // Embeds
+    ...embeds.map(name => `/embeds/${name}`),
   ],
-  head: head,
   style: "global.css",
   globalStylesheets: ["/global.css"],
 };
