@@ -79,8 +79,6 @@ const head = ({ title, data, path }) => {
   if (description) {
     pieces.push(`<meta name="twitter:description" content="${description}">`)
   } pieces.push(`<meta name="twitter:title" content="${title}">`)
-  pieces.push(`<meta name="theme-color" content="#CF497A">`)
-
 
   if (publishedTime) {
     pieces.push(`<meta property="article:published_time" content="${publishedTime}">`);

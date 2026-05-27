@@ -11,6 +11,7 @@ const svgNode = getChart();
 const xmlSerialiser = new window.XMLSerializer();
 const svg = xmlSerialiser.serializeToString(svgNode);
 const png = await sharp(Buffer.from(svg))
+    .flatten({ background: "#ffffff" })
     .resize(1200, 630)
     .png()
     .toBuffer();
