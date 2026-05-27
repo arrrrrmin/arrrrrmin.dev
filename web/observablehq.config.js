@@ -8,6 +8,7 @@ const fonts = readdirSync("src/fonts")
 
 
 const embeds = readdirSync("src/embeds")
+  .filter(f => /\.(svg|png)\.js$/.test(f))
   .map(f => f.replace(/\.js$/, ""));
 
 const SITE_NAME = "arrrrrmin.dev";
@@ -88,6 +89,7 @@ const head = ({ title, data, path }) => {
   if (publishedTime) {
     pieces.push(`<meta property="article:published_time" content="${publishedTime}">`);
   }
+  pieces.push(`<meta name="twitter:card" content="summary_large_image">`);
   pieces.push(`<meta name="robots" content="${BASE_URL}/robots.txt">`);
   // Post attribution
   pieces.push(`<meta name="fediverse:creator" content="@arrrrrmin@chaos.social">`);
@@ -143,7 +145,6 @@ export default {
     "fonts.css",
     // Fonts
     ...fonts.map(name => `/fonts/${name}.woff2`),
-    "/embeds/lostindata.svg",
     // Embeds
     ...embeds.map(name => `/embeds/${name}`),
   ],

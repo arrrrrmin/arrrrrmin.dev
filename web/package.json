@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "clean": "rimraf src/.observablehq/cache",
-    "local-build": "rm src/.observablehq/cache/embeds/* && observable build",
+    "local-build": "rm -f src/.observablehq/cache/embeds/* && observable build",
     "serve-build": "npx serve dist",
     "build": "observable build",
     "dev": "observable preview",
@@ -13,7 +13,8 @@
   "dependencies": {
     "@observablehq/framework": "^1.13.4",
     "@observablehq/stdlib": "^5.8.8",
-    "d3": "^7.9.0"
+    "d3": "^7.9.0",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "jsdom": "^29.1.1",
