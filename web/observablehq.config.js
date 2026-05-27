@@ -14,14 +14,6 @@ const embeds = readdirSync("src/embeds")
 const SITE_NAME = "arrrrrmin.dev";
 const BASE_URL = "https://arrrrrmin.dev";
 
-const escape = (str) =>
-  String(str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-
 const head = ({ title, data, path }) => {
   let pieces = [];
   let description = getMetaFromPath({ path, meta: "description" });
@@ -86,8 +78,7 @@ const head = ({ title, data, path }) => {
   pieces.push(`<meta name="twitter:card" content="summary_large_image">`)
   if (description) {
     pieces.push(`<meta name="twitter:description" content="${description}">`)
-  }   pieces.push(`<meta name="twitter:title" content="${title}">`)
-  pieces.push(`<meta name="twitter:image" content="${BASE_URL}${preview}">`)
+  } pieces.push(`<meta name="twitter:title" content="${title}">`)
   pieces.push(`<meta name="theme-color" content="#CF497A">`)
 
 
