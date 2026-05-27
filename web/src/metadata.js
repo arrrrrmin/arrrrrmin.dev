@@ -22,9 +22,9 @@ const descriptions = [
     path: "lostindata",
     description: "A tiny excourse into data loaders, static svg routes in Framework and css keyframe animations embedded in SVGs.",
     date: "2026-05-25",
-    preview: "/embeds/lostindata.svg",
-    previewWidth: 640,
-    previewHeight: 400,
+    preview: "/embeds/lostindata.png",
+    previewWidth: 1200,
+    previewHeight: 630,
   }
 ];
 
