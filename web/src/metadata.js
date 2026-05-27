@@ -11,12 +11,21 @@ const descriptions = [
     path: "chart_design",
     description: `An educational data project to see how datavis can mislead or suggest false conclusions through visual guidance.`,
     date: "2026-03-14",
+
   },
   {
     path: "lanz_mining",
     description: `A data project exploring media participation in German public service talk shows. Data collected over a period of more than a year is being analysed and visualised. `,
     date: "2025-05-27",
   },
+  {
+    path: "lostindata",
+    description: "A tiny excourse into data loaders, static svg routes in Framework and css keyframe animations embedded in SVGs.",
+    date: "2026-05-25",
+    preview: "/embeds/lostindata.svg",
+    previewWidth: 640,
+    previewHeight: 400,
+  }
 ];
 
 
@@ -37,6 +46,13 @@ export const pages = [
       { name: "Charting basics", path: "/chart_design/1_basics" },
       { name: "Misleading axis", path: "/chart_design/3_misleadingpatterns" },
       { name: "Missing data", path: "/chart_design/4_missingdata" },
+    ],
+  },
+  {
+    name: "Experiments",
+    open: true,
+    pages: [
+      { name: "Lost in data", path: "/experiments/lostindata" },
     ],
   },
   {

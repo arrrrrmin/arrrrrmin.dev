@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "clean": "rimraf src/.observablehq/cache",
-    "build": "observable build",
+    "build": "rm src/.observablehq/cache/embeds/* && observable build",
     "dev": "observable preview",
     "deploy": "observable deploy",
     "observable": "observable"
@@ -14,6 +14,7 @@
     "d3": "^7.9.0"
   },
   "devDependencies": {
+    "jsdom": "^29.1.1",
     "rimraf": "^5.0.5"
   },
   "engines": {
