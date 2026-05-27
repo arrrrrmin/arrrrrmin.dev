@@ -90,7 +90,7 @@ const head = ({ title, data, path }) => {
     pieces.push(`<meta property="article:published_time" content="${publishedTime}">`);
   }
   pieces.push(`<meta name="twitter:card" content="summary_large_image">`);
-  pieces.push(`<meta name="robots" content="${BASE_URL}/robots.txt">`);
+  pieces.push(`<meta name="robots" content="index, follow">`);
   // Post attribution
   pieces.push(`<meta name="fediverse:creator" content="@arrrrrmin@chaos.social">`);
   const isBuild = process.env.npm_lifecycle_event === "build"
