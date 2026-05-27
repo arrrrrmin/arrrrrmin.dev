@@ -50,8 +50,7 @@ const head = ({ title, data, path }) => {
   pieces.push(`<link rel="me" href="https://chaos.social/@arrrrrmin"></link>`);
 
   if (title) {
-    pieces.push(`<title>${escape(title)}</title>`);
-    pieces.push(`<meta property="og:title" content="${escape(title)}">`);
+    pieces.push(`<meta property="og:title" content="${title}">`);
   }
 
   if (data.keywords) {
@@ -60,15 +59,13 @@ const head = ({ title, data, path }) => {
 
   if (description) {
     pieces.push(
-      `<meta name="description" content="${escape(description)}">`,
-      `<meta property="og:description" content="${escape(description)}">`,
+      `<meta name="description" content="${description}">`,
+      `<meta property="og:description" content="${description}">`,
     );
   }
 
   pieces.push(`<meta property="og:url" content="${BASE_URL}${path}">`);
   pieces.push(`<meta property="og:image" content="${BASE_URL}${preview}">`);
-  pieces.push(`<meta property="og:image:width" content="${imageWidth}">`);
-  pieces.push(`<meta property="og:image:height" content="${imageHeight}">`);
 
   if (siteName) {
     pieces.push(`<meta property="og:site_name" content="${siteName}">`);
@@ -85,6 +82,14 @@ const head = ({ title, data, path }) => {
   if (author) {
     pieces.push(`<meta name="author" content="${author}">`);
   }
+
+  pieces.push(`<meta name="twitter:card" content="summary_large_image">`)
+  if (description) {
+    pieces.push(`<meta name="twitter:description" content="${description}">`)
+  }   pieces.push(`<meta name="twitter:title" content="${title}">`)
+  pieces.push(`<meta name="twitter:image" content="${BASE_URL}${preview}">`)
+  pieces.push(`<meta name="theme-color" content="#CF497A">`)
+
 
   if (publishedTime) {
     pieces.push(`<meta property="article:published_time" content="${publishedTime}">`);
