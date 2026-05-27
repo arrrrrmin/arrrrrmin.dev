@@ -142,7 +142,7 @@ can be called here in plain markdown:
 This way we now don't need `dynamicPaths` anymore, but I'll keep it, because I don't want to use the svgs everytime I create a new one.
 This is what it looks like:
 
-![Lost in data logo](/embeds/lostindata.svg)
+![A small human looking bar trapped between large bars in a bar chart. Bars are pulsing slightly - eye are looking left to right in a infinite loop.](/embeds/lostindata.svg)
 
 It's a static SVG. The eyes and bars are moving (I'm not experienced with keyframe animations ... yet), but at least in principal it has moving parts. This is something one can do while the SVG is build in the data loader. By including a `style` tag, the browser is able to play a simple animation from inside the SVG. This I learned is called embedded CSS. That's exactly the same trick I learned from the [Visualising Climate logo replica](/learning_from_pros/visualising_climate), all you need is this to add a style tag to the svg:
 
