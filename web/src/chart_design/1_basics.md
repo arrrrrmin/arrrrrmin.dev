@@ -119,7 +119,7 @@ following this order.
 At least we don't gaze over it and may get it wrong. **We can also get a stable feeling for what designers want us to look at, which enables us to ask why or what we can not see.**
 
 <div class="card full">
-<img src="/images/efficiently-reading-charts.png" alt="Diagram comparing economic development, based on GDP with CO2 emissions per country. Image is 80% desaturated scaled so annotations about reading order is readable. Dips almost for all show countries, in 2020 during corona pandemic. Largest CO2 emittor amongst shown China, Germany, India, World average and others is the USA, followed by Germany."/>
+<img src="./images/efficiently-reading-charts.png" alt="Diagram comparing economic development, based on GDP with CO2 emissions per country. Image is 80% desaturated scaled so annotations about reading order is readable. Dips almost for all show countries, in 2020 during corona pandemic. Largest CO2 emittor amongst shown China, Germany, India, World average and others is the USA, followed by Germany."/>
 <caption>An example with one chart that compares the GDP to CO₂ emission per country from 1990 to 2024 with annotated reading order.</caption>
 </div>
 

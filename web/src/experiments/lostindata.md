@@ -30,7 +30,7 @@ ${html`<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="ht
 
 The goal was not to be very artistic - because there is a lot to learn for me. Well the logics for the svg was pretty easy. Generate data, bin the data, randomly select a bin where we replace the bar with our newly created _rectMoji_, done! My next thought, right after "_nice it's working_" was "_that's boring_". The result was this:
 
-![A small human looking bar trapped between large bars in a bar chart. Eyes are looking up to the large bars and seem confused to intimidated.](/images/Observable-Preview-404-lost-in-data.png)
+![A small human looking bar trapped between large bars in a bar chart. Eyes are looking up to the large bars and seem confused to intimidated.](./images/Observable-Preview-404-lost-in-data.png)
 
 Since this is an Observable Framework project I'm able to easily add interaction to visualisations, so I added an update button and played (way to long, it's too much fun) with the transitions and speeds.
 You can see the prototype [here](https://observablehq.com/d/1cbe16f09b6f0edb).

@@ -100,9 +100,9 @@ const buildFooter = ({ path }) => {
   pieces.push(
     `<div class="footer-social">`,
   );
-  pieces.push(`<div><img src="/images/arrrrrmin.dev.svg" class="profile-image" /></div>`);
-  pieces.push(`<div><a rel="me" href="https://chaos.social/@arrrrrmin">Mastodon</a>`);
-  pieces.push(`<a rel="me" href="https://bsky.app/profile/arrrrrmin.dev">Bluesky</a></div></div>`);
+  pieces.push(`<div style="display: flex; flex-direction: column; gap: 4px;"><div><a rel="me" href="https://chaos.social/@arrrrrmin">Mastodon</a></div>`);
+  pieces.push(`<div><a rel="me" href="https://bsky.app/profile/arrrrrmin.dev">Bluesky</a></div></div></div>`);
+  pieces.push(`<img src="/images/arrrrrmin.dev.svg" class="profile-image" />`);
   return pieces.join("\n");
 };
 

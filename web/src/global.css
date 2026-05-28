@@ -154,15 +154,16 @@ footer>div {
   padding: 1rem 0rem;
   max-width: 640px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: end;
   border-top: 1px solid var(--theme-foreground-fainter);
   display: flex;
+  gap: 6px;
 }
 
 .footer-social {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
 }
 
 /** Useful tools for articles */
@@ -172,8 +173,8 @@ footer>div {
 
 /** Profile image */
 .profile-image {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 }
 
