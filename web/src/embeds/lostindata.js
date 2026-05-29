@@ -46,7 +46,7 @@ export function getData() {
 // The main function
 export function getChart() {
     const data = getData();
-    const [width, height] = [640, 320];
+    const [width, height] = [600, 320];
     const svg = d3.select(document.body)
         .append("svg")
         .attr("xmlns", "http://www.w3.org/2000/svg")
