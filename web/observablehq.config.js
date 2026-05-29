@@ -143,6 +143,7 @@ export default {
     ...fonts.map(name => `/fonts/${name}.woff2`),
     // Embeds
     ...embeds.map(name => `/embeds/${name}`),
+    "projects/images/withopenmaps-preview.png",
   ],
   style: "global.css",
   globalStylesheets: ["/global.css"],
