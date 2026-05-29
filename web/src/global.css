@@ -113,6 +113,8 @@ blockquote {
 code,
 pre {
   background: var(--theme-background-alt);
+  padding: 1px 4px;
+  border-radius: 2px;
 }
 
 #observablehq-sidebar,

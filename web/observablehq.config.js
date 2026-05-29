@@ -77,13 +77,15 @@ const head = ({ title, data, path }) => {
 
   pieces.push(`<meta name="twitter:card" content="summary_large_image">`)
   if (description) {
-    pieces.push(`<meta name="twitter:description" content="${description}">`)
-  } pieces.push(`<meta name="twitter:title" content="${title}">`)
+    pieces.push(`<meta name="twitter:description" content="${description}">`);
+  }
+
+  pieces.push(`<meta name="twitter:image" content="${BASE_URL}${preview}">`)
+  pieces.push(`<meta name="twitter:title" content="${title}">`)
 
   if (publishedTime) {
     pieces.push(`<meta property="article:published_time" content="${publishedTime}">`);
   }
-  pieces.push(`<meta name="twitter:card" content="summary_large_image">`);
   pieces.push(`<meta name="robots" content="index, follow">`);
   // Post attribution
   pieces.push(`<meta name="fediverse:creator" content="@arrrrrmin@chaos.social">`);

@@ -25,6 +25,14 @@ const descriptions = [
     preview: "/embeds/lostindata.png",
     previewWidth: 1200,
     previewHeight: 630,
+  },
+  {
+    path: "withopenmaps",
+    description: "The ARTE map is a visualisation the ARTE 'With open maps' format as a map. Currently in prototyping stage the map allows to explore the format interactivly.",
+    date: "2026-05-29",
+    preview: "/projects/images/withopenmaps-preview.png",
+    previewWidth: 1200,
+    previewHeight: 630,
   }
 ];
 
@@ -58,7 +66,9 @@ export const pages = [
   {
     name: "Projects",
     open: true,
-    pages: [{ name: "Lanz mining", path: "https://lanz-mining.arrrrrmin.dev/" }],
+    pages: [
+      { name: "With open maps (wip)", path: "/projects/withopenmaps" },
+      { name: "Lanz mining", path: "https://lanz-mining.arrrrrmin.dev/" }],
   },
 ];
 

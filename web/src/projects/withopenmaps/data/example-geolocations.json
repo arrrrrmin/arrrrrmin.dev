@@ -1,0 +1,599 @@
+{
+    "collected_at": "2026-05-28",
+    "outputs": [
+        {
+            "title": "Mit offenen Karten - Kriege im 21. Jahrhundert",
+            "description": "Die Ukraine und Gaza: zwei große und in ihrem Ausmaß unvorhersehbare geopolitische Konflikte, deren Auswirkungen global zu spüren sind. Europa, das lange vom Krieg verschont zu bleiben schien, rüstet massiv auf, während der Nahe Osten mehr denn je vor der Gefahr eines Flächenbrandes steht. \"Mit offenen Karten\" unterzieht die Konflikte im 21. Jahrhundert einer Bestandsaufnahme.",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/p7PSWLps73bTgbmXFB9VQj/1920x1080?type=TEXT&watermark=true",
+            "published": "2024-09-28",
+            "source": "https://www.arte.tv/de/videos/114573-027-A/mit-offenen-karten/",
+            "length": 730,
+            "geolocations": [
+                {
+                    "name": "Ukraine",
+                    "location": {
+                        "lat": 49.4871968,
+                        "lon": 31.2718321
+                    },
+                    "weight": 0.25
+                },
+                {
+                    "name": "Gazastreifen",
+                    "location": {
+                        "lat": 31.4432234,
+                        "lon": 34.360007
+                    },
+                    "weight": 0.25
+                },
+                {
+                    "name": "Europa",
+                    "location": {
+                        "lat": 51.0,
+                        "lon": 10.0
+                    },
+                    "weight": 0.25
+                }
+            ]
+        },
+        {
+            "title": "Mit offenen Karten - Im Fokus - Ukraine: Vier Jahre Widerstand",
+            "description": "Der Angriffskrieg, den Russlands Präsident Putin am 24. Februar 2022 begonnen hat, steckt fest. Trotz einer Übermacht an Menschen und Material eroberte Moskau in einem Jahr nur knapp ein Prozent des Gebietes hinzu. Putins Russland steckt in einem Konflikt fest, der bereits länger andauert als der \"Große Vaterländische Krieg\" der Sowjetunion.",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/Ky9JBUcxR6wMYQw6QvAzdk/1920x1080?type=TEXT&watermark=true",
+            "published": "2026-02-24",
+            "source": "https://www.arte.tv/de/videos/126925-029-A/mit-offenen-karten-im-fokus/",
+            "length": 210,
+            "geolocations": [
+                {
+                    "name": "Ukraine",
+                    "location": {
+                        "lat": 49.4871968,
+                        "lon": 31.2718321
+                    },
+                    "weight": 0.75
+                },
+                {
+                    "name": "Russland",
+                    "location": {
+                        "lat": 64.6863136,
+                        "lon": 97.7453061
+                    },
+                    "weight": 0.25
+                },
+                {
+                    "name": "Moskau",
+                    "location": {
+                        "lat": 55.625578,
+                        "lon": 37.6063916
+                    },
+                    "weight": 0.25
+                }
+            ]
+        },
+        {
+            "title": "Mit offenen Karten - Nigeria - Riese mit Schwächen",
+            "description": "Nigeria ist nicht nur die wichtigste diplomatische und militärische Macht Westafrikas - seine Bevölkerung wächst zudem rasant an. Doch hat es das Land mit zahlreiche Herausforderungen zu tun: mangelnde soziale Gerechtigkeit, ethnische Rivalitäten, endemische Korruption, islamistischer Terror …",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/eHi3GuJ7RXDmaGJffYVfag/1920x1080?type=TEXT&watermark=true",
+            "published": "2024-01-13",
+            "source": "https://www.arte.tv/de/videos/114573-012-A/mit-offenen-karten/",
+            "length": 718,
+            "geolocations": [
+                {
+                    "name": "Nigeria",
+                    "location": {
+                        "lat": 9.6000359,
+                        "lon": 7.9999721
+                    },
+                    "weight": 0.75
+                },
+                {
+                    "name": "Nigeria",
+                    "location": {
+                        "lat": 9.6000359,
+                        "lon": 7.9999721
+                    },
+                    "weight": 0.25
+                },
+                {
+                    "name": "Afrika",
+                    "location": {
+                        "lat": 11.5024338,
+                        "lon": 17.7578122
+                    },
+                    "weight": 0.25
+                }
+            ]
+        }
+    ],
+    "connections": [
+        {
+            "title": "Mit offenen Karten - Kriege im 21. Jahrhundert",
+            "description": "Die Ukraine und Gaza: zwei große und in ihrem Ausmaß unvorhersehbare geopolitische Konflikte, deren Auswirkungen global zu spüren sind. Europa, das lange vom Krieg verschont zu bleiben schien, rüstet massiv auf, während der Nahe Osten mehr denn je vor der Gefahr eines Flächenbrandes steht. \"Mit offenen Karten\" unterzieht die Konflikte im 21. Jahrhundert einer Bestandsaufnahme.",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/p7PSWLps73bTgbmXFB9VQj/1920x1080?type=TEXT&watermark=true",
+            "published": "2024-09-28",
+            "source": "https://www.arte.tv/de/videos/114573-027-A/mit-offenen-karten/",
+            "length": 730,
+            "origin": "Ukraine",
+            "target": "Gazastreifen",
+            "origin_coords": [
+                49.4871968,
+                31.2718321
+            ],
+            "target_coords": [
+                31.4432234,
+                34.360007
+            ],
+            "weight": 0.5,
+            "originCount": 2
+        },
+        {
+            "title": "Mit offenen Karten - Kriege im 21. Jahrhundert",
+            "description": "Die Ukraine und Gaza: zwei große und in ihrem Ausmaß unvorhersehbare geopolitische Konflikte, deren Auswirkungen global zu spüren sind. Europa, das lange vom Krieg verschont zu bleiben schien, rüstet massiv auf, während der Nahe Osten mehr denn je vor der Gefahr eines Flächenbrandes steht. \"Mit offenen Karten\" unterzieht die Konflikte im 21. Jahrhundert einer Bestandsaufnahme.",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/p7PSWLps73bTgbmXFB9VQj/1920x1080?type=TEXT&watermark=true",
+            "published": "2024-09-28",
+            "source": "https://www.arte.tv/de/videos/114573-027-A/mit-offenen-karten/",
+            "length": 730,
+            "origin": "Ukraine",
+            "target": "Europa",
+            "origin_coords": [
+                49.4871968,
+                31.2718321
+            ],
+            "target_coords": [
+                51.0,
+                10.0
+            ],
+            "weight": 0.5,
+            "originCount": 2
+        },
+        {
+            "title": "Mit offenen Karten - Kriege im 21. Jahrhundert",
+            "description": "Die Ukraine und Gaza: zwei große und in ihrem Ausmaß unvorhersehbare geopolitische Konflikte, deren Auswirkungen global zu spüren sind. Europa, das lange vom Krieg verschont zu bleiben schien, rüstet massiv auf, während der Nahe Osten mehr denn je vor der Gefahr eines Flächenbrandes steht. \"Mit offenen Karten\" unterzieht die Konflikte im 21. Jahrhundert einer Bestandsaufnahme.",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/p7PSWLps73bTgbmXFB9VQj/1920x1080?type=TEXT&watermark=true",
+            "published": "2024-09-28",
+            "source": "https://www.arte.tv/de/videos/114573-027-A/mit-offenen-karten/",
+            "length": 730,
+            "origin": "Gazastreifen",
+            "target": "Europa",
+            "origin_coords": [
+                31.4432234,
+                34.360007
+            ],
+            "target_coords": [
+                51.0,
+                10.0
+            ],
+            "weight": 0.5,
+            "originCount": 1
+        },
+        {
+            "title": "Mit offenen Karten - Im Fokus - Ukraine: Vier Jahre Widerstand",
+            "description": "Der Angriffskrieg, den Russlands Präsident Putin am 24. Februar 2022 begonnen hat, steckt fest. Trotz einer Übermacht an Menschen und Material eroberte Moskau in einem Jahr nur knapp ein Prozent des Gebietes hinzu. Putins Russland steckt in einem Konflikt fest, der bereits länger andauert als der \"Große Vaterländische Krieg\" der Sowjetunion.",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/Ky9JBUcxR6wMYQw6QvAzdk/1920x1080?type=TEXT&watermark=true",
+            "published": "2026-02-24",
+            "source": "https://www.arte.tv/de/videos/126925-029-A/mit-offenen-karten-im-fokus/",
+            "length": 210,
+            "origin": "Ukraine",
+            "target": "Russland",
+            "origin_coords": [
+                49.4871968,
+                31.2718321
+            ],
+            "target_coords": [
+                64.6863136,
+                97.7453061
+            ],
+            "weight": 1.0,
+            "originCount": 2
+        },
+        {
+            "title": "Mit offenen Karten - Im Fokus - Ukraine: Vier Jahre Widerstand",
+            "description": "Der Angriffskrieg, den Russlands Präsident Putin am 24. Februar 2022 begonnen hat, steckt fest. Trotz einer Übermacht an Menschen und Material eroberte Moskau in einem Jahr nur knapp ein Prozent des Gebietes hinzu. Putins Russland steckt in einem Konflikt fest, der bereits länger andauert als der \"Große Vaterländische Krieg\" der Sowjetunion.",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/Ky9JBUcxR6wMYQw6QvAzdk/1920x1080?type=TEXT&watermark=true",
+            "published": "2026-02-24",
+            "source": "https://www.arte.tv/de/videos/126925-029-A/mit-offenen-karten-im-fokus/",
+            "length": 210,
+            "origin": "Ukraine",
+            "target": "Moskau",
+            "origin_coords": [
+                49.4871968,
+                31.2718321
+            ],
+            "target_coords": [
+                55.625578,
+                37.6063916
+            ],
+            "weight": 1.0,
+            "originCount": 2
+        },
+        {
+            "title": "Mit offenen Karten - Im Fokus - Ukraine: Vier Jahre Widerstand",
+            "description": "Der Angriffskrieg, den Russlands Präsident Putin am 24. Februar 2022 begonnen hat, steckt fest. Trotz einer Übermacht an Menschen und Material eroberte Moskau in einem Jahr nur knapp ein Prozent des Gebietes hinzu. Putins Russland steckt in einem Konflikt fest, der bereits länger andauert als der \"Große Vaterländische Krieg\" der Sowjetunion.",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/Ky9JBUcxR6wMYQw6QvAzdk/1920x1080?type=TEXT&watermark=true",
+            "published": "2026-02-24",
+            "source": "https://www.arte.tv/de/videos/126925-029-A/mit-offenen-karten-im-fokus/",
+            "length": 210,
+            "origin": "Russland",
+            "target": "Moskau",
+            "origin_coords": [
+                64.6863136,
+                97.7453061
+            ],
+            "target_coords": [
+                55.625578,
+                37.6063916
+            ],
+            "weight": 0.5,
+            "originCount": 1
+        },
+        {
+            "title": "Mit offenen Karten - Nigeria - Riese mit Schwächen",
+            "description": "Nigeria ist nicht nur die wichtigste diplomatische und militärische Macht Westafrikas - seine Bevölkerung wächst zudem rasant an. Doch hat es das Land mit zahlreiche Herausforderungen zu tun: mangelnde soziale Gerechtigkeit, ethnische Rivalitäten, endemische Korruption, islamistischer Terror …",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/eHi3GuJ7RXDmaGJffYVfag/1920x1080?type=TEXT&watermark=true",
+            "published": "2024-01-13",
+            "source": "https://www.arte.tv/de/videos/114573-012-A/mit-offenen-karten/",
+            "length": 718,
+            "origin": "Nigeria",
+            "target": "Afrika",
+            "origin_coords": [
+                9.6000359,
+                7.9999721
+            ],
+            "target_coords": [
+                11.5024338,
+                17.7578122
+            ],
+            "weight": 1.0,
+            "originCount": 1
+        },
+        {
+            "title": "Mit offenen Karten - Nigeria - Riese mit Schwächen",
+            "description": "Nigeria ist nicht nur die wichtigste diplomatische und militärische Macht Westafrikas - seine Bevölkerung wächst zudem rasant an. Doch hat es das Land mit zahlreiche Herausforderungen zu tun: mangelnde soziale Gerechtigkeit, ethnische Rivalitäten, endemische Korruption, islamistischer Terror …",
+            "preview": "https://api-cdn.arte.tv/img/v2/image/eHi3GuJ7RXDmaGJffYVfag/1920x1080?type=TEXT&watermark=true",
+            "published": "2024-01-13",
+            "source": "https://www.arte.tv/de/videos/114573-012-A/mit-offenen-karten/",
+            "length": 718,
+            "origin": "Nigeria",
+            "target": "Afrika",
+            "origin_coords": [
+                9.6000359,
+                7.9999721
+            ],
+            "target_coords": [
+                11.5024338,
+                17.7578122
+            ],
+            "weight": 0.5,
+            "originCount": 1
+        }
+    ],
+    "lookup_by_name": {
+        "Ukraine": {
+            "episodes": [
+                {
+                    "title": "Mit offenen Karten - Kriege im 21. Jahrhundert",
+                    "description": "Die Ukraine und Gaza: zwei große und in ihrem Ausmaß unvorhersehbare geopolitische Konflikte, deren Auswirkungen global zu spüren sind. Europa, das lange vom Krieg verschont zu bleiben schien, rüstet massiv auf, während der Nahe Osten mehr denn je vor der Gefahr eines Flächenbrandes steht. \"Mit offenen Karten\" unterzieht die Konflikte im 21. Jahrhundert einer Bestandsaufnahme.",
+                    "preview": "https://api-cdn.arte.tv/img/v2/image/p7PSWLps73bTgbmXFB9VQj/1920x1080?type=TEXT&watermark=true",
+                    "published": "2024-09-28",
+                    "source": "https://www.arte.tv/de/videos/114573-027-A/mit-offenen-karten/",
+                    "length": 730,
+                    "geolocations": [
+                        {
+                            "name": "Ukraine",
+                            "location": {
+                                "lat": 49.4871968,
+                                "lon": 31.2718321
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Gazastreifen",
+                            "location": {
+                                "lat": 31.4432234,
+                                "lon": 34.360007
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Europa",
+                            "location": {
+                                "lat": 51.0,
+                                "lon": 10.0
+                            },
+                            "weight": 0.25
+                        }
+                    ]
+                },
+                {
+                    "title": "Mit offenen Karten - Im Fokus - Ukraine: Vier Jahre Widerstand",
+                    "description": "Der Angriffskrieg, den Russlands Präsident Putin am 24. Februar 2022 begonnen hat, steckt fest. Trotz einer Übermacht an Menschen und Material eroberte Moskau in einem Jahr nur knapp ein Prozent des Gebietes hinzu. Putins Russland steckt in einem Konflikt fest, der bereits länger andauert als der \"Große Vaterländische Krieg\" der Sowjetunion.",
+                    "preview": "https://api-cdn.arte.tv/img/v2/image/Ky9JBUcxR6wMYQw6QvAzdk/1920x1080?type=TEXT&watermark=true",
+                    "published": "2026-02-24",
+                    "source": "https://www.arte.tv/de/videos/126925-029-A/mit-offenen-karten-im-fokus/",
+                    "length": 210,
+                    "geolocations": [
+                        {
+                            "name": "Ukraine",
+                            "location": {
+                                "lat": 49.4871968,
+                                "lon": 31.2718321
+                            },
+                            "weight": 0.75
+                        },
+                        {
+                            "name": "Russland",
+                            "location": {
+                                "lat": 64.6863136,
+                                "lon": 97.7453061
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Moskau",
+                            "location": {
+                                "lat": 55.625578,
+                                "lon": 37.6063916
+                            },
+                            "weight": 0.25
+                        }
+                    ]
+                }
+            ],
+            "origin_coords": [
+                49.4871968,
+                31.2718321
+            ]
+        },
+        "Gazastreifen": {
+            "episodes": [
+                {
+                    "title": "Mit offenen Karten - Kriege im 21. Jahrhundert",
+                    "description": "Die Ukraine und Gaza: zwei große und in ihrem Ausmaß unvorhersehbare geopolitische Konflikte, deren Auswirkungen global zu spüren sind. Europa, das lange vom Krieg verschont zu bleiben schien, rüstet massiv auf, während der Nahe Osten mehr denn je vor der Gefahr eines Flächenbrandes steht. \"Mit offenen Karten\" unterzieht die Konflikte im 21. Jahrhundert einer Bestandsaufnahme.",
+                    "preview": "https://api-cdn.arte.tv/img/v2/image/p7PSWLps73bTgbmXFB9VQj/1920x1080?type=TEXT&watermark=true",
+                    "published": "2024-09-28",
+                    "source": "https://www.arte.tv/de/videos/114573-027-A/mit-offenen-karten/",
+                    "length": 730,
+                    "geolocations": [
+                        {
+                            "name": "Ukraine",
+                            "location": {
+                                "lat": 49.4871968,
+                                "lon": 31.2718321
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Gazastreifen",
+                            "location": {
+                                "lat": 31.4432234,
+                                "lon": 34.360007
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Europa",
+                            "location": {
+                                "lat": 51.0,
+                                "lon": 10.0
+                            },
+                            "weight": 0.25
+                        }
+                    ]
+                }
+            ],
+            "origin_coords": [
+                31.4432234,
+                34.360007
+            ]
+        },
+        "Europa": {
+            "episodes": [
+                {
+                    "title": "Mit offenen Karten - Kriege im 21. Jahrhundert",
+                    "description": "Die Ukraine und Gaza: zwei große und in ihrem Ausmaß unvorhersehbare geopolitische Konflikte, deren Auswirkungen global zu spüren sind. Europa, das lange vom Krieg verschont zu bleiben schien, rüstet massiv auf, während der Nahe Osten mehr denn je vor der Gefahr eines Flächenbrandes steht. \"Mit offenen Karten\" unterzieht die Konflikte im 21. Jahrhundert einer Bestandsaufnahme.",
+                    "preview": "https://api-cdn.arte.tv/img/v2/image/p7PSWLps73bTgbmXFB9VQj/1920x1080?type=TEXT&watermark=true",
+                    "published": "2024-09-28",
+                    "source": "https://www.arte.tv/de/videos/114573-027-A/mit-offenen-karten/",
+                    "length": 730,
+                    "geolocations": [
+                        {
+                            "name": "Ukraine",
+                            "location": {
+                                "lat": 49.4871968,
+                                "lon": 31.2718321
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Gazastreifen",
+                            "location": {
+                                "lat": 31.4432234,
+                                "lon": 34.360007
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Europa",
+                            "location": {
+                                "lat": 51.0,
+                                "lon": 10.0
+                            },
+                            "weight": 0.25
+                        }
+                    ]
+                }
+            ],
+            "origin_coords": [
+                51.0,
+                10.0
+            ]
+        },
+        "Russland": {
+            "episodes": [
+                {
+                    "title": "Mit offenen Karten - Im Fokus - Ukraine: Vier Jahre Widerstand",
+                    "description": "Der Angriffskrieg, den Russlands Präsident Putin am 24. Februar 2022 begonnen hat, steckt fest. Trotz einer Übermacht an Menschen und Material eroberte Moskau in einem Jahr nur knapp ein Prozent des Gebietes hinzu. Putins Russland steckt in einem Konflikt fest, der bereits länger andauert als der \"Große Vaterländische Krieg\" der Sowjetunion.",
+                    "preview": "https://api-cdn.arte.tv/img/v2/image/Ky9JBUcxR6wMYQw6QvAzdk/1920x1080?type=TEXT&watermark=true",
+                    "published": "2026-02-24",
+                    "source": "https://www.arte.tv/de/videos/126925-029-A/mit-offenen-karten-im-fokus/",
+                    "length": 210,
+                    "geolocations": [
+                        {
+                            "name": "Ukraine",
+                            "location": {
+                                "lat": 49.4871968,
+                                "lon": 31.2718321
+                            },
+                            "weight": 0.75
+                        },
+                        {
+                            "name": "Russland",
+                            "location": {
+                                "lat": 64.6863136,
+                                "lon": 97.7453061
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Moskau",
+                            "location": {
+                                "lat": 55.625578,
+                                "lon": 37.6063916
+                            },
+                            "weight": 0.25
+                        }
+                    ]
+                }
+            ],
+            "origin_coords": [
+                64.6863136,
+                97.7453061
+            ]
+        },
+        "Moskau": {
+            "episodes": [
+                {
+                    "title": "Mit offenen Karten - Im Fokus - Ukraine: Vier Jahre Widerstand",
+                    "description": "Der Angriffskrieg, den Russlands Präsident Putin am 24. Februar 2022 begonnen hat, steckt fest. Trotz einer Übermacht an Menschen und Material eroberte Moskau in einem Jahr nur knapp ein Prozent des Gebietes hinzu. Putins Russland steckt in einem Konflikt fest, der bereits länger andauert als der \"Große Vaterländische Krieg\" der Sowjetunion.",
+                    "preview": "https://api-cdn.arte.tv/img/v2/image/Ky9JBUcxR6wMYQw6QvAzdk/1920x1080?type=TEXT&watermark=true",
+                    "published": "2026-02-24",
+                    "source": "https://www.arte.tv/de/videos/126925-029-A/mit-offenen-karten-im-fokus/",
+                    "length": 210,
+                    "geolocations": [
+                        {
+                            "name": "Ukraine",
+                            "location": {
+                                "lat": 49.4871968,
+                                "lon": 31.2718321
+                            },
+                            "weight": 0.75
+                        },
+                        {
+                            "name": "Russland",
+                            "location": {
+                                "lat": 64.6863136,
+                                "lon": 97.7453061
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Moskau",
+                            "location": {
+                                "lat": 55.625578,
+                                "lon": 37.6063916
+                            },
+                            "weight": 0.25
+                        }
+                    ]
+                }
+            ],
+            "origin_coords": [
+                55.625578,
+                37.6063916
+            ]
+        },
+        "Nigeria": {
+            "episodes": [
+                {
+                    "title": "Mit offenen Karten - Nigeria - Riese mit Schwächen",
+                    "description": "Nigeria ist nicht nur die wichtigste diplomatische und militärische Macht Westafrikas - seine Bevölkerung wächst zudem rasant an. Doch hat es das Land mit zahlreiche Herausforderungen zu tun: mangelnde soziale Gerechtigkeit, ethnische Rivalitäten, endemische Korruption, islamistischer Terror …",
+                    "preview": "https://api-cdn.arte.tv/img/v2/image/eHi3GuJ7RXDmaGJffYVfag/1920x1080?type=TEXT&watermark=true",
+                    "published": "2024-01-13",
+                    "source": "https://www.arte.tv/de/videos/114573-012-A/mit-offenen-karten/",
+                    "length": 718,
+                    "geolocations": [
+                        {
+                            "name": "Nigeria",
+                            "location": {
+                                "lat": 9.6000359,
+                                "lon": 7.9999721
+                            },
+                            "weight": 0.75
+                        },
+                        {
+                            "name": "Nigeria",
+                            "location": {
+                                "lat": 9.6000359,
+                                "lon": 7.9999721
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Afrika",
+                            "location": {
+                                "lat": 11.5024338,
+                                "lon": 17.7578122
+                            },
+                            "weight": 0.25
+                        }
+                    ]
+                }
+            ],
+            "origin_coords": [
+                9.6000359,
+                7.9999721
+            ]
+        },
+        "Afrika": {
+            "episodes": [
+                {
+                    "title": "Mit offenen Karten - Nigeria - Riese mit Schwächen",
+                    "description": "Nigeria ist nicht nur die wichtigste diplomatische und militärische Macht Westafrikas - seine Bevölkerung wächst zudem rasant an. Doch hat es das Land mit zahlreiche Herausforderungen zu tun: mangelnde soziale Gerechtigkeit, ethnische Rivalitäten, endemische Korruption, islamistischer Terror …",
+                    "preview": "https://api-cdn.arte.tv/img/v2/image/eHi3GuJ7RXDmaGJffYVfag/1920x1080?type=TEXT&watermark=true",
+                    "published": "2024-01-13",
+                    "source": "https://www.arte.tv/de/videos/114573-012-A/mit-offenen-karten/",
+                    "length": 718,
+                    "geolocations": [
+                        {
+                            "name": "Nigeria",
+                            "location": {
+                                "lat": 9.6000359,
+                                "lon": 7.9999721
+                            },
+                            "weight": 0.75
+                        },
+                        {
+                            "name": "Nigeria",
+                            "location": {
+                                "lat": 9.6000359,
+                                "lon": 7.9999721
+                            },
+                            "weight": 0.25
+                        },
+                        {
+                            "name": "Afrika",
+                            "location": {
+                                "lat": 11.5024338,
+                                "lon": 17.7578122
+                            },
+                            "weight": 0.25
+                        }
+                    ]
+                }
+            ],
+            "origin_coords": [
+                11.5024338,
+                17.7578122
+            ]
+        }
+    }
+}
