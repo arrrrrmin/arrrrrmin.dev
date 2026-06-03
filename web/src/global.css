@@ -117,6 +117,18 @@ pre {
   border-radius: 2px;
 }
 
+/** Width */
+#observablehq-center {
+  margin: 1rem;
+}
+
+.observablehq-pre-container {
+  position: relative;
+  /* margin: 1rem -1rem; */
+  margin: unset;
+  max-width: 960px;
+}
+
 /** Sidebar */
 
 #observablehq-sidebar,
