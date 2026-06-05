@@ -31,7 +31,7 @@ const descriptions = [
   },
   {
     path: "visualising_climate",
-    description: "The ARTE map is a visualisation the ARTE 'With open maps' format as a map. Currently in prototyping stage, the map allows to explore the format interactivly.",
+    description: "The Visualising Climate conference is taking place in November 2026 for the first time. I love their logo, beacuse it's a different way to present the state of climate. We rebuild their logo with publically available data.",
     date: "2026-05-03",
     preview: "/embeds/visualisingclimatelogo.png",
     previewWidth: 1200,

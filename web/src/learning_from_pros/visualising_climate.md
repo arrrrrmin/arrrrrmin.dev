@@ -1,5 +1,10 @@
 ---
 title: Visualising Climate Logo
+keywords:
+  - Learning
+  - Datavis
+  - Climate
+  - Global warming
 sql:
   surface_temperatures_anomalies: "./data/surface_temperatures_anomalies.csv"
 ---
