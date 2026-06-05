@@ -4,6 +4,10 @@ sql:
   surface_temperatures_anomalies: "./data/surface_temperatures_anomalies.csv"
 ---
 
+```js
+import {SimpleClimateAnomalyRadial, ClimateAnomalyRadial} from "./chart.js"
+```
+
 # Reproducing the Visualising Climate Conference Logo
 On the 4th to 6th November of 2026 the Visualising Climate 2026 will take place in Bologna, Italy. 
 > _Visualising Climate_ is the first global conference on data visualisation for climate and environmental sciences. Bringing together scientists, artists, communicators, and journalists, this event will serve as a meeting point between data and storytelling, evidence and perception, art and science.
@@ -29,7 +33,7 @@ I'm a bit surprised it looks like way less years because they overlap and I gues
 
 The main things I do not often use tbh is the radial scale functions. But the d3 docs got us covered with [radial lines](https://d3js.org/d3-shape/radial-line#radial-lines). We need to define a mapping for `angle` which we map to the date and `radius`, which maps the temperature anomalies. We end up with a couple of scales:
 
-```
+```js echo run=false
 ...
 const minMaxYears = d3.extent(globals.years.map((d) => d[0]));
 
@@ -55,7 +59,7 @@ const dateOnRing = (d) => {
 // Plug the x and y scales into angle and radius
 const l = d3
 	.lineRadial()
-	// curveCatmullRomClosed should also work
+	// Close functions will close between December and January
 	.curve(d3.curveCardinalClosed.tension(0.1))
 	.angle((D) => dateOnRing(D))
 	.radius((D) => y(D.temperature_anomaly));
@@ -69,9 +73,27 @@ const c = d3.scaleSequential(
 
 This works pretty well because we can stick to the [radial area chart example](https://observablehq.com/@d3/radial-area-chart/2) example. No need for the area in this example, although **donut polygons** sound fun (noted for later update).
 
-```js
-import {ClimateAnomalyRadial} from "./chart.js"
+If we use our scales now, we can see the architecture of this chart. Additionally we can use dot's to see where our actual data points are.
+A good thing to do, I'm just learning about these scales so better double check that everything is precisly mapped where we want it to be.
+
+
+```js echo run=false
+// Another scale for debugging
+// Provides an x and y value using `pointRadial`
+const toCartesian = (anomaly) => {
+    const theta = dateOnRing(anomaly); // Angle
+    const r = y(anomaly.temperature_anomaly); // Revert scale
+    const [a, b] = d3.pointRadial(theta, r);  // Point
+    return { x: a, y: b };
+};
 ```
+
+Using the cartesian scale above, we can get the points in x and y coordinates from the angle `theta` and the radius `r`. Now we can debug the assumption we had and see which dot and line corresponds to which month in which year. In the following chart you can nagivate through the plates by hovering (touching) dots.
+
+<div class="card" style="display: flex; justify-content: center;">
+${view(SimpleClimateAnomalyRadial({temperature_anomalies: world_anomalies, width: 600}))}
+
+</div>
 
 ```sql id=[...countries]
 SELECT distinct(entity) as entity FROM surface_temperatures_anomalies;
@@ -86,6 +108,8 @@ FROM surface_temperatures_anomalies WHERE CODE = 'OWID_WRL';
 SELECT entity, code, month, "_2025","_2024","_2023","_2022","_2021","_2020","_2019","_2018","_2017","_2016","_2015","_2014","_2013","_2012","_2011","_2010","_2009","_2008","_2007","_2006","_2005","_2004","_2003","_2002","_2001","_2000","_1999","_1998","_1997","_1996","_1995","_1994","_1993","_1992","_1991","_1990","_1989","_1988","_1987","_1986","_1985","_1984","_1983","_1982","_1981","_1980","_1979" 
 FROM surface_temperatures_anomalies WHERE entity = ${form.country.entity};
 ```
+
+## Local anomalies
 
 <div style="overflow: visible">
 
@@ -103,13 +127,13 @@ const form = view(Inputs.form({
 <div style="margin-bottom: 12px;">
 <figure style="z-index: 10; width: 100%; display: flex; flex-flow: column; align-items: center;">
 <h2 style="min-height: 25px">World average<h2>
-${ClimateAnomalyRadial({temperature_anomalies: world_anomalies, width: 800, animate: form.animate})}
+${ClimateAnomalyRadial({temperature_anomalies: world_anomalies, width: 800, animate: form.animate, peakLabel: true})}
 </figure>
 </div>
 <div>
 <figure style="z-index: 10; width: 100%; display: flex; flex-flow: column; align-items: center;">
 <h2 style="min-height: 25px">${form.country.entity}<h2>
-${ClimateAnomalyRadial({temperature_anomalies: selected_anomalies, width: 800, ...form})}
+${ClimateAnomalyRadial({temperature_anomalies: selected_anomalies, width: 800, ...form, peakLabel: true})}
 </figure>
 </div>
 </div>
@@ -221,7 +245,7 @@ FROM surface_temperatures_anomalies WHERE entity = 'Italy';
 <div>
 <figure style="z-index: 10; width: 100%; display: flex; flex-flow: column; align-items: center;">
 <h2 style="min-height: 25px">Italy</h2>
-${ClimateAnomalyRadial({temperature_anomalies: italy_anomalies, width: 800, animate: true})}
+${ClimateAnomalyRadial({temperature_anomalies: italy_anomalies, width: 800, animate: true, peakLabel: true})}
 </figure>
 </div>
 

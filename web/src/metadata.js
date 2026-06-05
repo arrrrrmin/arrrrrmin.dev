@@ -14,11 +14,6 @@ const descriptions = [
 
   },
   {
-    path: "lanz_mining",
-    description: `A data project exploring media participation in German public service talk shows. Data collected over a period of more than a year is being analysed and visualised. `,
-    date: "2025-05-27",
-  },
-  {
     path: "lostindata",
     description: "A tiny excourse into data loaders, static svg routes in Framework and css keyframe animations embedded in SVGs.",
     date: "2026-05-25",
@@ -67,7 +62,7 @@ export const pages = [
     name: "Projects",
     open: true,
     pages: [
-      { name: "With open maps (wip)", path: "/projects/withopenmaps" },
+      { name: "With open maps", path: "/projects/withopenmaps" },
       { name: "Lanz mining", path: "https://lanz-mining.arrrrrmin.dev/" }],
   },
 ];

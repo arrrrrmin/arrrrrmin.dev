@@ -93,21 +93,20 @@ export function climateAnomalyScales({ width, fixed, years, anomalies, compare }
     const x = d3
         .scaleUtc()
         .domain([
-            new Date(`${fixed}-01-01`),
-            new Date(`${fixed + 1}-01-01`) - 1
+            new Date(Date.UTC(fixed, 0, 1)),
+            new Date(Date.UTC(fixed, 11, 31)),
         ])
         .range([0, 2 * Math.PI]);
 
     let anomaly_min = d3.min([-1, d3.min(anomalies, d => d.temperature_anomaly)])
     const y = d3.scaleLinear().domain(
         compare ? [anomaly_min, 1] : [anomaly_min, d3.max(anomalies, d => d.temperature_anomaly)]
-        //d3.extent(anomalies, d => d.temperature_anomaly)
     ).range([rInner, rOuter]);
 
     // A helper function to make the line's `angle` function look cleaner
     const dateOnRing = (d) => {
         const isoDateMonth = d.day.toISOString().slice(5, 7);
-        const isoDateDay = d.day.toISOString().slice(8, 10);
+        const isoDateDay = "01";
         return x(new Date(`${fixed}-${isoDateMonth}-${isoDateDay}`));
     };
 
@@ -124,17 +123,115 @@ export function climateAnomalyScales({ width, fixed, years, anomalies, compare }
 
     const a = Object.fromEntries([...years].reverse().map(([year, _], i) => [year, i * 20]));
 
+    const toCartesian = (anomaly) => {
+        const theta = dateOnRing(anomaly);
+        const r = y(anomaly.temperature_anomaly);
+        const [a, b] = d3.pointRadial(theta, r);
+        return { x: a, y: b };
+    };
+
     // We calculate the values so the visualisation becomes more tidy
     return years.map(([year, anoms]) => ({
         year,
         d: l(anoms),
         fill: c(year),
         delay: a[year],
+        anoms: anoms.map((a) => ({
+            ...a,
+            ...toCartesian(a),
+            fill: c(a.year),
+        }))
     }));
 
 }
 
-export function ClimateAnomalyRadial({ temperature_anomalies, width, compare, animate }) {
+export function SimpleClimateAnomalyRadial({ temperature_anomalies, width }) {
+    let _anomalies = prepareClimateAnomalyData(temperature_anomalies);
+    const years = d3.groups(_anomalies, (d) => d.day.getFullYear()).reverse();
+    const fixed = d3.min(years, (d) => d[0]);
+
+    const data = climateAnomalyScales({ width, fixed, years, anomalies: _anomalies, compare: false });
+
+    const svg = d3
+        .create("svg")
+        .attr("width", width)
+        .attr("height", width)
+        .attr("viewBox", [-width / 2, -width / 2, width, width])
+        .attr("style", "max-width: 100%; height: auto;");
+
+    svg
+        .selectAll("g.year-circle")
+        .data(data)
+        .join(
+            (enter) => {
+                const g = enter.append("g")
+                    .attr("class", "year-circle")
+                    .attr("id", (d) => `_${d.year}`)
+                g.selectAll("path")
+                    .data((d) => [d])
+                    .join("path")
+                    .attr("id", (d) => `_${d.year}`)
+                    .attr("data-name", (d) => d.year)
+                    .attr("stroke", (d) => d.fill)
+                    .attr("fill", "none")
+                    .attr("stroke-width", 2)
+                    .attr("d", (d) => d.d);
+                // For debugging the actual xy positions
+                g.selectAll("circle")
+                    .data((d) => d.anoms)
+                    .join("circle")
+                    .attr("data-name", (a) => `${a.year}-${a.month}`)
+                    .attr("cx", (a) => a.x)
+                    .attr("cy", (a) => a.y)
+                    .attr("r", 2)
+                    .attr("stroke", "#474448")
+                    .attr("fill", "transparent")
+                    .on("mouseover", function (e, d) {
+                        console.log(d);
+                        d3.select(this).attr("fill", d => d.fill)
+                            .attr("r", 4);
+                        svg.selectAll("g.year-circle path")
+                            .attr("stroke", "#474448")
+                            .attr("opacity", 0.25);
+                        svg.selectAll(`g#_${d.year} path`)
+                            .attr("fill", d => d.fill)
+                            .attr("fill-opacity", 0.8)
+                            .attr("stroke", d.fill)
+                            .attr("opacity", 1).attr("stroke-width", 4);
+                        tipdate.text(`${new Date(d.year, d.month - 1, 15).toLocaleString("en-GB", { year: "numeric", month: "short" })}`);
+                        tipanom.text(`${d.temperature_anomaly.toFixed(2)} °C`);
+                    })
+                    .on("mouseout", function (e, d) {
+                        svg.selectAll("g.year-circle path")
+                            .attr("fill", "none")
+                            .attr("stroke", D => D.fill)
+                            .attr("stroke-width", 2)
+                            .attr("opacity", 1);
+                        d3.select(this).attr("fill", "transparent")
+                            .attr("r", 2);
+                        d3.select()
+                        tipdate.text("");
+                        tipanom.text("");
+                    });
+            },
+            (exit) => {
+                exit.select("g")
+                    .transition()
+                    .duration(800)
+                    .delay((_, i) => (data.length - (i + 1)) * 14)
+                    .attr("transform", "scale(0, 0)")
+                exit.remove();
+            }
+        );
+
+    const tip = svg.append("g").attr("id", "tip").attr("transform", `translate(${width / 2}, ${width / 2}})`);
+    const tipdate = tip.append("text").attr("id", "tip-date").attr("text-anchor", "middle").attr("dy", -5);
+    const tipanom = tip.append("text").attr("id", "tip-anom").attr("text-anchor", "middle").attr("dy", 15);
+
+    return svg.node()
+}
+
+export function ClimateAnomalyRadial({ temperature_anomalies, width, compare, animate, peakLabel }) {
     let _anomalies = prepareClimateAnomalyData(temperature_anomalies)
     // Group anomalies per year as [year, anomalies]
     const years = d3.groups(_anomalies, (d) => d.day.getFullYear()).reverse();
@@ -183,12 +280,13 @@ export function ClimateAnomalyRadial({ temperature_anomalies, width, compare, an
 
     const peak_anomaly = d3.max(_anomalies, d => d.temperature_anomaly)
 
-    svg.select("g#_1979")
-        .append("text")
-        .attr("text-anchor", "middle")
-        .attr("fill", "white")
-        .attr("font-size", 24)
-        .text(`Peak: ${peak_anomaly.toFixed(3)}°C`)
-
+    if (peakLabel) {
+        svg.select("g#_1979")
+            .append("text")
+            .attr("text-anchor", "middle")
+            .attr("fill", "white")
+            .attr("font-size", 24)
+            .text(`Peak: ${peak_anomaly.toFixed(3)}°C`)
+    }
     return svg.node();
 }
