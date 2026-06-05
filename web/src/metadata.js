@@ -28,7 +28,15 @@ const descriptions = [
     preview: "/projects/images/withopenmaps-preview.png",
     previewWidth: 1200,
     previewHeight: 630,
-  }
+  },
+  {
+    path: "visualising_climate",
+    description: "The ARTE map is a visualisation the ARTE 'With open maps' format as a map. Currently in prototyping stage, the map allows to explore the format interactivly.",
+    date: "2026-05-03",
+    preview: "/embeds/visualisingclimatelogo.png",
+    previewWidth: 1200,
+    previewHeight: 630,
+  },
 ];
 
 
@@ -36,7 +44,7 @@ export const pages = [
   {
     name: "Learning from professionals",
     path: "/learning_from_pros/",
-    pages: [  
+    pages: [
       { name: "Visualising Climate Logo", path: "/learning_from_pros/visualising_climate" },
       { name: "WSJ made an analysis of Epstein mails", path: "/learning_from_pros/wsj_epstein_mails" },
       { name: "NZZ scrolly telling economic crisis", path: "/learning_from_pros/nzz_economic_crisis" },
