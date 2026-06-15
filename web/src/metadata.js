@@ -25,7 +25,7 @@ const descriptions = [
     path: "withopenmaps",
     description: "The ARTE map is a visualisation the ARTE 'With open maps' format as a map. Currently in prototyping stage, the map allows to explore the format interactivly.",
     date: "2026-05-29",
-    preview: "/projects/images/withopenmaps-preview.png",
+    preview: "/embeds/static/withopenmaps-preview.png",
     previewWidth: 1200,
     previewHeight: 630,
   },
@@ -33,7 +33,7 @@ const descriptions = [
     path: "visualising_climate",
     description: "The Visualising Climate conference is taking place in November 2026 for the first time. I love their logo, beacuse it's a different way to present the state of climate. We rebuild their logo with publically available data.",
     date: "2026-05-03",
-    preview: "/embeds/visualisingclimatelogo.png",
+    preview: "/embeds/static/visualisingclimatelogo.png",
     previewWidth: 1200,
     previewHeight: 630,
   },
@@ -43,7 +43,7 @@ const descriptions = [
 export const pages = [
   {
     name: "Learning from professionals",
-    path: "/learning_from_pros/",
+    open: true,
     pages: [
       { name: "Visualising Climate Logo", path: "/learning_from_pros/visualising_climate" },
       { name: "WSJ made an analysis of Epstein mails", path: "/learning_from_pros/wsj_epstein_mails" },
@@ -52,7 +52,7 @@ export const pages = [
   },
   {
     name: "Misleading chart design",
-    path: "/chart_design/",
+    open: true,
     pages: [
       { name: "Charting basics", path: "/chart_design/1_basics" },
       { name: "Misleading axis", path: "/chart_design/3_misleadingpatterns" },
@@ -61,16 +61,16 @@ export const pages = [
   },
   {
     name: "Experiments",
-    open: true,
+    open: false,
     pages: [
       { name: "Lost in data", path: "/experiments/lostindata" },
+      { name: "With open maps", path: "/experiments/withopenmaps" },
     ],
   },
   {
     name: "Projects",
-    open: true,
+    open: false,
     pages: [
-      { name: "With open maps", path: "/projects/withopenmaps" },
       { name: "Lanz mining", path: "https://lanz-mining.arrrrrmin.dev/" }],
   },
 ];

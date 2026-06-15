@@ -15,7 +15,7 @@ An **static visualisation** to show who was mentioned in the Jeffrey Epstein Ema
 
 **Disclaimer: Since I'm not a journalist I'm not doing the counting and reading through this horrable content. I got great respect for people that read through all this. I try to find the names programmatically but that's it.**
 
-![Beeswarm analysis of epstein email threads, focused actors are Donald Trump, Hilary Clinton and other persons of public interest.](images/bafkreihtafudt5jhvtab2ojrtmeui3kw3tp3c6cnfga4hrgwfowei3ujgq.png)
+![Beeswarm analysis of epstein email threads, focused actors are Donald Trump, Hilary Clinton and other persons of public interest.](../images/bafkreihtafudt5jhvtab2ojrtmeui3kw3tp3c6cnfga4hrgwfowei3ujgq.png)
 
 This is an image shared by [@emptywheel](https://bsky.app/profile/emptywheel.bsky.social) on Bluesky. The original article ["The epstein email cache"](https://www.wsj.com/politics/policy/the-epstein-email-cache-2-300-messages-many-of-which-mention-trump-5edf0226) is locked behind a paywall.
 

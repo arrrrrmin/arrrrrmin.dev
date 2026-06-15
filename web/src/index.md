@@ -21,7 +21,7 @@ Pipelines using [DuckDB](https://duckdb.org) and other libraries plus data handl
 ## Data visualisations
 
 Since this is mainly my private hobby space, I view and analyse data visualisations as often as I can but not as often as I'd like to.
-There are multiple sections for the DataVis topic, for example I currently learn how visualisations can trick readers into misleading, false or suggestive impressions. It's part of a learning jounrey, like almost everthing on this site. You can find my journey (with the focus on misleading datavis) at [Learning chart design](/chart_design/).
+There are multiple sections for the DataVis topic, for example I currently learn how visualisations can trick readers into misleading, false or suggestive impressions. It's part of a learning jounrey, like everthing on this site.
 
 ```js
 import {getPagerList} from "/metautils.js"

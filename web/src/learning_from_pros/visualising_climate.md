@@ -33,7 +33,7 @@ The ECMWF account on Bluesky [hinted](https://bsky.app/profile/copernicusecmwf.b
 
 ## Building the logo basis
 In the dev console we can see that the designer chose to use 1979 to 2024 as the data scope.
-![Datavisualisation in a web browser with the dev console open. The Visualisation shows slices in different colours ranging from blue to yellow to red. The right aligned dev console shows the SVG tree with many g (group)-elements open.](images/Visual-Climate-Dev-Console-Which-Years.png)
+![Datavisualisation in a web browser with the dev console open. The Visualisation shows slices in different colours ranging from blue to yellow to red. The right aligned dev console shows the SVG tree with many g (group)-elements open.](../images/Visual-Climate-Dev-Console-Which-Years.png)
 I'm a bit surprised it looks like way less years because they overlap and I guess many are note really visible or so near to each other I can't distinguish them visually.
 
 The main things I do not often use tbh is the radial scale functions. But the d3 docs got us covered with [radial lines](https://d3js.org/d3-shape/radial-line#radial-lines). We need to define a mapping for `angle` which we map to the date and `radius`, which maps the temperature anomalies. We end up with a couple of scales:

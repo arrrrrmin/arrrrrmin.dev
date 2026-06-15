@@ -18,7 +18,7 @@ If your team [Just give me the vis](#creating-a-map) here you go.
 
 Since I like to consume [ARTE](https://arte.tv) (a German-French cooperative public broadcasting TV station), I noticed that there is a lot of potential to one of their formats for a DataVis. The format is called _With Open Maps_ translated from the German original _Mit offenen Karten_ where _Karten_ can mean a game card or map. It's available in German, French and Polish and covers certain geo-political aspects each episode. A usual episode ranges between 12 to 20 minutes of video time. Here's a random example of what such an episode can look like, in this case it's about gun violence in Brazil and the episodes title [_From Bolsonaro to Lula: Where is Brazil heading?_](https://www.arte.tv/de/videos/125533-026-A/mit-offenen-karten/)
 
-![A map of southamerica provided by the ARTE fromat "with open maps", showing Brazil yellow coloured, venezuela in red and argentina in blue. Images of Luiz Inácio Lula da Silva, Javier Milei and an image of fifth January 2026 event where Nicolás Maduro was taken arrested in USA military intervention, show the political context surrounding Brazil.](./images/ARTE-open-maps-example-brazil-2025-05-30.png)
+![A map of southamerica provided by the ARTE fromat "with open maps", showing Brazil yellow coloured, venezuela in red and argentina in blue. Images of Luiz Inácio Lula da Silva, Javier Milei and an image of fifth January 2026 event where Nicolás Maduro was taken arrested in USA military intervention, show the political context surrounding Brazil.](../images/ARTE-open-maps-example-brazil-2025-05-30.png)
 
 > **💡** Why not make a map of their maps?
 

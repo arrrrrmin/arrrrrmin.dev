@@ -6,10 +6,13 @@ const fonts = readdirSync("src/fonts")
   .filter(f => f.endsWith(".woff2"))
   .map(f => f.replace(/\.woff2$/, ""));
 
-
 const embeds = readdirSync("src/embeds")
   .filter(f => /\.(svg|png)\.js$/.test(f))
   .map(f => f.replace(/\.js$/, ""));
+
+const previews = readdirSync("src/embeds/static");
+
+console.log(previews);
 
 const SITE_NAME = "arrrrrmin.dev";
 const BASE_URL = "https://arrrrrmin.dev";
@@ -138,15 +141,12 @@ export default {
     "/web-app-manifest-512x512.png",
     "/apple-touch-icon.png",
     "/sitemap.xml",
-    // Images
     "/images/arrrrrmin.dev.svg",
-    "fonts.css",
-    // Fonts
+    "/fonts.css",
+    // Fonts, embeddables and previews
     ...fonts.map(name => `/fonts/${name}.woff2`),
-    // Embeds
     ...embeds.map(name => `/embeds/${name}`),
-    "embeds/visualisingclimatelogo.png",
-    "projects/images/withopenmaps-preview.png",
+    ...previews.map(name => `/embeds/static/${name}`),
   ],
   style: "global.css",
   globalStylesheets: ["/global.css"],
