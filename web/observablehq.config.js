@@ -125,6 +125,7 @@ export default {
   // typographer: false, // smart quotes and other typographic improvements
   // preserveExtension: false, // drop .html from URLs
   // preserveIndex: false, // drop /index from URLs
+  base: "/",
   head: head,
   footer: ({ path }) => buildFooter({ path }),
   dynamicPaths: [
@@ -136,6 +137,7 @@ export default {
     "/web-app-manifest-192x192.png",
     "/web-app-manifest-512x512.png",
     "/apple-touch-icon.png",
+    "/sitemap.xml",
     // Images
     "/images/arrrrrmin.dev.svg",
     "fonts.css",

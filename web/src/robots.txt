@@ -138,3 +138,4 @@ User-agent: YandexAdditionalBot
 User-agent: YouBot
 User-agent: ZanistaBot
 Disallow: /
+Sitemap: https://arrrrrmin.dev/sitemap.xml
