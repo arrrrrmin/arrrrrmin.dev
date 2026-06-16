@@ -12,7 +12,7 @@ style: "./withopenmaps/styles/withopenmaps.css"
 Up front, WIP stands for _work in progress_. I'm not sure where this project goes, but I like it and want to continue.
 Originally I started this project in [October 2025](https://chaos.social/@arrrrrmin/115434464469706882), but life took me elsewhere and it moved into the back of my head. Now in May 2026 I want to continue with it.
 
-If your team [Just give me the vis](#creating-a-map) here you go.
+TLDR: [Just give me the vis](#creating-a-map), here you go.
 
 ## The idea
 
@@ -155,14 +155,108 @@ let data = await FileAttachment("./withopenmaps/data/arte-open-maps-geolocations
     geolocations: maps.groupGeolocations(output.geolocations)
   }))
 }));
+const nolocation_episodes = await data.outputs.filter(o => o.geolocations.length < 1);
 ```
 
-Currently there are some episodes (12 out of 160) where no geolocation was found. Neither in the title nor the description. I'll need to find a solution to present these as well. 
+Currently there are some episodes (${nolocation_episodes.length} out of 160) where no geolocation was found. Neither in the title nor the description. I'll need to find a solution to present these as well. Although the actual problem is the NER (Name Entity Recognition) model, which searches for location names in the texts. It sometimes misses entities, where we humans instantly see them, but that's a different story. For this project I'm not going to try to improve existing NLP model, just to get 2+ handfull of episodes mapped to locations.
 You can inspect them here:
 
 ```js
-display(data.outputs.filter(o => o.geolocations.length < 1))
+display(nolocation_episodes)
 ```
+
+## Country overview
+
+Before we go straight ahead to build the map, I'd like to take a little time to give an overview over the coverage.
+Over the ${data.outputs.length} episodes in the dataset we got two types of episodes either long ones or short narrowly scoped episodes.
+The shorter ones are a subformat inside _With open maps_ and are called _In focus_. These are usually around 4-5 minutes in length and 
+care more about recent events, while the longer episodes are around 20-25 minutes in length and mostly come with literature recommendations
+regarding the episodes topic.
+
+Here is an overview which countries are frequently mentioned in which type of format:
+
+```js
+const sortCriteria = view(Inputs.radio(["total", "long", "short"], {label: "Format", value: "total"}));
+```
+
+```js
+const wide_data = Object.entries(data.lookup_by_name).map(
+  ([name, entry]) => {
+    const total = entry.episodes.length;
+    const short = entry.episodes.filter(({title}) => title.includes("Mit offenen Karten - Im Fokus -")).length;
+    const long = total - short;
+    return {
+      name: name === "Vereinigte Staaten von Amerika" ? "USA" : name, 
+      total,
+      long,
+      short,
+    }
+  }
+).sort((a, b) => b[sortCriteria] - a[sortCriteria]);
+const dist_data = wide_data.flatMap((entry) => [
+  {name: entry.name, total: entry.total, count: entry.long, format: "long"}, 
+  {name: entry.name, total: entry.total, count: entry.short, format: "short"}
+]);
+```
+
+```js
+import {groups} from "npm:d3";
+
+function getEpisodeDistributionPlot(width, height) {
+  const n = width > 500 ? 20 : 10
+  const top20 = groups(dist_data, d => d.name).slice(0, n).flatMap(([_, group]) => group);
+  const names20 = groups(dist_data, d => d.name).slice(0, n).flatMap(([key, group]) => ({name: key, total: group[0].total}));
+
+  const sortedDomain = wide_data
+    .toSorted((a, b) => b[sortCriteria] - a[sortCriteria])
+    .slice(0, n)
+    .map(d => d.name);
+  const reversedOrder = sortCriteria === "short"
+  const labelX = sortCriteria === "short" ? 0 : "total";
+  const labelAnchor = sortCriteria === "short" ? "start" : "end"
+  const labelDX = sortCriteria === "short" ? 4 : -4
+
+  let xConfig = {grid: true, label: "Num. of episodes"};
+  let yConfig = {label: null, ticks: [], domain: sortedDomain};
+  if (width <= 500) {
+    xConfig = {label: null, ticks: [], domain: sortedDomain};
+    yConfig = {grid: true, label: "Num. of episodes"};
+  }
+
+  return Plot.plot({
+    title: `Top ${n} countries mentioned in ARTE Open Maps episodes`,
+    subtitle: "Arte publishes the format in a long and short version. The short version is called 'in focus'.",
+    width,
+    height: height ?? 400,
+    marginTop: width > 500 ? 0: 40,
+    marginLeft: width > 500 ? 4: 20,
+    marginRight: 10,
+    marginBottom: width > 500 ? 30: 8,
+    x: xConfig,
+    y: yConfig,
+    color: {legend: true, scheme: "Reds", reverse: true},
+    marks: [
+      ...(
+        width > 500 ? 
+        [
+          Plot.barX(top20, {y: "name", x: "count", rx: 4, fill: "format", order: "format", reverse: reversedOrder, }),
+          Plot.textX(names20, {y: "name", x: labelX, text: "name", textAnchor: labelAnchor, dx: labelDX})
+        ]: [
+          Plot.barY(top20, {x: "name", y: "count", rx: 4, fill: "format", order: "format", reverse: reversedOrder,}),
+          Plot.textY(names20, {x: "name", y: "total", text: "name", textAnchor: "middle", dy: -8})
+        ])
+    ]
+  });
+}
+```
+
+<div class="card">
+${resize((width) => getEpisodeDistributionPlot(width, width > 600 ? width / 1.5: width))}
+</div>
+
+At this point I finally realised that all data is in German, which by now I forgot and I look pretty silly realising it now.
+But that's the way it is now, apologies.
+
 
 ## Creating a map
 
@@ -188,7 +282,6 @@ const lmap = await FileAttachment("./withopenmaps/data/land-110m.json").json();
 const cmap = await FileAttachment("./withopenmaps/data/countries-110m.json").json();
 ```
 
-
 ```js
 const map = ArteMap(data, lmap, cmap);
 ```
@@ -212,7 +305,7 @@ function renderResultEpisodes (episodes) {
 ```
 
 ```js
-const locationName = view(Inputs.select(Object.keys(data.lookup_by_name).sort()));
+const locationName = view(Inputs.select(Object.keys(data.lookup_by_name).sort(), {value: "Kanada"}));
 ```
 
 ```js
@@ -221,7 +314,7 @@ display(container);
 ```
 
 ```js
-const aspectString = width > 600 ? "4/3" : "4/5";
+const aspectString = width > 600 ? "4/3" : "4/4";
 container.style.aspectRatio = aspectString;
 container.replaceChildren(
   resize((width, height) => map.render({ source, related, width, height }))
