@@ -192,7 +192,7 @@ update = chart.update(data, state)
 Inside the update function we simply build the SVG using the scales we have and look for the state variable in the update function. Each year group is transformed based on the state. Either `scale(1, 1)` for the large version or
 `scale(0.9, 0.9)` for the slightly smaller version. The rest is done using durations and easing functions based on the state.
 
-I wanted to do this animation with d3js but that was not the best idea. The original for the _Visualising Climate Conference_ uses css styles and fixed the durations per group individually. It's so much easier to simply set the delays and have a proper animation with css styles. But tbh I need to learn this:
+I wanted to do this animation with d3js but that was not the best idea. The original for the _Visualising Climate Conference_ uses css styles and fixed the durations per group individually. It's so much easier to simply set the delays and have a proper animation with css styles. But tbh I need to learn how these animation timing functions work:
 
 ```
 @keyframes visclimate-popup {

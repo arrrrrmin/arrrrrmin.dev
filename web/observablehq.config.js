@@ -10,9 +10,7 @@ const embeds = readdirSync("src/embeds")
   .filter(f => /\.(svg|png)\.js$/.test(f))
   .map(f => f.replace(/\.js$/, ""));
 
-const previews = readdirSync("src/embeds/static");
-
-console.log(previews);
+const previews = readdirSync("src/embeds/static").map(d => d);
 
 const SITE_NAME = "arrrrrmin.dev";
 const BASE_URL = "https://arrrrrmin.dev";
@@ -100,16 +98,108 @@ const head = ({ title, data, path }) => {
   return pieces.join("\n");
 };
 
+const renderNav = (sections, currentPath) => {
+  return sections.map((section) => {
+    const items = section.pages.map((p) => {
+      const external = p.path.startsWith("http");
+      const current = p.path === currentPath ? ' aria-current="page"' : "";
+      const blank = external ? ' target="_blank" rel="noopener"' : "";
+      return `<a href="${p.path}"${blank}${current}>${p.name}</a>`;
+    }).join("");
+    return `<details class="nav-group">
+      <summary>${section.name}</summary>
+      <div class="nav-menu">${items}</div>
+    </details>`;
+  }).join("");
+}
+
+// const buildFooter = ({ path }) => {
+//   let pieces = [];
+//   pieces.push(
+//     `<div class="footer-social">`,
+//   );
+//   pieces.push(`<div style="display: flex; flex-direction: column; gap: 4px;"><div><a rel="me" href="https://chaos.social/@arrrrrmin">Mastodon</a></div>`);
+//   pieces.push(`<div><a rel="me" href="https://bsky.app/profile/arrrrrmin.dev">Bluesky</a></div></div></div>`);
+//   pieces.push(`<img src="/images/arrrrrmin.dev.svg" class="profile-image" />`);
+//   return pieces.join("\n");
+// };
+
 const buildFooter = ({ path }) => {
-  let pieces = [];
-  pieces.push(
-    `<div class="footer-social">`,
-  );
-  pieces.push(`<div style="display: flex; flex-direction: column; gap: 4px;"><div><a rel="me" href="https://chaos.social/@arrrrrmin">Mastodon</a></div>`);
-  pieces.push(`<div><a rel="me" href="https://bsky.app/profile/arrrrrmin.dev">Bluesky</a></div></div></div>`);
-  pieces.push(`<img src="/images/arrrrrmin.dev.svg" class="profile-image" />`);
-  return pieces.join("\n");
-};
+  const src = path === "/" ? "/index" : path;
+  const year = new Date().getFullYear();
+  return `
+      <div class="site-footer">
+        <div>
+          <span>© ${year} arrrrrmin</span>,
+          <a href="https://github.com/arrrrrmin/arrrrrmin.dev/blob/main/web/src${src}.md?plain=1">page source</a>
+
+        </div>
+        <div class="site-footer__nav" role="navigation">
+          <div class="footer-social">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div><a rel="me" href="https://chaos.social/@arrrrrmin">Mastodon</a></div>
+              <div><a rel="me" href="https://bsky.app/profile/arrrrrmin.dev">Bluesky</a></div>
+            </div>
+            <img src="/images/arrrrrmin.dev.svg" class="profile-image" />
+          </div>
+        </nav>
+      </div>
+    `;
+}
+
+const buildHeader = ({ path }) => {
+  return `
+    <nav class="site-nav">
+      <a class="brand" href="/">arrrrrmin.dev</a>
+      <button class="nav-burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">${renderNav(pages, path)}</div>
+    </nav>
+    <script>
+      (() => {
+        if (window.__navMenuInit) return;
+        window.__navMenuInit = true;
+
+        const nav = () => document.querySelector(".site-nav");
+        const closeAll = () =>
+          document.querySelectorAll(".nav-group[open]").forEach((d) => d.removeAttribute("open"));
+        const closePanel = () => {
+          const n = nav(); if (!n) return;
+          n.classList.remove("open");
+          n.querySelector(".nav-burger")?.setAttribute("aria-expanded", "false");
+        };
+
+        document.addEventListener("toggle", (e) => {
+          if (e.target.matches?.(".nav-group[open]")) {
+            document.querySelectorAll(".nav-group[open]").forEach((d) => {
+              if (d !== e.target) d.removeAttribute("open");
+            });
+          }
+        }, true);
+
+        document.addEventListener("click", (e) => {
+          const burger = e.target.closest(".nav-burger");
+          if (burger) {
+            const n = nav();
+            const open = n.classList.toggle("open");
+            burger.setAttribute("aria-expanded", String(open));
+            if (!open) closeAll();
+            return;
+          }
+          if (e.target.closest(".nav-links a")) closePanel();
+          else if (!e.target.closest(".site-nav")) { closeAll(); closePanel(); }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") { closeAll(); closePanel(); }
+        });
+
+        matchMedia("(min-width: 641px)").addEventListener("change", (m) => { if (m.matches) closePanel(); });
+      })();
+    </script>
+  `;
+}
 
 // See https://observablehq.com/framework/config for documentation.
 export default {
@@ -146,8 +236,12 @@ export default {
     // Fonts, embeddables and previews
     ...fonts.map(name => `/fonts/${name}.woff2`),
     ...embeds.map(name => `/embeds/${name}`),
-    ...previews.map(name => `/embeds/static/${name}`),
+    ...previews.map(name => `./embeds/static/${name}`),
   ],
   style: "global.css",
   globalStylesheets: ["/global.css"],
+
+  sidebar: false,
+  pager: false,
+  header: ({ path }) => buildHeader({ path }),
 };

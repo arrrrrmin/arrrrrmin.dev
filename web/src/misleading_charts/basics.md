@@ -14,7 +14,7 @@ sql:
 import {
   ChartVisualEncoding,
   ChartVisualEncodingSimpleCompare,
-} from "../components/chart_design/visual_encodings.js";
+} from "../components/misleading_charts/visual_encodings.js";
 ```
 
 ```sql id=[...co2_and_gdp]
@@ -134,7 +134,7 @@ The years are labeled per coloured country line at the start and end. We have th
 Sometimes you get the opportunity to look at data freely by choosing examples. Somthing I would wish to happen more often, especially in data driven news coverage. In these instances you can discover the data freely, but that also makes it harder for authors to tell a story, because they can't know what you where discovering in the data. There is a simple solution embed static charts like the one above, to show what you wanted to highlight. In the above example it's amongst others that emissions and GDP suffered for many countries during corona. When people read to the end, authors can choose to add the interactive chart so users can replicate the static chart image and discover more trends.
 
 ```js
-import { ConnectedScatterPlot } from "../components/chart_design/gdp_co2.js";
+import { ConnectedScatterPlot } from "../components/misleading_charts/gdp_co2.js";
 ```
 
 ```sql id=[...countries]

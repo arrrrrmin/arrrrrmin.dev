@@ -12,11 +12,11 @@ sql:
 
 # Missing data
 
-I want to recall the small list of manipulation attack vectors mentioned in [Misleading patters](/chart_design/3_misleadingpatterns#two-attack-vectors-per-coin):
+I want to recall the small list of manipulation attack vectors mentioned in [Misleading patters](/misleading_charts/misleadingpatterns#two-attack-vectors-per-coin):
 
 - display wrong data
 - inappropriate amount of data
-- [bad design](/chart_design/3_misleadingpatterns#bad-design)
+- [bad design](/misleading_charts/misleadingpatterns#bad-design)
 - textual context bias
 - statistical confusion
 
@@ -261,7 +261,7 @@ We can go on cherry picking and digging inside a biased chart but the actual pro
 - Select (cherry picking) data that at first glace supports the claim
 - Distract from the missing comparibility by narrowing down to a mean
 
-If we stop thinking about the claim inside the data this claim presents we might be able to find the hints for the reasons why Europe's fertility rate is so low. In the section on axis variants and bad design habbits we compared [GDP per person to life expectancy](/chart_design/3_misleadingpatterns#no-axis-is-right-if-we-see-nothing). This data comes in handy now. Join the yearly GDPs per person per country with the fertility rates and calculate the fertility mean based on GDP, instead of countries:
+If we stop thinking about the claim inside the data this claim presents we might be able to find the hints for the reasons why Europe's fertility rate is so low. In the section on axis variants and bad design habbits we compared [GDP per person to life expectancy](/misleading_charts/misleadingpatterns#no-axis-is-right-if-we-see-nothing). This data comes in handy now. Join the yearly GDPs per person per country with the fertility rates and calculate the fertility mean based on GDP, instead of countries:
 
 ```js
 const gdp_spread = 5000;

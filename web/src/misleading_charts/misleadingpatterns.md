@@ -67,7 +67,7 @@ Let me try to mislead you by comparing <span style="color: #936639; text-decorat
 import {
   OriginalCriminalCases,
   MisleadingCriminalCases1,
-} from "../components/chart_design/pmk_cases.js";
+} from "../components/misleading_charts/pmk_cases.js";
 ```
 
 ```js
@@ -135,7 +135,7 @@ import {
   ScalingPopulation,
   ScaleLogarithmicExample,
   ScaleDiscreteColors,
-} from "../components/chart_design/axis_examples.js";
+} from "../components/misleading_charts/axis_examples.js";
 ```
 
 ```sql id=[...population]
