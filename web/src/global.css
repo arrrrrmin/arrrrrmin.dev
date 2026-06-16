@@ -148,6 +148,14 @@ pre {
   #observablehq-center {
     padding-inline: 1rem;
   }
+
+  #observablehq-center > main {
+    padding-inline: 0.25rem;
+  }
+
+  .card {
+    padding: 1rem 0.5rem;
+  }
 }
 
 @media (max-width: 520px) {

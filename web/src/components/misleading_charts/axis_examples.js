@@ -118,7 +118,9 @@ export function ScaleLogarithmicExample({ data, inputs, width }) {
       "GDP scale is in logarithm to actually see the highlighted countries of Africa. " +
       "Data provided by owerworldindata.org.",
     width,
-    height: width - 100,
+    height: width,
+    marginLeft: 20,
+    marginRight: 10,
     x: {
       label: "GDP (USD) per person",
       type: inputs.use_logarithm ? "log" : "linear",
@@ -134,15 +136,17 @@ export function ScaleLogarithmicExample({ data, inputs, width }) {
         fill: fillOrHighlight,
         r: 3,
       }),
-      Plot.text(
-        data.filter((d) => d.owid_region === inputs.highlight_region.owid_region),
-        {
-          x: "gdp_per_capita",
-          y: "life_expectancy_0",
-          text: "entity",
-          dy: 10,
-          fill: fillOrHighlight,
-        },
+      ...(
+        width > 500 ? [Plot.text(
+          data.filter((d) => d.owid_region === inputs.highlight_region.owid_region),
+          {
+            x: "gdp_per_capita",
+            y: "life_expectancy_0",
+            text: "entity",
+            dy: 10,
+            fill: fillOrHighlight,
+          },
+        )] : []
       ),
       Plot.tip(
         data,
@@ -150,7 +154,7 @@ export function ScaleLogarithmicExample({ data, inputs, width }) {
           x: "gdp_per_capita",
           y: "life_expectancy_0",
           title: (d) =>
-            `Country: ${d.entity}\nGDP: ${d.gdp_per_capita}\nLife expectancy: ${d.life_expectancy_0}\nYear:${d.year}`,
+            `Country: ${d.entity}\nGDP: ${(d.gdp_per_capita / 1000).toFixed(2)}k\nLife expectancy: ${d.life_expectancy_0.toFixed(2)}\nYear:${d.year}`,
         }),
       ),
     ],

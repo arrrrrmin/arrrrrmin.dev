@@ -193,7 +193,9 @@ function fertilityEUChart({ width, data, scope }) {
     subtitle:
       "Each line represents one country. Replacement rate is the fertility rate to keep a population stable over long time (usually ~2.1)",
     width,
-    height: 400,
+    height: width > 600 ? 500 : 400,
+    marginLeft: 30,
+    marginRight: 6,
     y: { label: "Fertility rate" },
     x: { label: "Year", tickFormat: "d" },
     color: { legend: fertility_inputs.focus.value !== "raw" },
@@ -290,7 +292,9 @@ function fertilityGlobalChart({ width, data, scope, center_gdp }) {
     subtitle:
       "Each line represents one country. Replacement rate is the fertility rate to keep a population stable over long time (usually ~2.1)",
     width,
-    height: 600,
+    height: width > 600 ? 500 : 400,
+    marginLeft: 30,
+    marginRight: 6,
     y: { label: "Fertility rate", domain: [0.5, 8.0] },
     x: { label: "Year", tickFormat: "d" },
     marks: [

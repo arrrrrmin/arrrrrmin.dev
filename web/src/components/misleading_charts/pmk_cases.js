@@ -1,5 +1,5 @@
 import * as Plot from "npm:@observablehq/plot";
-import {pmk_colours} from "../colours.js";
+import { pmk_colours } from "../colours.js";
 
 
 export function MisleadingCriminalCases1({ data, filter_type, degree, width, height }) {
@@ -7,25 +7,25 @@ export function MisleadingCriminalCases1({ data, filter_type, degree, width, hei
     .filter((d) => d.type === filter_type)
     .map((d) => ({ ...d, color: pmk_colours[d.type] }));
   const value_label = localdata.find((d) => d.year === 2024);
-  const y = degree.level > 1 ? { ticks: 0, label: null } : {label: "Cases"};
+  const y = degree.level > 1 ? { ticks: 0, label: null } : { label: "Cases" };
   return Plot.plot({
     width,
     height,
     color: { legend: true },
     x: { tickFormat: "d", label: null, grid: true, insetLeft: degree.level > 1 ? -30 : 0 },
-    y,
+    y: { tickFormat: "s" },
     marks: [
       Plot.line(localdata, { x: "year", y: "value", stroke: "color", strokeWidth: 3 }),
       ...(degree.level < 3
         ? [
-            Plot.text([value_label], {
-              x: value_label.year,
-              y: value_label.value,
-              text: (d) => `${(d.value / 1000).toFixed(1)}k`,
-              fill: "color",
-              dy: -15,
-            }),
-          ]
+          Plot.text([value_label], {
+            x: value_label.year,
+            y: value_label.value,
+            text: (d) => `${(d.value / 1000).toFixed(1)}k`,
+            fill: "color",
+            dy: -15,
+          }),
+        ]
         : []),
       Plot.text([value_label], {
         x: 2020,
@@ -42,7 +42,7 @@ export function MisleadingCriminalCases1({ data, filter_type, degree, width, hei
 
 export function OriginalCriminalCases({ data, include_total, width, height }) {
   const localdata = data.map((d) => ({ ...d, color: pmk_colours[d.type] }));
-  if (include_total){
+  if (include_total) {
     pmk_colours.Total = "#00b4d8";
   } else {
     delete pmk_colours.Total;
@@ -53,6 +53,8 @@ export function OriginalCriminalCases({ data, include_total, width, height }) {
       "PMAK was split into foreign and religious ideology in 2017. Data provieded by bka.de",
     width,
     height,
+    marginLeft: 30,
+    marginRight: 12,
     color: { legend: true, range: Object.values(pmk_colours), domain: Object.keys(pmk_colours) },
     y: { grid: true, tickFormat: "s", label: "Number of cases" },
     x: { tickFormat: "d", label: "Year" },
@@ -61,9 +63,9 @@ export function OriginalCriminalCases({ data, include_total, width, height }) {
       Plot.dot(localdata, { x: "year", y: "value", fill: "color" }),
       // Plot.text(localdata, { x: "year", y: "value", fill: "color", text: "type" }),
       ...(include_total ?
-        [Plot.line(localdata, Plot.groupX({y: "sum"}, { x: "year", y: "value", stroke: d => "Total"})),
-          Plot.dot(localdata, Plot.groupX({y: "sum"}, { x: "year", y: "value", fill: d => "Total" }))
-        ]: []
+        [Plot.line(localdata, Plot.groupX({ y: "sum" }, { x: "year", y: "value", stroke: d => "Total" })),
+        Plot.dot(localdata, Plot.groupX({ y: "sum" }, { x: "year", y: "value", fill: d => "Total" }))
+        ] : []
       )
     ],
   });

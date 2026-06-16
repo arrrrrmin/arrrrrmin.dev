@@ -19,11 +19,13 @@ function getYearExtentEntries(data) {
 export function ConnectedScatterPlot({ co2_and_gdp, selected_country_data, width, height }) {
   const [min_year, max_year] = extent(co2_and_gdp, (d) => d.year);
   const data = co2_and_gdp.filter((d) => d.entity !== selected_country_data[0].entity);
+  const fontSizeSm = width > 500 ? 14 : 12;
+  const fontSizeLg = width > 500 ? 20 : 16;
   return Plot.plot({
     title: "Economic development compared to CO₂ emissions",
     subtitle: `GDP and CO₂ emission development of selected countries between ${min_year} and ${max_year}. Data provided by ourworldindata.org`,
     width,
-    height: height ? height : width,
+    height: width > 500 ? width : 400,
     marginLeft: 20,
     marginRight: 40,
     x: { label: "GDP per capita (USD)", grid: true, tickFormat: "s", },
@@ -54,7 +56,7 @@ export function ConnectedScatterPlot({ co2_and_gdp, selected_country_data, width
           z: "entity",
           fill: "black",
           stroke: "white",
-          fontSize: 14,
+          fontSize: fontSizeSm,
           fontWeight: 600,
           dy: -8,
           textAnchor: "start",
@@ -67,7 +69,7 @@ export function ConnectedScatterPlot({ co2_and_gdp, selected_country_data, width
         z: "entity",
         fill: "black",
         stroke: "white",
-        fontSize: 20,
+        fontSize: fontSizeLg,
         fontWeight: 600,
         dy: -20,
       }),
@@ -98,7 +100,7 @@ export function ConnectedScatterPlot({ co2_and_gdp, selected_country_data, width
           z: "entity",
           fill: colours.accent,
           stroke: "white",
-          fontSize: 14,
+          fontSize: fontSizeSm,
           fontWeight: 600,
           dy: -8,
           textAnchor: "start",
@@ -111,7 +113,7 @@ export function ConnectedScatterPlot({ co2_and_gdp, selected_country_data, width
         z: "entity",
         fill: colours.accent,
         stroke: "white",
-        fontSize: 20,
+        fontSize: fontSizeLg,
         fontWeight: 600,
         dy: -20,
       }),

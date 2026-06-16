@@ -244,8 +244,6 @@ microcensus_data = microcensus_data.map((state) => ({
     ) / state.total,
 }));
 
-// console.log(JSON.parse(JSON.stringify(microcensus_data)));
-
 const new_features = ger_states.features.map((feature) => ({
   ...feature,
   properties: {
@@ -364,16 +362,6 @@ function DeadlyTrafficAccidents({ width }) {
         fontSize: 14,
         fontWeight: 600,
       }),
-      // Plot.arrow([{ x1: 2024, y1: tmax, x2: 2024, y2: total_in_2024.value, gender: "Total" }], {
-      //   x1: "x1",
-      //   y1: "y1",
-      //   x2: "x2",
-      //   y2: "y2",
-      //   strokeWidth: 3,
-      //   strokeLinejoin: "miter",
-      //   headLength: 8,
-      //   stroke: "#29bf12",
-      // }),
       Plot.text([`${percentage_label}% less\n accidents`], {
         x: 2003,
         y: tmax / 2,
