@@ -28,10 +28,6 @@ body {
   height: auto;
 }
 
-h1 {
-  margin: 10px;
-}
-
 #map {
   position: relative;
   border: 1px solid var(--dark-blue);
