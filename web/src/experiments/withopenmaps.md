@@ -309,12 +309,12 @@ const locationName = view(Inputs.select(Object.keys(data.lookup_by_name).sort(),
 ```
 
 ```js
-const container = html`<div style="min-height: 500px; margin-bottom: 1rem;"></div>`;
+const container = html`<div style="margin-bottom: 1rem;"></div>`;
 display(container);
 ```
 
 ```js
-const aspectString = width > 600 ? "4/3" : "4/4";
+const aspectString = width > 600 ? "4/3" : "4/5";
 container.style.aspectRatio = aspectString;
 container.replaceChildren(
   resize((width, height) => map.render({ source, related, width, height }))
