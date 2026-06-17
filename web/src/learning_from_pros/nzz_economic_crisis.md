@@ -140,9 +140,28 @@ Sorry If this bothered you a little, but I had to finish this an for me it felt 
 Therefore we need to find out what data was used, the authors added a note at the bottom of their data story, which says the used destatis data (data from federal statistics office). If you go to the [destatis database](https://www-genesis.destatis.de/datenbank/online) and type in 'production index', you get the statistics they used.
 More precisely it's the statistics code [42153-0003](https://www-genesis.destatis.de/datenbank/online/statistic/42153/). You can find the way I processed the data in the [repos datawork folder](https://github.com/arrrrrmin/arrrrrmin.dev/tree/main/dataworks).
 
-The authors additionally said: _The figures are adjusted for price, calendar and seasonal effects_. So we know we need to get the corrected X13 series. Make a few adjustments so we get a date type in the data base by concating `year` and `month`. This comes handy now because we need to reduce the data to the articles time span. Which I believe is around march or july. Doesn't really matter in this case since a few 1-4 months won't make much of a difference in a 35 year scope.
+The authors additionally said: _The figures are adjusted for price, calendar and seasonal effects_. So we know we need to get the corrected X13 series. Make a few adjustments so we get a date type in the data base by concating `year` and `month`. This comes handy now because we need to reduce the data to the articles time span. Which I believe is around May or July. Doesn't really matter in this case since a few months won't make much of a difference in a 35 year scope.
+
+```sql id=[...prodindexes]
+SELECT *, concat(year, '-', month, '-01')::DATE as time FROM 'prodindexes' WHERE processed_level_code = 'X13JDKSB' AND year >= 1995 AND year < 2026 AND time < '2025-09-01'::DATE AND industry_code IN ('WZ08-29', 'WZ08-28', 'WZ08-20', 'WZ08-13', 'WZ08-1105', 'WZ08-272', 'WZ08-254', 'WZ08-261', 'WZ08-325');
+```
+
+```sql id=[...windowedindexes]
+SELECT *, concat(year, '-', month, '-01')::DATE as time, avg("value") OVER seven AS moving_avrg FROM 'prodindexes' WHERE processed_level_code = 'X13JDKSB' AND year >= 1995 AND year < 2026 AND time < '2025-09-01'::DATE AND industry_code IN ('WZ08-29', 'WZ08-28', 'WZ08-20', 'WZ08-13', 'WZ08-1105', 'WZ08-272', 'WZ08-254', 'WZ08-261', 'WZ08-325')
+WINDOW seven AS (
+    PARTITION BY "industry_code"
+    ORDER BY "time" ASC
+    RANGE BETWEEN INTERVAL 3 MONTH PRECEDING
+              AND INTERVAL 3 MONTH FOLLOWING)
+ORDER BY 1, 2;
+```
+
+<div class="card">
+${Inputs.table(windowedindexes)}
+</div>
 
 ```js
+// Keep this here so I can use it independently in other js cells
 const codes = [
   "WZ08-29", // Kraftwagen und Kraftwagenteilen
   "WZ08-28", // Maschinenbau
@@ -154,6 +173,16 @@ const codes = [
   "WZ08-261", // elektronischen Bauelementen und Leiterplatten
   "WZ08-325", // med. u. zahnmed. Apparaten und Materialien
 ];
+```
+
+```js
+// Cell runs before it's value `y_domains` is used in `y_domains_map`
+const y_domains = codes.map((code) => {
+  return [0, d3.max(windowedindexes.filter((d) => d.industry_code === code), (d) => d.moving_avrg)];
+});
+```
+
+```js
 const en_labels = [
   "Automotive",
   "Mech. Engineering",
@@ -166,17 +195,6 @@ const en_labels = [
   "Medical technologies",
 ];
 const color_labels = ["orange", "orange", "orange", "red", "red", "green", "green", "blue", "blue"];
-const y_domains = [
-  [0, 139.329],
-  [0, 110.914],
-  [0, 106.814],
-  [0, 161.225],
-  [0, 172.2],
-  [0, 124.929],
-  [0, 186.85],
-  [0, 117.929],
-  [0, 104.325],
-];
 const en_labels_map = Object.fromEntries(d3.zip(codes, en_labels));
 const y_domains_map = Object.fromEntries(d3.zip(codes, y_domains));
 const colors_map = Object.fromEntries(d3.zip(codes, color_labels));
@@ -232,10 +250,6 @@ const major_events = [
 ];
 ```
 
-```sql id=[...prodindexes]
-SELECT *, concat(year, '-', month, '-01')::DATE as time FROM 'prodindexes' WHERE processed_level_code = 'X13JDKSB' AND year >= 1995 AND year < 2026 AND time < '2025-09-01'::DATE AND industry_code IN ('WZ08-29', 'WZ08-28', 'WZ08-20', 'WZ08-13', 'WZ08-1105', 'WZ08-272', 'WZ08-254', 'WZ08-261', 'WZ08-325');
-```
-
 ## Without the scrolly
 
 After a little while of searching I found the actual codes used in the visualisations, so we can filter for these and reduce the data further. We create for colors, english labels and the maximas. We need the maximas because of a small thing the authors did to the y axis. Remember the percentage scale? This is why. When we hover the question mark icon on the bottom of the original article we'r informed that the 100% tick on y axis corresponds to maximum value of each industry sector in the given time span. Further it reads the percentages are not compareable amongst each other.
@@ -245,11 +259,12 @@ The basic plot outside a scrolly telling scenario would look like so:
 
 ```js
 function prepareData(normalize = false) {
-  return prodindexes
+  return windowedindexes
     .filter((d) => isInCodes(d.industry_code))
     .map((d) => ({
       ...d,
-      value: normalize ? scaling_per_sector_map[d.industry_code](d.value) : d.value,
+      // replace the value with the moving average
+      value: normalize ? scaling_per_sector_map[d.industry_code](d.moving_avrg) : d.moving_avrg,
       time: new Date(Date.UTC(d.year, d.month - 1, 1)),
       index: getIndexByCode(d.industry_code),
       industry_label: en_labels_map[d.industry_code],
@@ -260,7 +275,7 @@ function prepareData(normalize = false) {
 ```
 
 ```js
-await prodindexes;
+await windowedindexes;
 const sector_data = prepareData(true);
 ```
 
@@ -280,9 +295,9 @@ const basic_facet_chart = () => {
 
   return Plot.plot({
     title:
-      "Reproduced production indexes for different industry sectors in Germany (original by NZZ)",
+      "Reproduced production indexes for different industry sectors in Germany",
     subtitle:
-      "Industry type labeled by the original authors of NZZ over 35 years from 1995 to 2025. Data provided by destatis.de.",
+      "Industry type labeled by the original authors of NZZ over 35 years from 1995 to 2025. Original work by NZZ authors. Data provided by destatis.de.",
     width: 1000,
     height: 1800,
     x: { ticks: xticks },
@@ -295,22 +310,22 @@ const basic_facet_chart = () => {
     marks: [
       Plot.areaY(
         sector_data,
-        Plot.windowY(7, {
+        {
           x: "time",
           y: "value",
           fill: (d) => helpers.colors.original[d.color].light,
-          fy: "index",
-        }),
+          fy: "index", 
+        },
       ),
       Plot.lineY(
         sector_data,
-        Plot.windowY(7, {
+        {
           x: "time",
           y: "value",
           stroke: (d) => helpers.colors.original[d.color].dark,
           strokeWidth: 2,
           fy: "index",
-        }),
+        }
       ),
       Plot.text(
         d3
@@ -503,20 +518,26 @@ const controls = view(Inputs.form({
   <div class="steps">
     <div class="step" data-step="0">Here is a simple scrolly version of their work, extended with a bit more interactivity. It's not as clean as the original one but gives you the option to explore for yourself</div>
     <div class="step" data-step="1">
-    First I added more ticks on x and y plus a grid for the y axis. It does not look as clean anymore but users are able to find their way around a little bit better.
+    <p>First I added more ticks on x and y plus a grid for the y axis. It does not look as clean anymore but users are able to find their way around a little bit better.</p>
     </div>
     <div class="step" data-step="2">
-    Next we have some fun interactive things, like the tip that shows you time and value on hover.</div>
+      <p>Next we have some fun interactive things, like the tip that shows you time and value on hover.</p>
+    </div>
     <div class="step" data-step="3">
-    The line plus dot indicators on hover show you where you are, again increased readability.</div>
+      <p>The line plus dot indicators on hover show you where you are, again increased readability.</p>
+    </div>
     <div class="step" data-step="4">
-    You can toggle a trend line to see the regression trend for yourself.</div>
-    <div class="step" data-step="5"></div>
-    Also comments are toggleable you'r not forced to go through every single comment one after another.
-    <div class="step" data-step="6"></div>
-    The trend start control let's you define the start of regression trend line. Move it around and see for yourself.
-    <div class="step" data-step="7"></div>
-    Over all this is more explorative but the same navigation pattern - scrolly.
+      <p>You can toggle a trend line to see the regression trend for yourself.</p>
+    </div>
+    <div class="step" data-step="5">
+      <p>Also comments are toggleable you'r not forced to go through every single comment one after another.</p>
+    </div>
+    <div class="step" data-step="6">
+      <p>The trend start control let's you define the start of regression trend line. Move it around and see for yourself.</p>
+    </div>
+    <div class="step" data-step="7">
+      <p>Over all this is more explorative but the same navigation pattern - scrolly.</p>
+    </div>
     <div class="step" data-step="8"></div>
   </div>
 </div>

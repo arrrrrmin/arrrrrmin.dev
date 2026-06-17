@@ -21,9 +21,9 @@ export const SingleFacetChart = ({ height, sector_data, sector_code, sector_even
 
     return Plot.plot({
         title:
-            `Production indexes for sectors in Germany (original by NZZ)`,
+            `${labels_map[sector_code]} production indexes in Germany`,
         subtitle:
-            `PI ${labels_map[sector_code]}; Data provided by destatis.de`,
+            `Original work by original by NZZ authors. Data provided by destatis.de`,
         width: 800,
         height,
         x: { ticks: xticks },
@@ -37,21 +37,21 @@ export const SingleFacetChart = ({ height, sector_data, sector_code, sector_even
         marks: [
             Plot.areaY(
                 data,
-                Plot.windowY(7, {
+                {
                     x: "time",
                     y: "value",
                     fill: (d) => helpers.colors.alter[d.color].light,
                     opacity: 0.5,
-                }),
+                },
             ),
             Plot.lineY(
                 data,
-                Plot.windowY(7, {
+                {
                     x: "time",
                     y: "value",
                     stroke: (d) => helpers.colors.alter[d.color].dark,
                     strokeWidth: 2,
-                }),
+                },
             ),
             // Per sector events
             ...(controls.comments ?
@@ -72,34 +72,28 @@ export const SingleFacetChart = ({ height, sector_data, sector_code, sector_even
                 ? [
                     Plot.linearRegressionY(
                         data.filter((d) => d.time.getFullYear() >= controls.year),
-                        Plot.windowY(7, {
-                            x: "time",
-                            y: "value",
-                        }),
+                        { x: "time", y: "value" }
                     ),
                 ]
                 : []),
-            Plot.ruleX(data, Plot.pointerX(Plot.windowY(7, {
+            Plot.ruleX(data, Plot.pointerX({
                 x: "time",
                 y: "value",
                 stroke: (d) => helpers.colors.alter[d.color].dark,
                 strokeWidth: 2,
-            }))),
-            Plot.dot(data, Plot.pointerX(Plot.windowY(7, {
+            })),
+            Plot.dot(data, Plot.pointerX({
                 x: "time",
                 y: "value",
                 stroke: (d) => helpers.colors.alter[d.color].dark,
                 strokeWidth: 2,
-            }))),
+            })),
             Plot.text(data, Plot.pointerX(
                 {
-                    ...Plot.window(7, {
-                        px: "time",
-                        py: "value",
-                        strokeWidth: 2,
-                    }),
+
                     px: "time",
                     py: "value",
+                    strokeWidth: 2,
                     dy: 10,
                     dx: 20,
                     frameAnchor: "top",
