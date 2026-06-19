@@ -7,7 +7,8 @@ keywords:
   - Scrolly telling
   - Redesign charts
 sql:
-  prodindexes: "../data/redesigns/42153-minimal.parquet"
+  prodindexes: "./data/42153-minimal.parquet"
+  grossvalueadded: "./data/gross_value_by_sector.parquet"
 ---
 
 ```js run=true
@@ -140,11 +141,7 @@ Sorry If this bothered you a little, but I had to finish this an for me it felt 
 Therefore we need to find out what data was used, the authors added a note at the bottom of their data story, which says the used destatis data (data from federal statistics office). If you go to the [destatis database](https://www-genesis.destatis.de/datenbank/online) and type in 'production index', you get the statistics they used.
 More precisely it's the statistics code [42153-0003](https://www-genesis.destatis.de/datenbank/online/statistic/42153/). You can find the way I processed the data in the [repos datawork folder](https://github.com/arrrrrmin/arrrrrmin.dev/tree/main/dataworks).
 
-The authors additionally said: _The figures are adjusted for price, calendar and seasonal effects_. So we know we need to get the corrected X13 series. Make a few adjustments so we get a date type in the data base by concating `year` and `month`. This comes handy now because we need to reduce the data to the articles time span. Which I believe is around May or July. Doesn't really matter in this case since a few months won't make much of a difference in a 35 year scope.
-
-```sql id=[...prodindexes]
-SELECT *, concat(year, '-', month, '-01')::DATE as time FROM 'prodindexes' WHERE processed_level_code = 'X13JDKSB' AND year >= 1995 AND year < 2026 AND time < '2025-09-01'::DATE AND industry_code IN ('WZ08-29', 'WZ08-28', 'WZ08-20', 'WZ08-13', 'WZ08-1105', 'WZ08-272', 'WZ08-254', 'WZ08-261', 'WZ08-325');
-```
+The authors additionally said: _The figures are adjusted for price, calendar and seasonal effects_. So we know we need to get the corrected X13 series. Make a few adjustments so we get a date type in DuckDB by concating `year` and `month`. This comes handy now because we need to reduce the data to the articles time span. Which I believe is around May or July. Doesn't really matter in this case since a few months won't make much of a difference in a 35 year scope.
 
 ```sql id=[...windowedindexes]
 SELECT *, concat(year, '-', month, '-01')::DATE as time, avg("value") OVER seven AS moving_avrg FROM 'prodindexes' WHERE processed_level_code = 'X13JDKSB' AND year >= 1995 AND year < 2026 AND time < '2025-09-01'::DATE AND industry_code IN ('WZ08-29', 'WZ08-28', 'WZ08-20', 'WZ08-13', 'WZ08-1105', 'WZ08-272', 'WZ08-254', 'WZ08-261', 'WZ08-325')
@@ -156,9 +153,13 @@ WINDOW seven AS (
 ORDER BY 1, 2;
 ```
 
-<div class="card">
-${Inputs.table(windowedindexes)}
-</div>
+```sql id=[...gross_by_sector]
+SELECT *, make_date(year::INT, month::INT, 1) as date FROM "grossvalueadded" WHERE value_type = 'X13 JDemetra+  kalender- und saisonbereinigt' AND price_type = 'preisbereinigt, verkettete Volumenang. (Mrd. EUR)' AND date >= make_date(1995, 1, 1) AND date < make_date(2026, 1, 1) ORDER BY date;
+```
+
+```sql id=[...pricetypes]
+SELECT distinct(price_type) FROM "grossvalueadded"; 
+```
 
 ```js
 // Keep this here so I can use it independently in other js cells
@@ -567,10 +568,42 @@ invalidation.then(() => observer.disconnect());
 
 Over all this is not better then the original one, because I do the same mistake. The basic problem here the monotonious scrolling that is beeing done. Scrolly telling imho only works for a few sections before it becomes tidious. 
 
+## The bigger scope
+
+In the nutshell the NZZ authors claim that they can show how bad the economy is doing. For this they show production indexes, my first question was: _How about the services, Germany doesn't only consist of the manufacturing business_. I guess they are interconnected to some degree, but it's not representative to the whole economy, only showing the production indexes of selected sectors. So I asked the GENSIS database again and after a while of searching I found out that there is a metric called _Gross Value Added_, which accounts for different types of services sectors like:
+
+- Public Services, Education, and Health Care
+- Trade, Transportation, and Hospitality
+- Information and Communication
+
+Additionally to the manufacturing sector it makes an economic accounting. In the following chart we see the depelopment of gross value added per year per sector, where color coding is split between the manufacturing sectors (blue) and the service sectors (red). Using the percentage toggle you can see how the distribution changed among the sectors.
+
+```js
+import {InteractiveGrossDevelopmentChart} from "./nzz_economic_crisis.js";
+```
+
+<div class="card">
+
+<figure class="plot" style="max-width: unset">
+<h2>Total economic development for services and production sections</h2>
+<h3>Economic sectors are color-coded by type either serive (reds) or production (blues). Use the percentages toggle, to see the chart in percentages per quarter year. Data provided by destatis.de</h3>
+
+```js
+const showShares = view(Inputs.toggle({label: "Shares in %", value: true}));
+```
+
+<div>
+${resize((width) => InteractiveGrossDevelopmentChart({data: gross_by_sector, width, height: 550, sectorFocus: "Manufacturing", percentages: showShares}))}
+</div>
+</figure>
+</div>
+
+In this chart we can see the dips, that the original authors have highlighted in 2008 and 2020. In the raw version this chart mainly shows the inflation, but in the _shared % view_ we can see that manufacturing indeed lowly decreases since 2023 and the recovery from the corona crisis, has slowly been eaten. But the rest of the economy sectors are not as heavily hit as manufacturing is. Partly these are connected, since manufacturing are large service sector customers. The overview chart above does not read as dramatic as their graphs do, which is most likely why they simply only included the production side of the economy. To me it looks a bit like cherrypicking, but I'm not an economic expert, I just included the overview chart too.
+
 # Conclusion
 
-So I learned that when building scrolly tellings one should be cautions about the number of scroll states to chain. Another thingi is that I got the impression that giving people the tools to explore data themselves instead of telling them a story is a bit more honest. But it's based on the assumption that users are willing to do that. 
+I learned that when building scrolly tellings one should be cautions about the number of scroll states to chain. Another thing is that I got the impression that giving people the tools to explore data themselves instead of telling them a story it feels more honest. But it's based on the assumption that users are willing to do exploration themselves. This might be true for people I know, but as a journalistic publication you'd want to reach many people and there I think my assumption would fall apart. 
 
-A very awesome example for well used scrolly telling is the wonderful work of Nadieh Bremer & Emily Barone: [Searching for Birds](https://searchingforbirds.visualcinnamon.com). I got to mention that the comparison is a unfair. First these two are absolute professionals in what they do and second they have time to their piece. A DDJ team usually want's to publish fast and can't affort to publish after the attention peak. But anyways it's a wonderful piece of art.
+A very awesome example for well used scrolly telling is the wonderful work of [Nadieh Bremer & Emily Barone: Searching for Birds](https://searchingforbirds.visualcinnamon.com). I got to mention that the comparison is a unfair. First these two are absolute professionals in what they do and second they have time to their piece. A DDJ team usually want's to publish fast and can't affort to publish after the attention peak. But anyways it's a wonderful piece of art.
 
-**I do want to acknowledge that this story part was fully reproducible so that's really nice and helps me to learn from their work**. Although I think it's not intended that random guys on the internet can learn from their content, it's more about the credibility as journalists. Please note that there is more but I didn't want to check on the rest of the story, where the authors show a chart to argue that government is growing while industry is shrinking, that's a part of journalism I don't want to get into. There may be a part of relation but that would require me to dig far deeper into the matter - again journalists work.
+**I do want to acknowledge that this story part was fully reproducible so that's really nice and helps me to learn from their work**. Although I think it's not intended that random guys on the internet can learn from their content, it's more about the credibility as journalists. Please note that there is more but I didn't want to check on the rest of the story, where the authors show a chart to argue that government is growing while industry is shrinking, that's a part of journalism I don't want to get into. There may be a part of a relation but that would require me to dig far deeper into the matter - again journalists work.
