@@ -153,14 +153,6 @@ WINDOW seven AS (
 ORDER BY 1, 2;
 ```
 
-```sql id=[...gross_by_sector]
-SELECT *, make_date(year::INT, month::INT, 1) as date FROM "grossvalueadded" WHERE value_type = 'X13 JDemetra+  kalender- und saisonbereinigt' AND price_type = 'preisbereinigt, verkettete Volumenang. (Mrd. EUR)' AND date >= make_date(1995, 1, 1) AND date < make_date(2026, 1, 1) ORDER BY date;
-```
-
-```sql id=[...pricetypes]
-SELECT distinct(price_type) FROM "grossvalueadded"; 
-```
-
 ```js
 // Keep this here so I can use it independently in other js cells
 const codes = [
@@ -582,6 +574,15 @@ Additionally to the manufacturing sector it makes an economic accounting. In the
 import {InteractiveGrossDevelopmentChart} from "./nzz_economic_crisis.js";
 ```
 
+```sql id=[...gross_by_sector]
+SELECT *, make_date(year::INT, month::INT, 1) as date FROM "grossvalueadded" WHERE value_type = 'X13 JDemetra+  kalender- und saisonbereinigt' AND price_type = 'preisbereinigt, verkettete Volumenang. (Mrd. EUR)' AND date >= make_date(1995, 1, 1) AND date < '2025-09-01'::DATE ORDER BY date;
+```
+
+```sql id=[...pricetypes]
+SELECT distinct(price_type) FROM "grossvalueadded"; 
+```
+
+
 <div class="card">
 
 <figure class="plot" style="max-width: unset">
@@ -589,16 +590,26 @@ import {InteractiveGrossDevelopmentChart} from "./nzz_economic_crisis.js";
 <h3>Economic sectors are color-coded by type either serive (reds) or production (blues). Use the percentages toggle, to see the chart in percentages per quarter year. Data provided by destatis.de</h3>
 
 ```js
-const showShares = view(Inputs.toggle({label: "Shares in %", value: true}));
+const gross_control = view(Inputs.form({
+  showShares: Inputs.toggle({label: "Shares in %", value: false}),
+  year: Inputs.range(
+    [1995, 2020],
+    {
+      label: "Trend start",
+      step: 1,
+      value: 1995,
+    },
+  ),
+}));
 ```
 
 <div>
-${resize((width) => InteractiveGrossDevelopmentChart({data: gross_by_sector, width, height: 550, sectorFocus: "Manufacturing", percentages: showShares}))}
+${resize((width) => InteractiveGrossDevelopmentChart({data: gross_by_sector.filter(d => d.year > gross_control.year), width, height: 550, sectorFocus: "Manufacturing", percentages: gross_control.showShares}))}
 </div>
 </figure>
 </div>
 
-In this chart we can see the dips, that the original authors have highlighted in 2008 and 2020. In the raw version this chart mainly shows the inflation, but in the _shared % view_ we can see that manufacturing indeed lowly decreases since 2023 and the recovery from the corona crisis, has slowly been eaten. But the rest of the economy sectors are not as heavily hit as manufacturing is. Partly these are connected, since manufacturing are large service sector customers. The overview chart above does not read as dramatic as their graphs do, which is most likely why they simply only included the production side of the economy. To me it looks a bit like cherrypicking, but I'm not an economic expert, I just included the overview chart too.
+In this chart we can see the dips, that the original authors have highlighted in 2008 and 2020. We can see that manufacturing indeed slowly decreases since 2023 and the recovery from the corona crisis, has slowly been eaten. But the rest of the economy sectors are not as heavily hit as manufacturing is. All service sectors (except _Trade, Transportation, and Hospitality_) are still growing, slowly but they are. Partly these are connected, since manufacturing are large service sector customers. Over all the overview chart above does not read as dramatic as their graphs do, but I'm not an economic expert, I can't tell if not growing economy is as dramatic as they report it to be.
 
 # Conclusion
 
