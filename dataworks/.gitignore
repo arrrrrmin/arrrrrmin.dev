@@ -6,6 +6,8 @@
 *.metadata.json
 !others/*
 others/.DS_Store
+data/cdsapi/*
+!data/cdsapi/.gitkeep
 
 # duckdb_sql
 *.ddb

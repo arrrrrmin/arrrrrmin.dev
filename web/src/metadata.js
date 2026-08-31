@@ -44,6 +44,15 @@ export const pages = [
     open: false,
     pages: [
       {
+        name: "Spatial and satellite data",
+        path: "/experiments/spatialsatdata",
+        description: "Learnings and potentials of satellite and geo spatial data processing in general and partially in DDJ, touching climate and environmental science.",
+        date: "2026-05-29",
+        // preview: "",
+        // previewWidth: 1200,
+        // previewHeight: 630,
+      },
+      {
         name: "Lost in data",
         path: "/experiments/lostindata",
         description: "A tiny excourse into data loaders, static svg routes in Framework and css keyframe animations embedded in SVGs.",
