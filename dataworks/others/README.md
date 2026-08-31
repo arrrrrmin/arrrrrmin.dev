@@ -16,5 +16,5 @@ Provided by the maintainers of [deutschlandGeoJSON](https://github.com/isellsoap
 
 ## Glacial lake outburst data
 
-Provided by the university of potsdam [Glacier Lake Outburst Flood Database V4.2](https://zenodo.org/records/7330345)
+Provided by the university of potsdam [Glacier Lake Outburst Flood Database V4.2](http://glofs.geoecology.uni-potsdam.de)
 Convert it to csv: `uv run src/dataworks/ods_convert/glofs_convert.py` and find the output in `outputs/glofdatabase_v4-2.csv`.
