@@ -475,11 +475,9 @@ const regions = new Array(...new Set(co2.map(d => d.owid_region)));
 
 ```js
 function getJointInformationChart(width, logToggle) {
-    // const usaDataPoint = emissionToLakes.filter(({name}) => name === "United States of America")[0];
-    // const usaTipText = "Although it looks like the USA are extremely threatened by glacial lakes, most of these are located in Alaska with little population."
     return Plot.plot({
         title: "Countries with glacial lake hazard and their respective CO2 emissions",
-        subtitle: "Having glacial lakes in a country is a risk to a certain part of the population. Circle sizes show the number of glacial lakes per country. Data provided by OurWorldInData, NASA and the National Snow and Ice Data Centre (University of Colorado).",
+        subtitle: "CO2 emissions and GDP per capita of countries with galcial lakes. Comparison with world regions like Europe can show as density areas. Circle sizes show the number of glacial lakes per country. Data provided by OurWorldInData, NASA and the National Snow and Ice Data Centre (University of Colorado).",
         width,
         x: {type: logToggle ? "log" : "linear", label: "GDP per capita (US$)"},
         y: {domain: [0, 18], grid: true, label: "CO2 emissions (per capita, tons)"},
