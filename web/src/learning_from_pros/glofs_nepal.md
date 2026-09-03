@@ -474,11 +474,12 @@ const regions = new Array(...new Set(co2.map(d => d.owid_region)));
 function getJointInformationChart(width, logToggle) {
     return Plot.plot({
         title: "Countries with glacial lake hazard and their respective CO2 emissions and GDP per capita",
-        subtitle: "CO2 emissions and GDP per capita of countries with glacial lakes. Comparison with world regions like Europe can show as density areas. Circle sizes show the number of glacial lakes per country. Data provided by OurWorldInData, NASA and the National Snow and Ice Data Centre (University of Colorado).",
+        subtitle: "CO2 emissions and GDP per capita of countries with glacial lakes. Comparison with world region averages as gray density areas. Circle sizes show the number of glacial lakes per country. Data provided by OurWorldInData, NASA and the NSIDC (University of Colorado).",
         width,
-        x: {type: logToggle ? "log" : "linear", label: "GDP per capita (US$)"},
+        height: width  * 0.65,
+        x: {domain: [0, 90_000], type: logToggle ? "log" : "linear", label: "GDP per capita (US$)"},
         y: {domain: [0, 18], grid: true, label: "CO2 emissions (per capita, tons)"},
-        c: {legend: true},
+        color: {legend: scatterForm.selectedRegion !== null, domain: scatterForm.selectedRegion ? [scatterForm.selectedRegion] : [], range: ["#ccccce"]},
         r: {label: "Glacial lakes"},
         marks: [
             ...(
@@ -486,16 +487,22 @@ function getJointInformationChart(width, logToggle) {
                 Plot.density(co2.filter(d => scatterForm.selectedRegion === d.owid_region), {
                     x: "gdp_per_capita",
                     y: "emissions_total_per_capita",
-                    r: 1,
-                    weight: 1,
-                    stroke: "currentColor",
-                    strokeOpacity: 0.3,
+                    bandwidth: 15,
+                    thresholds: 4,
+                    fill: scatterForm.selectedRegion,
+                    fillOpacity: 0.18,
+                    // stroke: "currentColor"
+                    // r: 1,
+                    // weight: 1,
+                    // stroke: "currentColor",
+                    // strokeOpacity: 0.3,
                 })]: []
             ),
             Plot.dot(emissionToLakes, 
                 {x: "gdpPerCapita", 
                 y: "emissionsTotalPerCapita", 
                 r: "numLakes", 
+                // r: 4,
                 stroke: d => HIGHLIGHT_COUNTRIES.includes(d.name) ? "#D17455" : "currentColor",
                 tip: true,
             }),
