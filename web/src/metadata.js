@@ -11,7 +11,7 @@ export const pages = [
     open: true,
     pages: [
       {
-        name: "ARTEs piece on glacial lake floods",
+        name: "ARTE's piece on glacial lake floods",
         path: "/learning_from_pros/glofs_nepal",
         description: "Glacial lake floods (GLOFs) threaten millions of people world wide. Let's explore what data and information ARTE germany uses to build the basics for one of their animated info piece.",
         date: "2026-08-31",
