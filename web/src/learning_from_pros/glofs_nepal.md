@@ -13,7 +13,7 @@ sql:
 
 # ARTEs piece on glacial lake floods
 
-On 2026/08/28 ARTE published a info piece to show how the recent nepal flood was caused and how this problem is yet another one linked to global climate change. I liked the piece visually and downloaded it using [`yt-dlp`](https://github.com/yt-dlp/yt-dlp).
+On 2026/08/28 ARTE published a info piece to show how the recent nepal flood was caused and how this problem is yet another one linked to global climate change. I liked the piece visually took a few screenshots.
 The animated piece explained how glacial lakes outburst and create horrible floods like the one that hit Nepal this week.
 It didn't take long and now I'm also interested in what data they may used. 
 
@@ -476,7 +476,7 @@ const regions = new Array(...new Set(co2.map(d => d.owid_region)));
 ```js
 function getJointInformationChart(width, logToggle) {
     return Plot.plot({
-        title: "Countries with glacial lake hazard and their respective CO2 emissions",
+        title: "Countries with glacial lake hazard and their respective CO2 emissions and GDP per capita",
         subtitle: "CO2 emissions and GDP per capita of countries with galcial lakes. Comparison with world regions like Europe can show as density areas. Circle sizes show the number of glacial lakes per country. Data provided by OurWorldInData, NASA and the National Snow and Ice Data Centre (University of Colorado).",
         width,
         x: {type: logToggle ? "log" : "linear", label: "GDP per capita (US$)"},
