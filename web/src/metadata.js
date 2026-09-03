@@ -11,6 +11,12 @@ export const pages = [
     open: true,
     pages: [
       {
+        name: "ARTEs piece on glacial lake floods",
+        path: "/learning_from_pros/glofs_nepal",
+        description: "Threads that come from glacial lake floods (glofs). Let's explore what data and information ARTE germany uses to build the basics for one of their info movies.",
+        date: "2026-08-31",
+      },
+      {
         name: "Visualising Climate Logo",
         path: "/learning_from_pros/visualising_climate",
         description: "The Visualising Climate conference is taking place in November 2026 for the first time. I love their logo, because it's a different way to present the state of climate. We rebuild their logo with publically available data.",

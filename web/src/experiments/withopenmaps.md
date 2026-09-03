@@ -278,8 +278,8 @@ import {ArteMap} from "./withopenmaps/map.js"
 ```
 
 ```js
-const lmap = await FileAttachment("./withopenmaps/data/land-110m.json").json();
-const cmap = await FileAttachment("./withopenmaps/data/countries-110m.json").json();
+const lmap = await FileAttachment("../data/geo/land-110m.json").json();
+const cmap = await FileAttachment("../data/geo/countries-110m.json").json();
 ```
 
 ```js
