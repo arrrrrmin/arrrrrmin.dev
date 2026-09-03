@@ -472,12 +472,14 @@ const regions = new Array(...new Set(co2.map(d => d.owid_region)));
 
 ```js
 function getJointInformationChart(width, logToggle) {
+    const xAxisDomain = !logToggle ? [0, 90_000] : [1_500, 100_000]
+    const xAxisType = !logToggle ? "linear" : "log"
     return Plot.plot({
         title: "Countries with glacial lake hazard and their respective CO2 emissions and GDP per capita",
         subtitle: "CO2 emissions and GDP per capita of countries with glacial lakes. Comparison with world region averages as gray density areas. Circle sizes show the number of glacial lakes per country. Data provided by OurWorldInData, NASA and the NSIDC (University of Colorado).",
         width,
-        height: width  * 0.65,
-        x: {domain: [0, 90_000], type: logToggle ? "log" : "linear", label: "GDP per capita (US$)"},
+        height: width * 0.65,
+        x: {domain: xAxisDomain, type: xAxisType, label: "GDP per capita (US$)"},
         y: {domain: [0, 18], grid: true, label: "CO2 emissions (per capita, tons)"},
         color: {legend: scatterForm.selectedRegion !== null, domain: scatterForm.selectedRegion ? [scatterForm.selectedRegion] : [], range: ["#ccccce"]},
         r: {label: "Glacial lakes"},
@@ -520,9 +522,6 @@ function getJointInformationChart(width, logToggle) {
 
 
 ```js
-```
-
-```js
 const logToggle = Inputs.toggle({label: "Log X-axis", value: false});
 const selectedRegion = Inputs.select(regions, {label: "Compare to region", value: null});
 ```
@@ -531,7 +530,6 @@ const selectedRegion = Inputs.select(regions, {label: "Compare to region", value
 const scatterForm = view(Inputs.form({
     selectedRegion: selectedRegion,
     logToggle: logToggle,
-
 }))
 ```
 
