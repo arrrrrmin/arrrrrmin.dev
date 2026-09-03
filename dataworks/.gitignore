@@ -13,6 +13,7 @@ others/.DS_Store
 # outputs
 outputs/*.parquet
 outputs/*.geo.json
+outputs/glofs
 
 # pycharm
 .idea
