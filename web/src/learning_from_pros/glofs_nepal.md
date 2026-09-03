@@ -1,5 +1,5 @@
 ---
-title: "ARTEs piece on glacial lake floods"
+title: "ARTE's piece on glacial lake floods"
 keywords:
   - Datavis
   - DDJ
@@ -11,19 +11,19 @@ sql:
   co2gdp: "../data/co2_and_gdp_per_capita.csv"
 ---
 
-# ARTEs piece on glacial lake floods
+# ARTE's piece on glacial lake floods
 
-On 2026/08/28 ARTE published a info piece to show how the recent nepal flood was caused and how this problem is yet another one linked to global climate change. I liked the piece visually took a few screenshots.
+On 2026/08/28 ARTE published an info piece to show how the recent Nepal flood was caused and how this problem is yet another one linked to global climate change. I liked the piece visually and took a few screenshots.
 The animated piece explained how glacial lakes outburst and create horrible floods like the one that hit Nepal this week.
-It didn't take long and now I'm also interested in what data they may used. 
+It didn't take long and now I'm also interested in what data they might have used. 
 
 ## Nepal floods
 
-ARTE published their piece, since the [current situation in Nepal](https://www.dw.com/en/nepal-flood-death-toll-crosses-900-thousands-still-missing/a-78568505) (as of 2026/08/31) is horrible and the phenomena of glacial outburst floods is publically not well known. The info piece describes how a [Glacial lake outburst flood (GLOF for short)](https://en.wikipedia.org/wiki/Glacial_lake_outburst_flood) is caused and what aligned it with the climate change situation the world is in. Breaking news, everything happening in nature is likely to large extends fueled by climate change - but it's important to cover it extensivly. 
+ARTE published their piece, since the [current situation in Nepal](https://www.dw.com/en/nepal-flood-death-toll-crosses-900-thousands-still-missing/a-78568505) (as of 2026/08/31) is horrible and the phenomenon of glacial outburst floods is publicly not well known. The info piece describes how a [Glacial lake outburst flood (GLOF for short)](https://en.wikipedia.org/wiki/Glacial_lake_outburst_flood) is caused and what aligned it with the climate change situation the world is in. Breaking news, everything happening in nature is likely to a large extent fueled by climate change - but it's important to cover it extensively. 
 
 ## Glacial lake outburst floods
 
-GLOFs as the name says are caused by some sort of outburst that suddenly releases meltwater that once filled a hollow in the hills and created a lake. These lakes are created by retreating ice formations thousands of years ago (around [10000 years](https://en.wikipedia.org/wiki/Glacial_lake)). The ice left back in melted and the hollow formation filled with meltwater and forms a lake. The outburst flood part of the phenomena is influenced either by a breaking dam part in the crust or melting ice that exeeds the capacity of hollows. There is a special case where geotermic peaks cause ice to melt and peak the lakes water level far above the threshold. These cases are scientifically known as [Jökulhlaup](https://en.wikipedia.org/wiki/Jökulhlaup), an term originally from iceland where the science regarding these geological phenomena is a well researched subject as they are more endangered than most regions of the world. By definition GLOFs are catastrophic events with high impact but low frequency, meaning although they don't happen very often the large amounts of water that are released have a high thread potential compared to the well-known floods in rain season for example.
+GLOFs as the name says are caused by some sort of outburst that suddenly releases meltwater that once filled a hollow in the hills and created a lake. These lakes were created by retreating ice formations thousands of years ago (around [10000 years](https://en.wikipedia.org/wiki/Glacial_lake)). The ice left behind in melted and the hollow formation filled with meltwater and formed a lake. The outburst flood part of the phenomenon is influenced either by a breaking dam part in the crust or melting ice that exceeds the capacity of hollows. There is a special case where geothermic peaks cause ice to melt and peak the lakes water level far above the threshold. These cases are scientifically known as [Jökulhlaup](https://en.wikipedia.org/wiki/Jökulhlaup), a term originally from Iceland where the science regarding these geological phenomena is a well-researched subject as they are more endangered than most regions of the world. By definition GLOFs are catastrophic events with high impact but low frequency, meaning although they don't happen very often the large amounts of water that are released have a high threat potential compared to the well-known floods in rain season for example.
 
 ## Historic data
 
@@ -31,11 +31,9 @@ The first interesting thing was this line chart which shows the number of glacia
 
 ![ARTE journal glacial lake outburst floods per year since 1990 to 2024, an increase of 53% more glacial lakes since 1990.](../images/arte-glofs-per-year.png)
 
-The voice on the audio guiding this graphic, explains that the number of glacial rivers has grown about 53% from
+The voice on the audio guiding this graphic, explains that the number of glacial lakes has grown about 53% from
 1990 to 2024. At first I was surprised that this number actually exists in a global fashion and I was somehow delighted that there is a public dataset that tracks the number of glacial lakes since 1990.
-The dataset I found is "[_High Mountain Asia Near-Global Multi-Decadal Glacial Lake Inventory V001_](https://search.earthdata.nasa.gov/search/granules?p=C3249539102-NSIDC_CPRD&pg[0][v]=f&pg[0][gsk]=-start_date)". Because the name  suggests only Asian Mountains coverage I almost overlooked it. Recently I do more environmental data exploration in my daily work so at some point one gets used to strange naming conventions in scientific datasets - and terrible achronym usage. The dataset is a collection of shape files that globally span 1990 to 2018 in epochs of 10 or 5 years and it didn't recievce an update since the last epoch 2015-2018.
-
-Here is how the data looks like:
+The dataset I found is "[_High Mountain Asia Near-Global Multi-Decadal Glacial Lake Inventory V001_](https://search.earthdata.nasa.gov/search/granules?p=C3249539102-NSIDC_CPRD&pg[0][v]=f&pg[0][gsk]=-start_date)". Because the name  suggests only Asian Mountains coverage I almost overlooked it. Recently I do more environmental data exploration in my daily work so at some point one gets used to strange naming conventions in scientific datasets - and terrible acronym usage. The dataset is a collection of shape files that globally span 1990 to 2018 in epochs of 10 or 5 years and it didn't recieve an update since the last epoch 2015-2018. Here is how it looks:
 
 ```js
 const hma_stats = await FileAttachment("data/glofs/HMA_statistics.json").json()
@@ -100,15 +98,15 @@ ${resize((width) => getHistoricIncreaseChart(width))}
 
 </div>
 
-First finding the graphics makers at ARTE simply took the ${increase_num_lakes}% and carried it forward to 2024. I really don't know why 2024 but using the High Mountain Asia dataset I get the same number. Btw this dataset also carries the area in m<sup>2</sup> where the difference is marginal with an increase of ${increase_total_area}%. 
+The graphics makers at ARTE simply took the ${increase_num_lakes}% and carried it forward to 2024. I really don't know why 2024 but using the High Mountain Asia dataset I get the same number. Btw this dataset also carries the area in m<sup>2</sup> where the difference is marginal with an increase of ${increase_total_area}%. 
 
 ### Design decision
 
-Now that I looked at the data I can totally see why the makers reduced the chart to a single line. As you can see above, my version is not intuative. The epoch lengths vary which made me use arrows to give a better sense for the time axis but at the same time it's more confusing than anything else. Here I notice the __difference between visualising and communicating data__. Now that I tried a different version, I like ARTEs simplified approach much more.
+Now that I looked at the data I can totally see why the makers reduced the chart to a single line. As you can see above, my version is not intuitive. The epoch lengths vary which made me use arrows to give a better sense for the time axis but at the same time it's more confusing than anything else. Here I notice the __difference between visualising and communicating data__. Now that I tried a different version, I like ARTE's simplified approach much more.
 
 ## Does the flood frequency increase?
 
-While I was looking for data on glofs in general I stumbled over a database published by the [University of Potsdam](https://glofs.geoecology.uni-potsdam.de). Please be aware that the link doesn't support SSL/TLS so it's _insecture_.
+While I was looking for data on glofs in general I stumbled across a database published by the [University of Potsdam](https://glofs.geoecology.uni-potsdam.de). Please be aware that the link doesn't support SSL/TLS so it's _insecure_.
 The database is a larger .ods file (LibreOffice equivalent to Excel) and contains a collection of scientifically documented or researched GLOF events.
 
 
@@ -177,21 +175,20 @@ ${resize((width) => getOutburstsOrTemperatureChart(width))}
 
 </div>
 
-This dataset tells the same story but with actual events, which in my opinion is more urgent, since it covers actual events. Also it covers older floods too - but I guess this might open up discussions for a monitoring bias. But regardless of the what critiques might bring up, data clearly shows that this is strongly correlated with rising temperatures.
+This dataset tells the same story but with actual events, which in my opinion is more urgent. Also it covers older floods too - but I guess this might open up discussions for a monitoring bias. But regardless of the what critiques might bring up, data clearly shows that this is strongly correlated with rising temperatures.
 
 ## Who is endangered by glacial floods
 
-The other very interesting animated graphic in this ARTE report is a section where they cited a nature article with the title [Glacial lake outburst floods threaten millions globally](https://www.nature.com/articles/s41467-023-36033-x). The abstract is literally number and highlighted countries:
+The other very interesting animated graphic in this ARTE report is a section where they cited a nature article with the title [Glacial lake outburst floods threaten millions globally](https://www.nature.com/articles/s41467-023-36033-x). The abstract is literally the number and highlighted countries:
 
 > Here we show that 15 million people globally are exposed to impacts from potential GLOFs. 
 > ... More than half of the globally exposed population are found in just four countries: India, Pakistan, Peru, and China. 
 
 ![Screenshot of an ARTE (de) Journal piece on glacial lake outburst floods, stating 15 Million people are endangered by glacial floods world wide. A map in the background of the number highlights India, Pakistan, Peru, and China as these countries make for half the endangered population. Small icons sign that infrastructure is also threatened by floods and will cause heavy economic damage.](../images/arte-glofs-endangered-people.png)
 
-Don't get me wrong this is totally fine, I'm just surprised how _easy_ it sometimes is to do valuable data vis or infographics when you simply cite the numbers, that are already calculated by established research. That's a really good thing, in the end journalists have the most stressfull job that follows a fast news cycle. If they'd need to calculate the numbers again to verify, that is (1) not their job and (2) not practiable in time.
-Anyways I'm glad ARTE cites established research (it's not that hard in the end). 
+I'm struck by how little investigation is needed to build a strong infographic - simply by using established research. That's not a criticism. Journalists don't have time to do the numbers themselves anyways considering how fast news cycles turn.
 
-Regardless of where they got the numbers from, I took the High Mountain Asia dataset and visualized it in two ways: (1) detailed to see every glacial lake and (2) an aggregated version grouped to country level and located at the countries center point. Additionally I adapted the country highlighting as stated by the nature article. In the detailed map you mostly see all the edges around greenland and adjacent arctics with a lot of ice an glacial lakes. Alaska and the South American Andes also have a lot of glacial lakes, but it's in general way to cluttered. 
+Regardless of where they got the numbers from, I took the High Mountain Asia dataset and visualized it in two ways: (1) detailed to see every glacial lake and (2) an aggregated version grouped to country level and located at the countries center point. Additionally I adapted the country highlighting as stated by the nature article. In the detailed map you mostly see all the edges around Greenland and adjacent arctics with a lot of ice and glacial lakes. Alaska and the South American Andes also have a lot of glacial lakes, but it's in general way too cluttered. 
 
 ```js
 const HIGHLIGHT_COUNTRIES = ["India", "Pakistan", "Peru", "China"];
@@ -342,7 +339,7 @@ ${resize((width) => getLakeLocationsMap(width, detailedLakesMap))}
 
 I simply included the detail view, to give the raw data perspective. The main view is the aggregated version of lakes per country, it shows much more tidy where the hazards are located, although it's not the exact locations since I aggregated to country level and pin them to country centers. This way you can actually see something, the alternative is pure clutter.
 
-Since I was already building maps and also found actual GLOF events here is a map where you can scrub through time and see where actual events happend, but be aware I combined them in 5year epochs. Science apparently does it the same way so here you go:
+Since I was already building maps and also found actual GLOF events here is a map where you can scrub through time and see where actual events happened, but be aware I combined them in 5year epochs. Science apparently does it the same way so here you go:
 
 ```js
 const STEP = 5;
@@ -359,7 +356,7 @@ ORDER BY cast(year as INTEGER)
 function getGlacialFloodMap(width){
     return Plot.plot({
         title: `Glacial lake outburst floods between ${floodYear} - ${floodYear + STEP}`,
-        subtitle: `${glofs.length} floods in ${STEP} year since ${floodYear} where caused by glacial melt or collapsing boulders. Size of circles corresponds to the size of glacial area. Data provided by NASA, obtained by National Snow and Ice Data Center (Colorado).`,
+        subtitle: `${glofs.length} floods in ${STEP} year since ${floodYear} were caused by glacial melt or collapsing boulders. Size of circles corresponds to the size of glacial area. Data provided by NASA, obtained by National Snow and Ice Data Center (Colorado).`,
         width,
         projection: "equirectangular",
         r: {range: [2, 24]},
@@ -440,7 +437,7 @@ function getHimalayanRegionCrop(width) {
 }
 ```
 
-On the above map we can see where actual floods have occured over time. It mirrors the [Chart above](#glofs-and-temperature) and shows the pattern, where conutries like Iceland, the Coast Moutain region of western Canada, Norway but also the Himalaya region experience GLOFs with relative frequency. Especially the Himalayan, Hindu Kush and Pamir regions spans multiple countries. These Moutain ranges together span the whole west of China where we see increasing activity fo glacial floods, as we can see in the following in more detail.
+On the above map we can see where actual floods have occurred over time. It mirrors the [Chart above](#glofs-and-temperature) and shows the pattern, where countries like Iceland, the Coast Mountain region of western Canada, Norway but also the Himalaya region experience GLOFs with relative frequency. Especially the Himalayan, Hindu Kush and Pamir regions span multiple countries. These Mountain ranges together span the whole west of China where we see increasing activity of glacial floods, as we can see in the following in more detail.
 
 ```js
 const floodYear2 = view(Inputs.range([1900, 2025-STEP], {step: STEP, value: 2025}));
@@ -452,9 +449,9 @@ ${resize((width) => getHimalayanRegionCrop(width))}
 
 ## Climate change
 
-In the last sentence of ARTEs piece the commentator points out that most of the threatened countries aren't the countries that contribute to climate change in terms of CO2 emissions. At this point we gone through most of the GLOFs data, so we'r only missing data on CO2 emissions. But that's not a huge deal, climate change is available quick and reliable through [Ower World In Data](https://ourworldindata.org/grapher/co-emissions-per-capita?country=GRL~BTN~USA~CHN~CHL~CAN~NOR~PER~IND~PAK~ARG~NPL~AFG~KGZ~ISL~TJK~KAZ~BOL~SWE~NZL~CHE~ITA~AUT~MNG~FRA~GEO~COL~ECU).
+In the last sentence of ARTE's piece the commentator points out that most of the threatened countries aren't the countries that contribute to climate change in terms of CO2 emissions. At this point we gone through most of the GLOFs data, so we'r only missing data on CO2 emissions. But that's not a huge deal, the data is available quickly and reliably through [Our World In Data](https://ourworldindata.org/grapher/co-emissions-per-capita?country=GRL~BTN~USA~CHN~CHL~CAN~NOR~PER~IND~PAK~ARG~NPL~AFG~KGZ~ISL~TJK~KAZ~BOL~SWE~NZL~CHE~ITA~AUT~MNG~FRA~GEO~COL~ECU).
 
-All we need to do is count the number of glacial lakes in a country and join this information with the lastest annual CO2 emission. [Ower World In Data](https://ourworldindata.org) also brings another nice possibility. They also provide GDP per capita and since money helps a country with monitoring such hazards I want to include it into the chart. So in the following one you get the emissions on y the gdp on x and sizes show the hazard as number of glacial lakes per country.
+All we need to do is count the number of glacial lakes in a country and join this information with the latest annual CO2 emission. [Ouer World In Data](https://ourworldindata.org) also brings another nice possibility. They also provide GDP per capita and since money helps a country with monitoring such hazards I want to include it into the chart. So in the following one you get the emissions on y the gdp on x and sizes show the hazard as number of glacial lakes per country.
 
 
 ```sql id=[...co2]
@@ -477,7 +474,7 @@ const regions = new Array(...new Set(co2.map(d => d.owid_region)));
 function getJointInformationChart(width, logToggle) {
     return Plot.plot({
         title: "Countries with glacial lake hazard and their respective CO2 emissions and GDP per capita",
-        subtitle: "CO2 emissions and GDP per capita of countries with galcial lakes. Comparison with world regions like Europe can show as density areas. Circle sizes show the number of glacial lakes per country. Data provided by OurWorldInData, NASA and the National Snow and Ice Data Centre (University of Colorado).",
+        subtitle: "CO2 emissions and GDP per capita of countries with glacial lakes. Comparison with world regions like Europe can show as density areas. Circle sizes show the number of glacial lakes per country. Data provided by OurWorldInData, NASA and the National Snow and Ice Data Centre (University of Colorado).",
         width,
         x: {type: logToggle ? "log" : "linear", label: "GDP per capita (US$)"},
         y: {domain: [0, 18], grid: true, label: "CO2 emissions (per capita, tons)"},
@@ -536,4 +533,4 @@ ${resize((width) => getJointInformationChart(width, scatterForm.logToggle))}
 
 </div>
 
-We can see that most the countries that have such lakes (1) don't emit more than 4 tons of CO2 annually per capita and (2) they call below or near 30.000 US-Dollar per capita. A classic example of the injustice caused by global warming. Those responsible often do not face the consequences of their actions, while people (mostly in the global south) have to live with these consequences. On top of this countries faced with glacial lakes also lack financial capabilities to fund expensive monitoring systems or research. This part is exactly what ARTEs commentary stated in the last sentence of their piece. 
+We can see that most of the countries that have such lakes (1) don't emit more than 4 tons of CO2 annually per capita and (2) they fall below or near 30.000 US-Dollar per capita. A classic example of the injustice caused by global warming. Those responsible often escape the consequences of their actions, while the people who bear them – mostly in the Global South – had no hand in causing them. On top of this countries faced with glacial lakes also lack financial capabilities to fund expensive monitoring systems or research. This part is exactly what ARTE's commentary stated in the last sentence of their piece. 
