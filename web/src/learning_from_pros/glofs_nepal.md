@@ -471,7 +471,6 @@ const emissionToLakes = glacialLakesPerCountry.map(
         })
     )[0]).filter(d => !["Greenland", "Canada"].includes(d.name));
 const regions = new Array(...new Set(co2.map(d => d.owid_region)));
-console.log(regions);
 ```
 
 ```js
@@ -509,21 +508,9 @@ function getJointInformationChart(width, logToggle) {
                 x: "gdpPerCapita", 
                 y: "emissionsTotalPerCapita", 
                 text: "name", 
-                // fill: d => HIGHLIGHT_COUNTRIES.includes(d.name) ? "#D17455" : "currentColor",
+
                 dy: -12
             }),
-            // Plot.tip(glacialLakesPerCountry, Plot.pointer({
-            //     x: d => d.coordinates[0],
-            //     y: d => d.coordinates[1],
-            //     //filter: (d) => d.info,
-            //     title: (d) => `${d.name}\nGlacial lakes: ${parseInt(d.numLakes)}\nTotal lake area: ${d.lakeTotalArea.toFixed(2)} km2`,
-            // })),
-            /** Plot.tip([usaTipText], {
-                x: usaDataPoint.gdpPerCapita, 
-                y: usaDataPoint.emissionsTotalPerCapita,
-                dy: -16,
-                anchor: "bottom"
-            }), */
         ]
     });
 }
@@ -552,6 +539,3 @@ ${resize((width) => getJointInformationChart(width, scatterForm.logToggle))}
 </div>
 
 We can see that most the countries that have such lakes (1) don't emit more than 4 tons of CO2 annually per capita and (2) they call below or near 30.000 US-Dollar per capita. A classic example of the injustice caused by global warming. Those responsible often do not face the consequences of their actions, while people (mostly in the global south) have to live with these consequences. On top of this countries faced with glacial lakes also lack financial capabilities to fund expensive monitoring systems or research. This part is exactly what ARTEs commentary stated in the last sentence of their piece. 
-
-<div style="min-height:500px">
-</div>

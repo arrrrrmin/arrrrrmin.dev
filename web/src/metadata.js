@@ -13,8 +13,11 @@ export const pages = [
       {
         name: "ARTEs piece on glacial lake floods",
         path: "/learning_from_pros/glofs_nepal",
-        description: "Threads that come from glacial lake floods (glofs). Let's explore what data and information ARTE germany uses to build the basics for one of their info movies.",
+        description: "Glacial lake floods (GLOFs) threaten millions of people world wide. Let's explore what data and information ARTE germany uses to build the basics for one of their animated info piece.",
         date: "2026-08-31",
+        preview: "/embeds/static/arte-glofs-nepal.png",
+        previewWidth: 2310,
+        previewHeight: 1274,
       },
       {
         name: "Visualising Climate Logo",
