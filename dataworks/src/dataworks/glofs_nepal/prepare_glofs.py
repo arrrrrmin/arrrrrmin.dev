@@ -66,6 +66,7 @@ if __name__ == "__main__":
     df["year"] = years.bfill(axis=1).iloc[:, 0].astype("Int64")
 
     df = df[df["year"].notna()]
+    df = df[["region", "Country", "Glacier", "RGI_Glacier_Area", "Longitude", "Latitude", "Date", "Date_Min", "Date_Max", "year"]]
 
     # Write GLOF database statistics
     df.to_csv(OUTPUT_DIR / "glofdatabase_v4-2.csv", index=False)
@@ -129,13 +130,17 @@ if __name__ == "__main__":
                     "total_area": float(filtered["Area_km2"].sum()),
                 }
             )
-            glacial_lake_locations_per_epoch.append(
-                {
-                    "start": int(start),
-                    "end": int(end),
-                    "children": filtered.to_dict(orient="records"),
-                }
-            )
+            filtered = filtered[["Year_Start", "FULL_NAME", "Country", "Area_km2", "Latitude", "Longitude"]]
+            # Only use the latest?
+            print(start, end)
+            if int(start) == 2015:
+                glacial_lake_locations_per_epoch.append(
+                    {
+                        "start": int(start),
+                        "end": int(end),
+                        "children": filtered.to_dict(orient="records"),
+                    }
+                )
 
     # Write HMA statistics
     print("***Write HMA statistics***")
