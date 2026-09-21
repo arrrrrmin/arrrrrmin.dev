@@ -148,7 +148,7 @@ a.logo-fillin svg {
 .post {
   display: grid;
   grid-template-columns: auto 160px; /*<PreviewButton (20px)> <Dots> <Year (31px>*/
-  align-items: center;
+  align-items: start;
 }
 
 .post-date {
@@ -181,10 +181,9 @@ a.social-icon:hover svg {
 }
 
 .post-meta {
-  display: grid;
-  grid-template-columns: 20px auto 23px;
+  display: flex;
   align-items: center;
-  column-gap: 4px;
+  column-gap: 1px;
 }
 
 .post-preview-toggle {
