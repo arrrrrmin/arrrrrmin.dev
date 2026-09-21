@@ -1,0 +1,277 @@
+.container {
+  display: grid;
+  max-width: var(--max-width);
+  /* minmax(0, 1fr) instead of auto: an `auto` track refuses to shrink below
+       its content's min-content width, which is what pinned the layout open. */
+  grid-template-columns: 164px minmax(0, 1fr);
+  margin: auto;
+}
+
+main {
+  min-height: 90vh;
+  margin: 8px;
+  /* min-width: 0 overrides the grid item default of min-width: auto, so main
+       may shrink; the max-width then caps it on wide viewports only. */
+  min-width: 0;
+  max-width: min(800px, 100%);
+}
+
+h1,
+h2,
+h3 {
+  font: 20px/1.5 var(--sans-serif);
+  font-weight: 800;
+}
+
+p,
+ul,
+li,
+ol,
+dl,
+dd {
+  font: 16px/1.5 var(--serif);
+  
+}
+
+table,
+tbody,
+thead,
+tr,
+td {
+  font: 14px/1.5 var(--serif);
+}
+
+blockquote p {
+  font-style: italic;
+}
+
+h1,
+h2,
+h3 a {
+  font-weight: 700;
+}
+
+figure {
+  padding: 8px 0;
+  border-top: 1px solid var(--theme-foreground-fainter);
+  border-bottom: 1px solid var(--theme-foreground-fainter);
+}
+
+figure h2,
+h3 {
+  font: 16px/1.5 var(--serif);
+  font-weight: 700;
+}
+
+figure h3 {
+  font: 14px/1.25 var(--serif);
+}
+
+h1 a[href] {
+  font-family: var(--sans-serif);
+}
+
+h2 a[href] {
+  font-family: var(--sans-serif);
+}
+
+h3 a[href] {
+  font-family: var(--sans-serif);
+}
+
+a[href] {
+  font-family: var(--serif);
+  text-decoration: underline;
+  color: unset;
+}
+
+pre code,
+figcaption code {
+  font-size: 12px;
+}
+
+a.logo-fillin {
+  text-decoration: none;
+}
+
+a.logo-fillin svg {
+  margin-right: 1px;
+}
+
+/* #site-header {
+  margin: 24px 0;
+  font: 16px/1.5 var(--serif);
+  max-width: 160px;
+  white-space: nowrap;
+} */
+
+#site-header {
+  position: sticky;
+  top: 0px;
+  margin-top: 20px;
+  align-self: start;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+#site-header-list {
+  list-style: none;
+  margin-top: 16px;
+  padding-left: 0px;
+}
+
+.sections {
+  margin-bottom: 32px;
+}
+
+.post-section {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  margin-bottom: 8px;
+}
+
+.section-search {
+  margin-top: 14px;
+  margin-bottom: 24px;
+}
+
+.post-list {
+  display: grid;
+  row-gap: 2px;
+}
+
+.post {
+  display: grid;
+  grid-template-columns: auto 160px; /*<PreviewButton (20px)> <Dots> <Year (31px>*/
+  align-items: center;
+}
+
+.post-date {
+  font: 13px/1.25 var(--monospace);
+  word-break: keep-all;
+}
+
+.post-empty {
+  font: 16px/1.5 var(--serif);
+}
+
+#site-footer {
+  margin: auto;
+  max-width: var(--max-width);
+  display: flex;
+  justify-content: space-between;
+  font: 16px/1.5 var(--serif);
+}
+
+a.social-icon {
+  text-decoration: none;
+}
+
+a[href].social-icon {
+  text-decoration: none;
+}
+
+a.social-icon:hover svg {
+  fill: gray;
+}
+
+.post-meta {
+  display: grid;
+  grid-template-columns: 20px auto 23px;
+  align-items: center;
+  column-gap: 4px;
+}
+
+.post-preview-toggle {
+  padding: 1px;
+}
+
+.post-preview-toggle svg {
+  display: block;
+}
+
+.post-preview-spacer {
+  width: 20px;
+}
+
+.preview-card {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  max-width: 400px;
+  font-family: var(--serif);
+  font-size: 12px;
+}
+
+.preview-image {
+  aspect-ratio: 16 / 9;
+}
+
+#site-header-list a[aria-current="page"]::after {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.2em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E% %3Ccircle cx='8' cy='8' r='3' fill='currentColor'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+@media (max-width: 400px) {
+  .post {
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .post-meta {
+    display: flex;
+  }
+
+  .month-dots {
+  }
+}
+
+@media (max-width: 700px) {
+  body {
+    padding: 16px 12px;
+  }
+
+  .container {
+    display: block;
+  }
+
+  main {
+    margin: 8px 0;
+  }
+
+  /* #site-header {
+    margin: 16px 0 8px;
+    max-width: none;
+    white-space: normal;
+  } */
+
+  #site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--theme-background); /* required — it's transparent now */
+    border-bottom: 1px solid var(--theme-foreground-faintest);
+    padding: 0 0 4px;
+    margin: 0 0 8px;
+  }
+
+  #site-header-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 0;
+  }
+
+  #site-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

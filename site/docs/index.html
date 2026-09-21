@@ -1,0 +1,69 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Untitled</title>
+  <script id="1" type="text/markdown" hidden="">
+    <!-- @meta {
+      "tags": ["blog", "d3js", "datavis"],
+      "blurb": "Data and visualisation learning journeys to educate myself, and maybe others."
+    } -->
+  </script>
+  <script id="2" type="text/markdown">
+    Data and visualisation learning journeys – to educate myself, and maybe others.
+  </script>
+  <script id="3" type="application/vnd.node.javascript" hidden="" output="posts" format="json">
+    import {readdir, readFile} from "node:fs/promises";
+    import {sep} from "node:path";
+
+    // Recursive walk of docs/. Paths come back relative to cwd, which is the
+    // notebook's own directory, so they can be read and linked to as-is.
+    const files = (await readdir(".", {recursive: true}))
+      .map((f) => f.split(sep).join("/"))
+      .filter((f) => f.endsWith(".html"))
+      .filter((f) => !f.startsWith(".observable/"))
+      .filter((f) => !f.endsWith("index.html"));
+
+    let posts = await Promise.all(files.map(async (file) => {
+      const src = await readFile(file, "utf-8");
+      const meta = src.match(/@meta\s*(\{[\s\S]*?\})/)?.[1];
+      const data = meta ? JSON.parse(meta) : {};
+      const slug = file.replace(/\.html$/, "");
+      return {
+        href: `./${slug}`,
+        section: slug.includes("/") ? slug.slice(0, slug.lastIndexOf("/")) : null,
+        title: src.match(/<title>([\s\S]*?)<\/title>/)?.[1].trim() ?? file,
+        ...(meta ? JSON.parse(meta) : {}),
+        image: data.image ? `/${data.image.replace(/^public\//, "")}` : null
+      };
+    }));
+
+    posts = posts.filter((p) => !p.draft)
+    posts.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+    process.stdout.write(JSON.stringify(posts));
+  </script>
+  <script id="4" type="module">
+    const query = view(Inputs.search(posts, {
+      placeholder: "Search",
+      columns: ["title", "blurb", "tags"]
+    }));
+  </script>
+  <script id="14" type="text/x-typescript">
+    import {postPreview, postList, bindPreview} from "/components/utils.js";
+  </script>
+  <script id="16" type="text/x-typescript">
+    const sections = [
+      ["learning-from-pros", "Learning from pros"],
+      ["basics", "Basic charting"],
+      ["projects", "Projects"]
+    ];
+    const list = postList(query, posts, {sections});
+    bindPreview(list, preview);
+    display(list);
+  </script>
+  <script id="7" type="text/markdown">
+    If you want you can dm me on [Mastodon](https://chaos.social/@arrrrrmin) or [Bluesky](https://bsky.app/profile/arrrrrmin.dev). Fyi I’m also freelancing. So if you got a project I’d be glad to respond to mails at **hello[at]arrrrrmin[dot]dev** and in case you'r wondering these are 5 r. Don’t ask why, it just laziness.
+  </script>
+  <script id="13" type="text/x-typescript">
+    const preview = postPreview();
+    display(preview.element);
+  </script>
+</notebook>

@@ -1,0 +1,63 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Untitled</title>
+  <script id="6" type="text/markdown" hidden="">
+    <!-- @meta {
+      "tags": ["blog", "projects", "datavis"],
+      "blurb": "From time to time I dig a little deeper into a topic. Projects usually don’t fit a single page on this site or has too many aspects, so I port it to it’s own site and call it a project."
+    } -->
+  </script>
+  <script id="7" type="text/markdown">
+    From time to time I dig a little deeper into a topic. Projects usually don’t fit a single page on this site or has too many aspects, so I port it to it’s own site and call it a project. I’d like to have more time to give some of these more love and flesh it out more.
+  </script>
+  <script id="3" type="application/vnd.node.javascript" hidden="" output="posts" format="json">
+    import {readdir, readFile} from "node:fs/promises";
+    import {sep} from "node:path";
+
+    const currentSlug = "projects";
+
+    const files = (await readdir(".", {recursive: true}))
+      .map((f) => f.split(sep).join("/"))
+      .filter((f) => f.endsWith(".html"))
+      .filter((f) => !f.startsWith(".observable/"))
+      .filter((f) => !f.endsWith("index.html"));
+
+    let posts = await Promise.all(files.map(async (file) => {
+      const src = await readFile(file, "utf-8");
+      const meta = src.match(/@meta\s*(\{[\s\S]*?\})/)?.[1];
+      const slug = file.replace(/\.html$/, "");
+      return {
+        href: `./${slug}`,
+        slug: currentSlug,
+        section: slug.includes("/") ? slug.slice(0, slug.lastIndexOf("/")) : null,
+        title: src.match(/<title>([\s\S]*?)<\/title>/)?.[1].trim() ?? file,
+        ...(meta ? JSON.parse(meta) : {})
+      };
+    }).filter(p => !p.draft));
+
+    posts = posts.filter((p) => !p.draft)
+    posts.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+    process.stdout.write(JSON.stringify(posts));
+  </script>
+  <script id="5" type="module">
+    const query = view(Inputs.search(posts, {
+        placeholder: "Search",
+        columns: ["title", "blurb", "tags"]
+      }));
+  </script>
+  <script id="8" type="text/x-typescript">
+    import {postPreview, postList, bindPreview} from "/components/utils.js";
+  </script>
+  <script id="4" type="module">
+    const sections = [
+      ["projects", "Projects"]
+    ];
+    const list = postList(query, posts, {sections});
+    bindPreview(list, preview);
+    display(list);
+  </script>
+  <script id="9" type="text/x-typescript">
+    const preview = postPreview();
+    display(preview.element);
+  </script>
+</notebook>

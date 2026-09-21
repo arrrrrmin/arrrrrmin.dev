@@ -1,0 +1,470 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Minimalistic datavis UI elements</title>
+  <script id="1" type="text/markdown">
+    # Minimalistic datavis UI elements
+  </script>
+  <script id="3" type="text/markdown" hidden="">
+    <!-- @meta {
+      "date": "2026-09-15",
+      "draft": true,
+      "tags": ["datavis", "ui", "transitions"],
+      "blurb": "An experiment to explore the intersection of UI and datavis."
+    } -->
+  </script>
+  <script id="5" type="text/markdown">
+    While working on this blog I decided to go a minimalistic different way. I didn’t want to blast readers with images and previews. So I thought I want to go a bit text first, also to force me writing more about what I do and what’s the thought process behind it. Which in turn helps me understand better where I want go with a post.
+
+    It sounds very deliberate but to be honest it’s just practise and documentation.
+  </script>
+  <script id="7" type="text/markdown">
+    ## Make it minimalistic
+
+    Making it minimalistic is highly influenced by [hundred rabbits](https://100r.ca/site/home.html). A canadian two person design studio. I recently got to read their [permacomputing 101](https://100r.ca/site/permacomputing_101.html) article where they give an introduction on what it is and which principles they follow.
+
+    Their design habbits are pretty obvious and I love it all. Minimal, mostly monochrome, simplicity over complexity and while reading you’r provided with tons of memes or side information along the way. **So I thought to myself, let's do an experiment to find intersections of UI and datavis?**
+  </script>
+  <script id="40" type="text/markdown">
+    The following sections might become small, since I want to test if my little experiment series works in small. Also I like tiny things, sorry for that.
+  </script>
+  <script id="10" type="text/markdown">
+    ## Date in visuals
+
+    Writing a blog, one of the first things one comes across is a `publishedDate`. Every blog has a publishing date and this is super trivial data. But maybe we can find a few variations to spice it up. I did this: ${trailDots(date)}, to get a bit create with the date formatting. Each dot is a month and the large one represents the month of publication, followed by a `<YY>` to indicate the year. It’s short and looks nice. But it has flaws. Try to compare the following two dates:
+  </script>
+  <script id="30" type="text/x-typescript">
+    const comparisonTrailDots = html`
+      <div>${trailDots(new Date("2025-06-01"))}</div>
+      <div>${trailDots(new Date("2025-07-01"))}</div>
+    `;
+
+    display(comparisonTrailDots);
+  </script>
+  <script id="28" type="text/markdown">
+    Without knowing that (1) is a June and (2) is a July you’d only know _ok middle of the year_, fine but not ideal.
+    I still like it but there are better ways to do this. Form here on you can set a date to test out different scenarios.
+  </script>
+  <script id="16" type="text/x-typescript">
+    const date = view(Inputs.date({value: "2026-09-15"}));
+  </script>
+  <script id="39" type="text/markdown">
+    ${blockDots(date)}
+  </script>
+  <script id="35" type="text/markdown">
+    Now we also got the day included as the top number and the year in the bottom, also the month is more easily readable with three rows. But it introduces a new flaw because it’s hard to align the numbers block with the bottom grid months (3, 6, 9, 12). It will look odd, no matter if we align it to either the outer big circle or the small circles bottom edge, as soon as our dates month hits the bottom numbers.
+
+    Another inconvenience is the size, since the grid won’t fit a common line height for inline usage. Here is a variation that can handle both:
+
+    ${blockDotsEqual(date)}
+  </script>
+  <script id="41" type="text/markdown">
+    It’s uniformly alignable and the date’s month won’t make the element look odd. It might be usable element for UI blocks where height and width aren’t restricted like it is for the line height, which should look reasonable uniform. But while I was on it I realised by accident, you can play around a bit more:
+  </script>
+  <script id="42" type="text/x-typescript">
+    const stacking = view(Inputs.range([0, 1], {label: "Stacking", step: 0.05, value: 0.7}))
+  </script>
+  <script id="43" type="text/x-typescript">
+    display(blockDotsEqual6(date, stacking))
+  </script>
+  <script id="44" type="text/markdown">
+    Six elements are relatively good to percieve in my opinion. The _natural_ reading direction would change to left-to-right. The direction might be the other way around for other countries. Two rows and two stacked numbers work pretty good to this point. The elements can become larger and one can stack them to reduce the required space.
+  </script>
+  <script id="37" type="text/markdown">
+    Another version would be a radial mapping, where each month corresponds to an angle in a circle. Inspection stickers use this pattern and it behaves almost the same as the last block version:
+
+    ${clockDots(date)}
+  </script>
+  <script id="31" type="text/markdown">
+    I start to realize that you can get creative with these things. I bet designers do this kind of thinking/exploration when they do their funky designs. Anyways I’m not a designer so I just want to go on and explore because doing tiny visualisation is actually fun.
+  </script>
+  <script id="48" type="text/markdown">
+    ## Summary
+  </script>
+  <script id="46" type="text/x-typescript">
+    const monthTable = view(Inputs.range([0, 11], {Label: "Month", value: 2, step: 1}));
+  </script>
+  <script id="49" type="text/x-typescript">
+    const dateTable = new Date(2024, monthTable, 10, 2, 30);
+  </script>
+  <script id="23" type="text/markdown">
+    | Experiment | Note |
+    | --- | --- |
+    | ${trailDots(dateTable)} | Throws away the day, fine situationally. Fits inline situations. Readability is medioker for mid-year months. |
+    | ${blockDots(dateTable)} | Includes date and year, increased readability with rows but hard to align with bottom months 3, 6, 9, and 12. |
+    | ${blockDotsEqual(dateTable)} | Removes the alignment problem by equalized sizes. Further increased readability but looks less minimalistic.|
+    | ${blockDotsEqual6(dateTable)} | Adaptation with 6 columns floating months to the right. Best block readability and alignment is easy. |
+    | ${clockDots(dateTable)} | Radial mapped months aren’t as easily readable and suffer from the starting problem where readers don’t know wether the first top dot corresponds to December or January.  |
+
+  </script>
+  <script id="45" type="text/markdown">
+    ## Ratings
+
+    While writing alternatives like ${trailPaths(date)} I realized this is draging me into a hole where I can’t proceed with what I actually wanted to expore. Different versions of UI elements. So I stopped doing more of these variations and asked myself what standard trivial elements come to mind which are less bloggy: **ratings**.
+
+    All the 5, 3 star, points or whatever ratings by _users_ on products or alike use. This element I believe is another one which could use some alternatives. The n of something pattern should be easily adaptable to a variety of shapes.
+  </script>
+  <script id="56" type="text/markdown">
+    Starting very basic you could do a simple block stack, which is boring but understandable.
+    This one says 2 out of 5.
+
+    ${ratingBlocks(2)}
+  </script>
+  <script id="57" type="text/markdown">
+    Let’s stay with rects for the moment and use a square indicator. It may look fancy but it’s not true to the rating target in terms of area, only in count:
+
+    ${ratingRects(4)}
+  </script>
+  <script id="58" type="text/markdown">
+    Maybe one can also use the pattern used to indicate circle sizes in datavis to indicate rating? My proposal would look like so:
+
+    ${ratingCircles(3)}
+
+    This one says 3 our of 5. Like before with the squared example the circles aren’t true to area but count. Since we aren’t building a data visual where area has a meaning, but only want to indicate the the rating this is fine, but don’t do this if area should correspond to the information you want to present. This one I like because it looks like a seashell.
+  </script>
+  <script id="59" type="text/markdown">
+    In the area series I had one more idea which would also be true to the area it represents:
+
+    ${ratingTriangle(1)}
+
+    One out of five and sure it looks fancy and all the above are more a fun thing than usable in a real world example. The triangles feel very mystical which is rarly approriate for any applications, but it was fun anyways.
+  </script>
+  <script id="52" type="text/x-typescript">
+    const maxRating5 = 5;
+    const rating5 = view(Inputs.range([1, maxRating5], {label: "Rating", step: 1, value: 2}));
+  </script>
+  <script id="60" type="text/markdown">
+    Appart from my weird excourses:
+
+    ${ratingRects(rating5)}
+    ${ratingCircles(rating5)}
+    ${ratingTriangle(rating5)}
+
+
+  </script>
+  <script id="51" type="text/x-typescript">
+    const getData = (r) => Array.from({length: maxRating5}).map((d, i) => ({i, rated: i < r}));
+
+    const ratingBlocks = (rating) => {
+      const [w, h] = [50, 50];
+      const minHeight = 6;
+      const rx = 2;
+      const data = getData(rating);
+      const y = d3.scaleBand(data.map(({i}) => i), [h - rx, rx]).paddingInner(0.2)
+      const svg = getSvg(w, h);
+
+      svg.selectAll("rect")
+        .data(data)
+        .join("rect")
+        .attr("x", 1)
+        .attr("y", (d) => y(d.i))
+        .attr("height", (d) => y.bandwidth())
+        .attr("width", w - rx)
+        .attr("stroke", "currentColor")
+        .attr("fill", (d) => d.rated ? "currentColor" : "none")
+        .attr("rx", rx);
+
+      return svg.node()
+    }
+
+    const ratingRects = (rating) => {
+      const [w, h] = [50, 50];
+      const [minW, minH] = [5, 5]
+      const data = getData(rating);
+      const x = d3.scaleLinear([0, data.length-1], [minW, w/2 - 1])
+      const y = d3.scaleLinear([0, data.length-1], [minH, h/2 - 1])
+      const svg = getSvg(w, h);
+
+      const offset = (d) => data.length - (d.i)
+
+      svg.selectAll("rect")
+        .data(data.reverse())
+        .join("rect")
+        .attr("x", (d) => w/2 - x(d.i))
+        .attr("y", (d) => h/2 - y(d.i))
+        .attr("width", (d) => x(d.i)*2)
+        .attr("height", (d) => y(d.i)*2)
+        .attr("stroke", (d) => (d.i + 1)  < rating ? "white": "currentColor")
+        .attr("fill", (d) => d.rated ? "currentColor" : "none")
+        .attr("rx", 2)
+
+      return svg.node();
+    }
+
+    const ratingCircles = (rating) => {
+      const w = 50;
+      const minWidth = 5;
+      const data = getData(rating);
+      const x = d3.scaleBand(d3.extent(data, d => d.i), [1, w-1]).paddingInner(0);
+      const r = d3.scaleLinear(d3.extent(data, d => d.i), [minWidth, w/2 - 1]);
+      const svg = getSvg(w, w);
+
+      svg.selectAll("circle")
+        .data(data.reverse())
+        .join("circle")
+        .attr("cx", (d) => w/2)
+        .attr("cy", (d) => w - r(d.i) - 1)
+        .attr("r", (d) => r(d.i))
+        .attr("fill", (d) => d.i  < rating ? "currentColor" : "white")
+        .attr("stroke", (d) => d.i + 1 < rating ? "white" : "currentColor");
+
+      return svg.node();
+    }
+
+    const ratingTriangle = (rating) => {
+      const [w, h] = [50, 50];
+      const data = getData(rating);
+      const step = w / data.length;
+      const _data = data.reverse().map((d) => ({...d, d: [
+        {x: d.i * step, y: h - 1},
+        {x: d.i * step + step, y: h - 1},
+        {x: w/2, y: 1},
+        {x: d.i * step, y: h - 1}
+      ]}));
+
+      const svg = getSvg(w, h);
+      const path = d3.line()
+        .x((d) => d.x)
+        .y((d) => d.y)
+
+      svg.append("g")
+        .selectAll("path")
+        .data(_data)
+        .join("path")
+        .attr("fill", (d) => (d.i + 1) <= rating ? "currentColor": "none")
+        .attr("stroke", (d) => (d.i + 1) < rating ? "white": "currentColor")
+        .attr("d", (d) => path(d.d))
+
+      svg.append("g")
+        .datum([
+          {x: 1, y: h - 1},
+          {x: w, y: h - 1},
+          {x: w/2, y: 1},
+          {x: 1, y: h - 1},
+        ])
+        .append("path")
+        .attr("fill", "none")
+        .attr("stroke", "currentColor")
+        .attr("d", path)
+
+      return svg.node();
+    }
+  </script>
+  <script id="17" type="text/x-typescript" hidden="">
+    const MONTHS = Array.from({ length: 12 }, (_, i) => i);
+    const mRand = d3.randomInt(0, 11);
+    const [rMin, rMax] = [1.5, 4];
+    const r = (d, pubDate) => (pubDate && pubDate.getMonth() === d ? rMax : rMin);
+    const getSvg = (w, h) => {
+      return d3.create("svg")
+        .attr("width", w)
+        .attr("height", h)
+        .attr("viewBox", [0, 0, w, h])
+    };
+  </script>
+  <script id="13" type="text/x-typescript">
+    const trailDots = (pubDate) => {
+      const [w, h] = [100, 16];
+      const marginsX = rMax;
+      const x = d3.scaleLinear([0, 11], [marginsX, w - marginsX]);
+
+      const svg = getSvg(w, h).attr("class", "trail-dots");
+
+      svg.append("g")
+        .selectAll("circle")
+        .data(MONTHS)
+        .join("circle")
+        .attr("cx", (d) => x(d))
+        .attr("cy", h / 2)
+        .attr("r", d => r(d, pubDate));
+
+      const year = String(pubDate.getFullYear()).slice(2, 4)
+
+      return html`<span style="display: inline-flex; vertical-align: middle; font-size: 13px; font-family: var(--monospace);">${svg.node()}/${year}</span>`;
+    };
+  </script>
+  <script id="18" type="text/x-typescript">
+    const blockDots = (pubDate) => {
+      const [w, h] = [50, 28];
+      const margin = rMax;
+      const cols = Array.from({length: 4}).map((_, i) => i);
+      const rows = Array.from({length: 3}).map((_, i) => i);
+      const spacingX = (w - margin * 2) / cols.length;
+      const spacingY = (h - margin * 2) / rows.length;
+      const x = d3.scaleBand(cols, [margin, w-margin]).paddingOuter(0).paddingInner(spacingX);
+      const y = d3.scaleBand(rows, [margin, h-margin]).paddingOuter(0).paddingInner(spacingY);
+
+      const svg = getSvg(w, h).attr("class", "block-dots").style("margin-right", `${margin}px`);
+
+      const cx = (i) => x(Math.floor(i / 3));
+      const cy = (i) => y(i % 3);
+
+      svg.append("g").selectAll("circle")
+        .data(MONTHS)
+        .join("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", d => r(d, pubDate))
+
+      const year = String(pubDate.getFullYear()).slice(2, 4);
+      const day = pubDate.getDate();
+
+      return html`
+        <div style="display: inline-flex; align-items: center; vertical-align: middle; font-size: 13px; font-family: var(--monospace);">
+          ${svg.node()}
+          <div style="display: flex; flex-direction: column; margin-top: 2px;">
+            <span style="line-height: 1em">${day}</span>
+            <span style="line-height: 1em">${year}</span>
+          </div>
+        </div>`;
+    }
+
+    const blockDotsEqual = (pubDate) => {
+      const [w, h] = [50, 30];
+      const strokeWidth = 1;
+      const margin = rMax + strokeWidth;
+      const cols = Array.from({length: 4}).map((_, i) => i);
+      const rows = Array.from({length: Math.floor(MONTHS.length / 4)}).map((_, i) => i);
+      const spacingX = (w - margin * 2) / cols.length;
+      const spacingY = (h - margin * 2) / rows.length;
+      const x = d3.scaleBand(cols, [margin, w-margin]).paddingOuter(0).paddingInner(spacingX);
+      const y = d3.scaleBand(rows, [margin, h-margin]).paddingOuter(0.2).paddingInner(spacingY);
+
+      const svg = getSvg(w, h).attr("class", "block-dots").style("margin-right", `${margin}px`);
+
+      let cx = (i) => x(Math.floor(i / 3));
+      let cy = (i) => y(i % 3);
+
+      svg.append("g").selectAll("circle")
+        .data(MONTHS)
+        .join("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", 2.5)
+        .attr("stroke", "currentColor")
+        .attr("fill", (d) => (pubDate && pubDate.getMonth() === d ? "currentColor" : "none"))
+
+      const year = String(pubDate.getFullYear()).slice(2, 4);
+      const day = pubDate.getDate();
+
+      return html`
+        <div style="display: inline-flex; align-items: center; vertical-align: middle; font-size: 13px; font-family: var(--monospace);">
+          ${svg.node()}
+          <div style="display: flex; flex-direction: column;">
+            <span style="line-height: 1em">${day}</span>
+            <span style="line-height: 1em">${year}</span>
+          </div>
+        </div>`;
+    }
+
+    const blockDotsEqual6 = (pubDate, stacking = 0) => {
+      console.log(stacking);
+      const strokeWidth = 1;
+      const margin = rMax + strokeWidth;
+      const [w, h] = [50 + (20 * (1 - stacking)), 28];
+      const cols = Array.from({length: 6}).map((_, i) => i);
+      const rows = Array.from({length: Math.floor(MONTHS.length / 6)}).map((_, i) => i);
+      const spacingX = (w - margin * 2) / cols.length;
+      const spacingY = (h - margin * 2) / rows.length;
+      const x = d3.scaleBand(
+        cols, [margin, w-margin]).paddingOuter(stacking).paddingInner(spacingX);
+      const y = d3.scaleBand(rows, [margin, h-margin]).paddingOuter(0.2).paddingInner(spacingY);
+
+      const svg = getSvg(w, h).attr("class", "block-dots").style("margin-right", `${Math.floor(margin / 2)}px`);
+
+      const cx = (i) => x(i % 6)
+      const cy = (i) => y(Math.floor(i / 6))
+
+      svg.append("g").selectAll("circle")
+        .data(MONTHS)
+        .join("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", rMax)
+        .attr("stroke", "currentColor")
+        .attr("fill", (d) => (pubDate && pubDate.getMonth() === d ? "currentColor" : "white"))
+
+      const year = String(pubDate.getFullYear()).slice(2, 4);
+      const day = pubDate.getDate();
+
+      return html`
+        <div style="display: inline-flex; align-items: center; vertical-align: middle; font-size: 13px; font-family: var(--monospace);">
+          ${svg.node()}
+          <div style="display: flex; flex-direction: column;">
+            <span style="line-height: 1em">${day}</span>
+            <span style="line-height: 1em">${year}</span>
+          </div>
+        </div>`;
+    }
+  </script>
+  <script id="22" type="text/x-typescript">
+    const clockDots = (pubDate) => {
+      const w = 50;
+      const h = w;
+      const margin = rMax;
+
+      const points = MONTHS.map((i) => {
+        const angle = (2 * Math.PI * i) / MONTHS.length - Math.PI / -6;
+        const [x, y] = d3.pointRadial(angle, w/2 - margin);
+        return {month: i, x: w / 2 + x, y: w / 2 + y};
+      });
+
+      const svg = getSvg(w, h).attr("class", "block-dots");
+
+      svg.selectAll("circle")
+        .data(points)
+        .join("circle")
+        .attr("cx", (d) => d.x)
+        .attr("cy", (d) => d.y)
+        .attr("r", (d) => r(d.month, pubDate))
+
+      const year = String(pubDate.getFullYear()).slice(2, 4);
+      const day = pubDate.getDate();
+
+      svg.append("g").attr("transform", `translate(${w/2}, ${w/2})`)
+        .append("text")
+        .attr("text-anchor", "middle")
+        .selectAll("tspan")
+        .data([day, year])
+        .join("tspan")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("dy", (_, i) => i === 0 ? -2 : 10)
+        .text(d => d)
+
+      return html`
+        <div style="display: inline-flex; align-items: center; vertical-align: middle; font-size: 13px; font-family: var(--monospace);">
+          ${svg.node()}
+          </div>
+        </div>`;
+    }
+  </script>
+  <script id="32" type="text/x-typescript">
+    const trailPaths = (pubDate) => {
+      const [w, h] = [100, 14];
+      const [strokeWidthMin, strokeWidthMax] = [1, 3];
+      const marginsX = strokeWidthMax / 2;
+      const x = d3.scaleBand(MONTHS, [marginsX, w - marginsX]);
+
+      const svg = getSvg(w, h).attr("class", "trail-dots");
+
+      const path = d3.line()
+        .x((d) => x(d.x))
+        .y((d) => d.y)
+
+      const data = MONTHS.map(d => ([{x: d, y: 0}, {x: d, y: h}]))
+      const strokeWidth = (d) => pubDate.getMonth() === d[0].x ? strokeWidthMax : strokeWidthMin;
+
+      svg.selectAll("path")
+        .data(data)
+        .join("path")
+        .attr("fill", "none")
+        .attr("stroke", "currentColor")
+        .attr("stroke-width", strokeWidth)
+        .attr("d", path)
+
+      const year = String(pubDate.getFullYear()).slice(2, 4)
+
+      return html`<span style="display: inline-block; vertical-align: middle; font-size: 13px; font-family: var(--monospace);">${svg.node()}/${year}</span>`;
+    };
+  </script>
+</notebook>
