@@ -44,6 +44,10 @@ blockquote p {
   font-style: italic;
 }
 
+input[type="search"] {
+  font-size: 16px !important;
+}
+
 h1,
 h2,
 h3 a {
@@ -260,7 +264,7 @@ a.social-icon:hover svg {
   }
 
   main {
-    margin: 4px;
+    margin: 8px;
   }
 
   /* #site-header {
