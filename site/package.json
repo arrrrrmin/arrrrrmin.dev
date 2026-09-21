@@ -1,7 +1,7 @@
 {
   "name": "observable-2.0-preview",
   "version": "1.0.0",
-  "description": "A lab-like site on data wrangling and visualizations plus adjacent interests.",
+  "description": "A personal lab/blog site on data wrangling and visualizations plus adjacent interests.",
   "main": "index.js",
   "repository": {
     "type": "git",
