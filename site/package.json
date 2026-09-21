@@ -1,5 +1,5 @@
 {
-  "name": "observable-2.0-preview",
+  "name": "arrrrrmin.dev",
   "version": "1.0.0",
   "description": "A personal lab/blog site on data wrangling and visualizations plus adjacent interests.",
   "main": "index.js",
@@ -10,11 +10,11 @@
   "scripts": {
     "clean-old": "rm -rf docs/.observable/cache",
     "clean": "find docs -type d -path '*/.observable/cache' -exec rm -rf {} +",
-    "preview": "npm run clean && notebooks preview --root docs --template docs/main.tmpl",
-    "build": "npm run clean && notebooks build --root docs --template docs/main.tmpl -- $(find docs -path 'docs/.observable' -prune -o -name '*.html' -print)"
+    "preview": "npm run clean && vite --config docs/vite.config.mjs",
+    "build": "npm run clean && vite build --config docs/vite.config.mjs"
   },
   "keywords": [],
-  "author": "",
+  "author": "arrrrrmin",
   "license": "MIT",
   "type": "commonjs",
   "bugs": {
@@ -23,6 +23,8 @@
   "homepage": "https://github.com/arrrrrmin/arrrrrmin.dev.git#readme",
   "dependencies": {
     "@duckdb/node-api": "^1.3.2-alpha.26",
-    "@observablehq/notebook-kit": "^2.6.4"
+    "@observablehq/notebook-kit": "^2.6.4",
+    "jsdom": "^26.1.0",
+    "vite": "^8.2.2"
   }
 }

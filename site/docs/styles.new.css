@@ -29,7 +29,7 @@ li,
 ol,
 dl,
 dd {
-  font: 16px/1.5 var(--sans-serif);
+  font: 16px/1.5 var(--serif);
   
 }
 
@@ -38,7 +38,7 @@ tbody,
 thead,
 tr,
 td {
-  font: 16px/1.5 var(--sans-serif);
+  font: 14px/1.5 var(--serif);
 }
 
 blockquote p {
@@ -59,16 +59,28 @@ figure {
 
 figure h2,
 h3 {
-  font: 16px/1.5 var(--sans-serif);
+  font: 16px/1.5 var(--serif);
   font-weight: 700;
 }
 
 figure h3 {
-  font: 14px/1.25 var(--sans-serif);
+  font: 14px/1.25 var(--serif);
+}
+
+h1 a[href] {
+  font-family: var(--sans-serif);
+}
+
+h2 a[href] {
+  font-family: var(--sans-serif);
+}
+
+h3 a[href] {
+  font-family: var(--sans-serif);
 }
 
 a[href] {
-  font-family: var(--sans-serif);
+  font-family: var(--serif);
   text-decoration: underline;
   color: unset;
 }
@@ -88,7 +100,7 @@ a.logo-fillin svg {
 
 /* #site-header {
   margin: 24px 0;
-  font: 16px/1.5 var(--sans-serif);
+  font: 16px/1.5 var(--serif);
   max-width: 160px;
   white-space: nowrap;
 } */
@@ -142,7 +154,7 @@ a.logo-fillin svg {
 }
 
 .post-empty {
-  font: 16px/1.5 var(--sans-serif);
+  font: 16px/1.5 var(--serif);
 }
 
 #site-footer {
@@ -150,7 +162,7 @@ a.logo-fillin svg {
   max-width: var(--max-width);
   display: flex;
   justify-content: space-between;
-  font: 16px/1.5 var(--sans-serif);
+  font: 16px/1.5 var(--serif);
 }
 
 a.social-icon {
@@ -189,7 +201,7 @@ a.social-icon:hover svg {
   inset: auto;
   margin: 0;
   max-width: 400px;
-  font-family: var(--sans-serif);
+  font-family: var(--serif);
   font-size: 12px;
 }
 

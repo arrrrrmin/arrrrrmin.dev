@@ -14,7 +14,7 @@
 
 :root {
   --serif: "Merriweather-Variable", ui-serif, serif;
-  --sans-serif: "Merriweather-Variable", ui-sans-serif, sans-serif;
+  --sans-serif: "Inter", ui-sans-serif, sans-serif;
   --monospace: "Spline Sans Mono Variable", Menlo, Consolas, monospace;
   --monospace-font: 14px/1.5 var(--monospace);
 }

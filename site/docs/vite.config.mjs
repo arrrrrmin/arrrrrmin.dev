@@ -1,11 +1,118 @@
-const SITE_ORIGIN = "https://arrrrrmin.dev";
+import {readdirSync, readFileSync} from "node:fs";
+import {join} from "node:path";
+import {fileURLToPath} from "node:url";
+import {deserialize} from "@observablehq/notebook-kit";
+import {config, observable} from "@observablehq/notebook-kit/vite";
+import {JSDOM} from "jsdom";
+import {defineConfig} from "vite";
 
-/** "noreferrer" ? */
+const ROOT = fileURLToPath(new URL(".", import.meta.url));
+const TEMPLATE = join(ROOT, "main.tmpl");
+
+const SITE_ORIGIN = "https://arrrrrmin.dev";
+const SITE_NAME = "arrrrrmin.dev";
+const AUTHOR = "arrrrrmin";
+
 const REL = ["noopener"];
 
-export default {
-  plugins: [externalLinks(), activeNav()]
-};
+const parser = new (new JSDOM().window.DOMParser)();
+
+export default defineConfig(({command}) => ({
+  ...config(),
+  root: ROOT,
+  base: command === "serve" ? "/" : "./",
+  build: {
+    outDir: ".observable/dist",
+    rollupOptions: {input: notebooks()}
+  },
+  plugins: [
+    observable({
+      template: TEMPLATE,
+      transformTemplate,
+      transformNotebook: (notebook) => ({...notebook, title: ""})
+    }),
+    externalLinks(),
+    activeNav()
+  ]
+}));
+
+/** Every notebook under docs the build entry points (no build cache). */
+function notebooks() {
+  return readdirSync(ROOT, {recursive: true, encoding: "utf-8"})
+    .map((file) => file.split(/[\\/]/).join("/"))
+    .filter((file) => file.endsWith(".html"))
+    .filter((file) => !file.split("/").includes(".observable"))
+    .map((file) => join(ROOT, file));
+}
+
+/** Fills the ${…} placeholders in the template from the notebook’s own metadata. */
+async function transformTemplate(template, {filename, path}) {
+  const source = readFileSync(filename, "utf-8");
+  const notebook = deserialize(source, {parser});
+  const meta = readMeta(source, filename);
+  const isIndex = path.endsWith("/index.html");
+  const isRoot = path === "/index.html";
+  const name = meta.title ?? (isUntitled(notebook.title) ? navTitle(template, path) : notebook.title);
+  const image = resolveImage(meta.image);
+  return render(template, {
+    title: isRoot || !name ? SITE_NAME : `${name} · ${SITE_NAME}`,
+    description: meta.blurb,
+    keywords: meta.tags?.join(", "),
+    author: AUTHOR,
+    canonical: SITE_ORIGIN + path.replace(/index\.html$/, ""),
+    type: isIndex ? "website" : "article",
+    published: meta.date,
+    robots: meta.draft ? "noindex, nofollow" : undefined,
+    card: image ? "summary_large_image" : "summary",
+    siteName: SITE_NAME,
+    image
+  });
+}
+
+/** The <!-- @meta {…} --> block a notebook carries in a hidden markdown cell. */
+function readMeta(source, filename) {
+  const json = source.match(/@meta\s*(\{[\s\S]*?\})/)?.[1];
+  if (!json) return {};
+  try {
+    return JSON.parse(json);
+  } catch (error) {
+    console.warn(`warning: invalid @meta in ${filename}: ${error.message}`);
+    return {};
+  }
+}
+
+/** Notebooks that never got a title in Observable Desktop. */
+function isUntitled(title) {
+  return !title || title === "Untitled";
+}
+
+/** Falls back to the section’s own label in the template’s nav. */
+function navTitle(template, path) {
+  const current = section(path);
+  if (!current) return null;
+  const start = template.search(/<nav[\s>]/i);
+  const end = template.indexOf("</nav>", start);
+  if (start < 0 || end < start) return null;
+  for (const [, href, label] of template.slice(start, end).matchAll(/<a\s[^>]*href=["']?([^"'\s>]+)[^>]*>([^<]*)<\/a>/gi)) {
+    if (section(href) === current) return label.trim();
+  }
+  return null;
+}
+
+/** Social images are given as public/name.png (or /public/name.png); serve them from the root. */
+function resolveImage(image) {
+  return image ? `${SITE_ORIGIN}/${image.replace(/^\//, "").replace(/^public\//, "")}` : undefined;
+}
+
+function render(template, data) {
+  return template
+    .replace(/\$\{(\w+)\}/g, (match, key) => (data[key] == null ? "" : escapeAttribute(String(data[key]))))
+    .replace(/^[ \t]*<(?:meta|link)\b[^>]*\s(?:content|href)=""[^>]*>[ \t]*\r?\n/gm, "");
+}
+
+function escapeAttribute(value) {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
 
 function activeNav() {
   return {
