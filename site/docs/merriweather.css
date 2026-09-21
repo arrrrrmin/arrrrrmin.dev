@@ -1,0 +1,114 @@
+/**
+- Merriweather-Light.woff2
+- Merriweather-LightItalic.woff2
+- Merriweather-Regular.woff2
+- Merriweather-Italic.woff2
+- Merriweather-Bold.woff2
+- Merriweather-BoldItalic.woff2
+- Merriweather-Black.woff2
+- Merriweather-BlackItalic.woff2
+- Merriweather[opsz,wdth,wght].woff2
+- Merriweather-Italic[opsz,wdth,wght].woff2
+*/
+
+
+:root {
+  --serif: "Merriweather-Variable", ui-serif, serif;
+  --sans-serif: "Merriweather-Variable", ui-sans-serif, sans-serif;
+  --monospace: "Spline Sans Mono Variable", Menlo, Consolas, monospace;
+  --monospace-font: 14px/1.5 var(--monospace);
+}
+
+html {
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  font-size: 16px;
+}
+
+@font-face {
+  font-family: 'Merriweather-Light';
+  src: url('/fonts/merriweather/Merriweather-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Merriweather-LightItalic';
+  src: url('/fonts/merriweather/Merriweather-Italic.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Merriweather-Regular';
+  src: url('/fonts/merriweather/Merriweather-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Supreme-Italic';
+  src: url('/fonts/merriweather/Merriweather-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Merriweather-Bold';
+  src: url('/fonts/merriweather/Merriweather-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Merriweather-BoldItalic';
+  src: url('/fonts/merriweather/Merriweather-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Merriweather-Black';
+  src: url('/fonts/merriweather/Merriweather-Black.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Merriweather-BlackItalic';
+  src: url('/fonts/merriweather/Merriweather-BlackItalic.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+  font-style: italic;
+}
+/**
+* This is a variable font
+* You can control variable axes as shown below:
+* font-variation-settings: wght 800.0;
+*
+* available axes:
+'wght' (range from 100.0 to 800.0
+*/
+@font-face {
+  font-family: 'Merriweather-Variable';
+  src: url('/fonts/merriweather/Merriweather[opsz,wdth,wght].woff2') format('woff2');
+  font-weight: 100 800;
+  font-display: swap;
+  font-style: normal;
+}
+/**
+* This is a variable font
+* You can control variable axes as shown below:
+* font-variation-settings: wght 800.0;
+*
+* available axes:
+'wght' (range from 100.0 to 800.0
+*/
+@font-face {
+  font-family: 'Merriweather-VariableItalic';
+  src: url('/fonts/merriweather/Merriweather-Italic[opsz,wdth,wght].woff2') format('woff2');
+  font-weight: 100 800;
+  font-display: swap;
+  font-style: italic;
+}
+

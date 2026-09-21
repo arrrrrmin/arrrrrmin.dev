@@ -1,0 +1,624 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Charting - Introduction</title>
+  <script id="1" type="text/markdown">
+    # Charting - Introduction
+  </script>
+  <script id="2" type="text/markdown" hidden="">
+    <!-- @meta {
+      "date": "2026-03-01",
+      "tags": ["charting", "visual encodings", "visual symbols", "chart reading"],
+      "blurb": "Exploring the very basics of charting. Knowing about the fundamentals makes complexs things easier."
+    } -->
+  </script>
+  <script id="4" type="application/sql" hidden="" database="duckdb" output="co2_and_gdp">
+    SELECT * FROM read_csv("../shared/owid/co2_and_gdp_per_capita.csv") WHERE entity in ('World', 'United States', 'China', 'India', 'United Kingdom', 'Germany', 'France', 'Spain', 'Brazil', 'Canda', 'Mexico', 'Chile', 'Iran')
+  </script>
+  <script id="5" type="text/markdown">
+    First we need to learn what a visualisation is made of. We basically have three components to get started:
+    Visual encodings, symbols and annotation. From my personal experience I can tell you learning about the dry
+    theory enabled me to scan chart faster, which come is very handy even in day to day news cycles.
+  </script>
+  <script id="6" type="text/markdown">
+
+    ## Visual encodings
+
+    Encodings hold the data and give us the mechanisms to transform data into visuals.
+    Encodings are the smalles unit (the atom) of charts and most charts use multiple encodings to show data.
+    Known ones are: **Position**, **Length**, **Slope**, **Area** or **Color**.
+    Depending on which symbol you choose to encode your data you will use different encodings.
+    A bar chart usually used position and length, while a line chart also encodes data with a slope that is
+    created by the angle of the line between two points. You can see examples of common encodings in the vis.
+
+  </script>
+  <script id="7" type="text/markdown">
+    ## Symbols
+
+    Symbols take different encodings and transform you data through the encodings into a visual.
+    Commonly known ones are: **Lines**, **bars**, **rectangle**, **circle** or **arrows**.
+    Here are a few examples of encoding for traditional kind of charts.
+    The examples show different perspectives of the GDP (gross domestic product) and CO₂ emission development over the year for Spain.
+  </script>
+  <script id="8" type="module">
+    const veInputs = view(
+      Inputs.form({
+        symbol: Inputs.select(["Line", "Rectangle", "Rectangle 2", "Circle", "Arrow"], {
+          label: "Select a symbol",
+        }),
+        encoding: Inputs.toggle({ label: "Encodings", value: true }),
+      }),
+    );
+  </script>
+  <script id="12" type="text/x-typescript">
+    const co2AndGdp = Array.from(co2_and_gdp);
+  </script>
+  <script id="13" type="text/x-typescript">
+    const colours = {light: "#ccc",  accent: "#000"}
+
+    function ChartVisualEncoding({ data, inputs, width }) {
+      const height = 400;
+      const textOptions = { fontSize: 16, fontWeight: 500, fill: colours.accent };
+      const lineOptions = { strokeWidth: 2, stroke: colours.accent };
+      const dotOptions = { r: 5, fill: colours.accent };
+
+      const spain_data = data.filter((d) => d.entity === "Spain");
+
+      let marks = [];
+      let x = {};
+      let y = {};
+      let r = {};
+      let c = {};
+      let title = "";
+      let subtitle = "";
+      const symbol = inputs.symbol;
+      const show_encodings = inputs.encoding;
+
+      if (symbol === "Arrow") {
+        title = "GDP change to previous year in Spain since 2010";
+        x = { tickFormat: "d" };
+        y = { grid: true };
+        let arrow_data = spain_data.filter((d) => d.year > 2009);
+        let dp_length = spain_data.filter((d) => d.year >= 2019 && d.year <= 2020);
+        const y1y2 = {
+          y1: Plot.window({ k: 2, reduce: "first" }),
+          y2: Plot.window({ k: 2, reduce: "last" }),
+        };
+        marks = [
+          Plot.arrow(
+            arrow_data,
+            Plot.map(y1y2, {
+              x: (d) => d.year + 1,
+              y: "gdp_per_capita",
+              stroke: colours.light,
+            }),
+          ),
+          ...(show_encodings
+            ? [
+                // Length
+                Plot.arrow(
+                  dp_length,
+                  Plot.map(y1y2, {
+                    x: (d) => d.year + 1,
+                    y: "gdp_per_capita",
+                    ...lineOptions,
+                  }),
+                ),
+                Plot.text(["Length"], {
+                  x: dp_length[0].year + 1,
+                  y: d3.mean(dp_length, (d) => d.gdp_per_capita),
+                  dx: 4,
+                  textAnchor: "start",
+                  ...textOptions,
+                }),
+                // Position
+                Plot.dot(dp_length, {
+                  x: 2020,
+                  y: "gdp_per_capita",
+                  fill: (d, i) => (i === 0 ? colours.accent : "transparent"),
+                  stroke: colours.accent,
+                }),
+                Plot.text(
+                  dp_length.map((d, i) => ({
+                    ...d,
+                    text: i === 0 ? "Position" : "Direction",
+                  })),
+                  {
+                    x: 2020,
+                    y: "gdp_per_capita",
+                    text: "text",
+                    dx: -4,
+                    textAnchor: "end",
+                    ...textOptions,
+                  },
+                ),
+              ]
+            : []),
+        ];
+      }
+      if (symbol === "Circle") {
+        title = "GDP and CO₂ emission of Spain since 2000";
+        subtitle = "Circle radius indicates CO₂ emission of the corresponding year";
+        const circle_data = spain_data.filter((d) => d.year > 2000);
+        const dp_area = spain_data.filter((d) => d.year === 2007);
+        x = { tickFormat: "d", ticks: 10 };
+        r = {
+          range: [4, 20],
+          domain: d3.extent(circle_data, (d) => d.emissions_total_per_capita),
+        };
+        marks = [
+          Plot.dot(circle_data, {
+            x: "year",
+            y: "gdp_per_capita",
+            r: "emissions_total_per_capita",
+            stroke: colours.light,
+          }),
+          ...(show_encodings
+            ? [
+                // Area
+                Plot.dot(dp_area, {
+                  x: "year",
+                  y: "gdp_per_capita",
+                  r: "emissions_total_per_capita",
+                  fill: colours.accent,
+                }),
+                Plot.text(["Position, Area"], {
+                  x: dp_area[0].year,
+                  y: dp_area[0].gdp_per_capita,
+                  z: dp_area[0].emissions_total_per_capita,
+                  dy: -30,
+                  ...textOptions,
+                }),
+              ]
+            : []),
+        ];
+      }
+      if (symbol === "Rectangle 2") {
+        title = "CO₂ emission in different countries since 1990";
+        x = {
+          axis: "top",
+          tickPadding: 0,
+          tickFormat: "d",
+          tickSize: 0,
+          label: null,
+          tickRotate: -90,
+          insetLeft: -11,
+        };
+        y = { axis: "right", tickSize: 0, label: null };
+        c = {
+          type: "sequential",
+          legend: true,
+          scheme: "Greys",
+          domain: [0, d3.max(data, (d) => d.emissions_total_per_capita)],
+          label: "CO₂ emissions per capita",
+        };
+
+        const dp_position = data.find((d) => d.entity === "France" && d.year === 2012);
+        const dp_color = data.find((d) => d.entity === "Spain" && d.year === 2006);
+        const localdata = width > 600 ? data : data.filter(d => d.year >= 2002);
+
+        marks = [
+          Plot.rect(localdata, {
+            x: "year",
+            y: "entity",
+            fill: "emissions_total_per_capita",
+            inset: 0.5,
+            rx: 2,
+            stroke: "black",
+          }),
+
+          ...(show_encodings
+            ? [
+                // Position
+                Plot.dot([dp_position], { x: "year", y: "entity", ...dotOptions }),
+                Plot.text([{ ...dp_position, text: "Position" }], {
+                  x: "year",
+                  y: "entity",
+                  text: "text",
+                  dx: 10,
+                  textAnchor: "start",
+                  ...textOptions,
+                }),
+                // Position
+                Plot.dot([dp_color], { x: "year", y: "entity", ...dotOptions }),
+                Plot.text([{ ...dp_color, text: "Color / Hue" }], {
+                  x: "year",
+                  y: "entity",
+                  text: "text",
+                  dx: 10,
+                  textAnchor: "start",
+                  ...textOptions,
+                }),
+              ]
+            : []),
+        ];
+      }
+      if (symbol === "Rectangle") {
+        title = "GDP in Spain since 2010";
+        x = { tickFormat: "d", tickSize: 0, label: null };
+        const xy = { x: "year", y: "gdp_per_capita" };
+        const dp_position = spain_data.find((d) => d.year === 2020);
+        marks = [
+          Plot.barY(
+            spain_data.filter((d) => d.year >= 2010),
+            { ...xy, stroke: colours.light, fill: null },
+          ),
+          ...(show_encodings
+            ? [
+                // Position
+                Plot.dotX([dp_position], {
+                  x: 2020,
+                  y: dp_position.gdp_per_capita,
+                  ...dotOptions,
+                }),
+                Plot.text(["Position"], {
+                  x: 2020,
+                  y: dp_position.gdp_per_capita,
+                  textAnchor: "start",
+                  dx: 10,
+                  ...textOptions,
+                }),
+                // Length
+                Plot.ruleX(dp_position, {
+                  x: 2020,
+                  y1: dp_position.gdp_per_capita,
+                  y2: 0,
+                  ...lineOptions,
+                }),
+                Plot.text(["Length"], {
+                  x: 2020,
+                  y: dp_position.gdp_per_capita / 2,
+                  dx: 4,
+                  textAnchor: "start",
+                  ...textOptions,
+                }),
+              ]
+            : []),
+        ];
+      }
+      if (symbol === "Line") {
+        title = "GDP in Spain since 2020";
+        x = { ticks: 3, tickFormat: "d" };
+        y = { tickFormat: "s" };
+        const xy = { x: "year", y: "gdp_per_capita" };
+        const dp_position = spain_data.find((d) => d.year === 2021);
+        const dp_length = spain_data.filter((d) => d.year >= 2021 && d.year <= 2022);
+        marks = [
+          Plot.line(
+            spain_data.filter((d) => d.year >= 2020),
+            { ...xy, stroke: colours.light },
+          ),
+          ...(show_encodings
+            ? [
+                // Length
+                Plot.line(dp_length, { ...xy, ...lineOptions }),
+                Plot.text(["Length"], {
+                  x: d3.mean(dp_length, (d) => d.year),
+                  y: d3.mean(dp_length, (d) => d.gdp_per_capita),
+                  dy: -20,
+                  ...textOptions,
+                }),
+                // Slope
+                Plot.lineX(dp_length, {
+                  x: 2022,
+                  y: "gdp_per_capita",
+                  ...lineOptions,
+                }),
+                Plot.textX(["Slope"], {
+                  x: 2022,
+                  y: d3.mean(dp_length, (d) => d.gdp_per_capita),
+                  dx: 2,
+                  textAnchor: "start",
+                  ...textOptions,
+                }),
+                // Position
+                Plot.dot([dp_position], { ...xy, ...dotOptions }),
+                Plot.text(["Position"], {
+                  x: dp_position.year,
+                  y: dp_position.gdp_per_capita,
+                  dy: 10,
+                  ...textOptions,
+                }),
+              ]
+            : []),
+        ];
+      }
+      return Plot.plot({
+        title,
+        subtitle: subtitle + "Data provided by ourworldindata.org",
+        width,
+        height,
+        marginLeft: symbol === "Rectangle 2" ? 20 : 60,
+        marginRight: symbol === "Rectangle 2" ? 80 : 20,
+        x,
+        y,
+        r,
+        color: c,
+        marks,
+      });
+    }
+  </script>
+  <script id="10" type="text/x-typescript">
+    ChartVisualEncoding({ data: co2AndGdp, inputs: veInputs, width })
+  </script>
+  <script id="9" type="text/markdown">
+    Don't get hung up in the data itself, we'll explore this data later on in more detail.
+    First we only need to understand how we get from data to a representation.
+  </script>
+  <script id="17" type="text/x-typescript">
+    function ChartVisualEncodingSimpleCompare({ co2AndGdp, symbol, width, height }) {
+      const pandemic = co2AndGdp
+        .filter((d) => ["Germany", "India"].includes(d.entity) && [2019, 2020].includes(d.year))
+        .sort((a, b) => b.year - a.year);
+
+      const data = d3
+        .groups(pandemic, (d) => d.entity)
+        .map(([_, group]) => ({
+          ...group[0],
+          diff_emissions_total_per_capita:
+            group[0].emissions_total_per_capita - group[1].emissions_total_per_capita,
+          diff_gdp_per_capita: (group[0].gdp_per_capita - group[1].gdp_per_capita) * -1,
+        }));
+      const strokeOption = { fill: null, stroke: colours.accent, strokeWidth: 2 };
+      let x =
+        symbol === "Circle" ? { grid: true, label: null } : { grid: true, label: "GDP loss (US$)" };
+      let y = symbol === "Circle" ? { grid: true, label: null } : { padding: 0.6, label: null };
+      const marks =
+        symbol === "Rectangle"
+          ? [
+              Plot.barX(data, {
+                x: "diff_gdp_per_capita",
+                y: "entity",
+                ...strokeOption,
+                rx: 2,
+              }),
+            ]
+          : [
+              Plot.dot(data, {
+                x: "entity",
+                y: "year",
+                r: (d) => d.diff_gdp_per_capita * -1,
+                ...strokeOption,
+              }),
+              Plot.text(data, {
+                x: "entity",
+                y: "year",
+                text: (d) => `${d3.format(".2s")(d.diff_gdp_per_capita)}\nUS$`,
+                fontSize: 16,
+                fill: colours.accent,
+                fontWeight: 500,
+              }),
+            ];
+
+      return Plot.plot({
+        title: "Per capita GDP loss in 2020 for India and Germany",
+        subtitle: "See how you persive different symbols showing the exact same data",
+        width,
+        height,
+        marginLeft: symbol === "Circle" ? 0 : 52,
+        x,
+        y,
+        r: { range: [0, 60] },
+        marks,
+      });
+    }
+  </script>
+  <script id="14" type="text/markdown">
+    ## Symbols are precieved differently
+
+    As you may already guess from the example before there are symbols that encode the same data differently from
+    others. The reason for this behaviour lives in the way we precieved shapes. Here is a simplified example:
+  </script>
+  <script id="15" type="module">
+    const ve_inputs2 = view(
+      Inputs.form({
+        symbol: Inputs.select(["Rectangle", "Circle"], {
+          label: "Select a symbol",
+        }),
+      }),
+    );
+  </script>
+  <script id="18" type="text/x-typescript">
+    ChartVisualEncodingSimpleCompare({ co2AndGdp, ...ve_inputs2, width, height: 320 })
+  </script>
+  <script id="19" type="text/markdown">
+    Most people don't think the circles are in the right proportion, since they think in terms of size (length, width or radius)
+    instead of area. The rectangles encoding is length and the circles encoding is radius/area.
+  </script>
+  <script id="22" type="text/markdown">
+    ## Annotation
+    Text on a chart is another layer to present data to you. Often in charts you don't get a classic scale,
+    but texts that are aligned without a ruler directly on the data. Annotations are mostly used to guide readers
+    or to highlight certain areas or aspects in the chart.
+  </script>
+  <script id="23" type="text/markdown">
+    ## Efficient chart reading
+
+    Alberto Cairo, author of [How charts lie](https://wwnorton.com/books/9781324001560) has but it in a nice and catchy phrase:
+
+    > _A good chart isn't an illustration but a visual argument or a part of an argument._
+
+    Just like literacy, graphicacy is a necessary skill to be able to follow a visual argument. And this skill is not only (but especially) important for data presenters like chart designers or scientific practitioneers that e.g. wants to show their results.
+  </script>
+  <script id="24" type="text/markdown">
+    ## Suggested order
+
+    He highlights a certain order so we have an order we can practise every time we see a chart:
+    The better we get at reading the visual argument, the faster we get and the better we can follow the argument made by the chart:
+
+    1. Title, introduction, caption and source
+    2. Measurements, units, scales and legends
+    3. Methods of visual encoding
+    4. Annotations inside the chart content
+    5. Take a bird's eye view to spot patterns
+
+    I practise this order (as of the writing) for a few months and start noticing that I usually have a good impression of what's coming after point the scales and units. You will spot the most bad actors by simply checking on the axis.
+    Others are more subtile, or not even proofable bad actors, but make such minor adjustments that we will only have a vage feeling by
+    following this order.
+
+    At least we don't gaze over it and may get it wrong. **We can also get a stable feeling for what designers want us to look at, which enables us to ask why or what we can not see.**
+
+    ![Diagram comparing economic development, based on GDP with CO2 emissions per country. Image is 80% desaturated scaled so annotations about reading order is readable. Dips almost for all show countries, in 2020 during corona pandemic. Largest CO2 emittor amongst shown China, Germany, India, World average and others is the USA, followed by Germany.](./images/efficiently-reading-charts.png)
+
+    After annotating this image I noticed I got no african countries in there. I'm honestly sorry for the european gaze.
+    But as you can see not all mistages make designers bad actors.
+
+    The chart above is a little more complex chart for most readers, since we go away from e.g. the known time scale X axis on the bottom and used this scale for the GDP so we can draw line based on the position of x: GDP and y: CO₂ emission.
+    The years are labeled per coloured country line at the start and end. We have three scales (x, y and color), annotations and a information box on this map. Most non-expert readers will trouble skimming throug this chart. It took some time for me, the first time I saw such a chart.
+
+    > _But using the reading order will prevent us from skimming, instead forces us to read the chart. That will increases the chance we get it right._
+
+  </script>
+  <script id="25" type="text/markdown">
+    ## Discover data
+
+    Sometimes you get the opportunity to look at data freely by choosing examples. Somthing I would wish to happen more often, especially in data driven news coverage. In these instances you can discover the data freely, but that also makes it harder for authors to tell a story, because they can't know what you where discovering in the data. There is a simple solution embed static charts like the one above, to show what you wanted to highlight. In the above example it's amongst others that emissions and GDP suffered for many countries during corona. When people read to the end, authors can choose to add the interactive chart so users can replicate the static chart image and discover more trends.
+  </script>
+  <script id="26" type="module">
+    function getCentersPerCountry(data) {
+      const extents = d3.groups(data, (d) => d.code).map(
+        ([_, group]) => group[parseInt(group.length / 2)],
+      );
+      return extents;
+    }
+    function getYearExtentEntries(data) {
+      return d3.groups(data, (d) => d.code).map(([_, group]) => {
+        const sorted = group.sort((a, b) => a.year - b.year);
+        return [sorted[0], sorted[sorted.length - 1]];
+      });
+    }
+
+    function ConnectedScatterPlot({ co2AndGdp2, selectedCountryData, width, height }) {
+      const [min_year, max_year] = d3.extent(co2AndGdp2, (d) => d.year);
+      const data = co2AndGdp2.filter((d) => d.entity !== selectedCountryData[0].entity);
+      const fontSizeSm = width > 500 ? 14 : 12;
+      const fontSizeLg = width > 500 ? 20 : 16;
+      return Plot.plot({
+        title: "Economic development compared to CO₂ emissions",
+        subtitle: `GDP and CO₂ emission development of selected countries between ${min_year} and ${max_year}. Data provided by ourworldindata.org`,
+        width,
+        height: width > 500 ? 400 : width,
+        marginLeft: 20,
+        marginRight: 40,
+        x: { label: "GDP per capita (USD)", grid: true, tickFormat: "s", },
+        y: { label: "Emissions per capita (tons of CO₂)" },
+        marks: [
+          Plot.line(data, {
+            x: "gdp_per_capita",
+            y: "emissions_total_per_capita",
+            z: "entity",
+            stroke: colours.light,
+            curve: "catmull-rom",
+          }),
+          Plot.dot(
+            getYearExtentEntries(data).flatMap((d) => d),
+            {
+              x: "gdp_per_capita",
+              y: "emissions_total_per_capita",
+              fill: colours.light,
+              r: 4,
+              z: "entity",
+            },
+          ),
+          Plot.text(
+            getYearExtentEntries(data).flatMap((d) => d),
+            {
+              x: "gdp_per_capita",
+              y: "emissions_total_per_capita",
+              text: (d) => `${d.year}`,
+              z: "entity",
+              fill: colours.light,
+              stroke: "white",
+              fontSize: fontSizeSm,
+              fontWeight: 600,
+              dy: -8,
+              textAnchor: "start",
+            },
+          ),
+          Plot.text(getCentersPerCountry(data), {
+            x: "gdp_per_capita",
+            y: "emissions_total_per_capita",
+            text: (d) => d.entity,
+            z: "entity",
+            fill: colours.light,
+            stroke: "white",
+            fontSize: fontSizeLg,
+            fontWeight: 600,
+            dy: -20,
+          }),
+          // Selected country
+          Plot.line(selectedCountryData, {
+            x: "gdp_per_capita",
+            y: "emissions_total_per_capita",
+            z: "entity",
+            stroke: colours.accent,
+            curve: "catmull-rom",
+          }),
+          Plot.dot(
+            getYearExtentEntries(selectedCountryData).flatMap((d) => d),
+            {
+              x: "gdp_per_capita",
+              y: "emissions_total_per_capita",
+              fill: colours.accent,
+              r: 4,
+              z: "entity",
+            },
+          ),
+          Plot.text(
+            getYearExtentEntries(selectedCountryData).flatMap((d) => d),
+            {
+              x: "gdp_per_capita",
+              y: "emissions_total_per_capita",
+              text: (d) => `${d.year}`,
+              z: "entity",
+              fill: colours.accent,
+              stroke: "white",
+              fontSize: fontSizeSm,
+              fontWeight: 600,
+              dy: -8,
+              textAnchor: "start",
+            },
+          ),
+          Plot.text(getCentersPerCountry(selectedCountryData), {
+            x: "gdp_per_capita",
+            y: "emissions_total_per_capita",
+            text: (d) => d.entity,
+            z: "entity",
+            fill: colours.accent,
+            stroke: "white",
+            fontSize: fontSizeLg,
+            fontWeight: 600,
+            dy: -20,
+          }),
+        ],
+      });
+    }
+  </script>
+  <script id="27" type="application/sql" hidden="" database="duckdb" output="countries_">
+    SELECT distinct(entity) FROM read_csv("../shared/owid/co2_and_gdp_per_capita.csv");
+  </script>
+  <script id="28" type="text/x-typescript">
+    const predefinedCountries = ['World', 'Gabon', 'Israel', 'Japan', 'United States', 'Germany', 'China', 'Brazil', 'Canada'];
+    const countries = Array.from(countries_.map(d => d.entity));
+    const discoverInputs = view(
+      Inputs.form({
+        country: Inputs.select(countries, { sort: true, label: "Country", value: "France" }),
+        end: Inputs.range(
+          [1990, 2023],
+          {label: "End year", step: 1, value: 2000, focus: false}),
+      }),
+    );
+  </script>
+  <script id="29" type="application/sql" hidden="" database="duckdb" output="co2_and_gdp2_">
+    SELECT * FROM read_csv("../shared/owid/co2_and_gdp_per_capita.csv") WHERE year >= 1990
+  </script>
+  <script id="32" type="text/x-typescript">
+    const co2AndGdp2 = Array.from(co2_and_gdp2_);
+  </script>
+  <script id="35" type="module">
+    const standardCountryData = co2AndGdp2.filter(d => predefinedCountries.includes(d.entity) && d.year <= discoverInputs.end)
+    const selectedCountryData = co2AndGdp2.filter(d => d.entity === discoverInputs.country && d.year <= discoverInputs.end);
+  </script>
+  <script id="40" type="text/x-typescript">
+    ConnectedScatterPlot({ co2AndGdp2: standardCountryData, selectedCountryData, width})
+  </script>
+</notebook>

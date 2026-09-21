@@ -1,0 +1,275 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Tangram Mosaic Patterns</title>
+  <script id="2" type="text/markdown">
+    # Tangram Mosaic Patterns
+  </script>
+  <script id="1" type="text/markdown" hidden="">
+    <!-- @meta {
+      "date": "2026-02-28",
+      "image": "public/tangram-mosaic-patterns.png",
+      "tags": ["tangram", "generative", "patterns", "d3js"],
+      "blurb": "Generating tangram mosaic patterns with d3js."
+    } -->
+  </script>
+  <script id="512" type="text/markdown">
+    Recently I saw pattern art like [Error Page Imagery](https://observablehq.com/@observablehq/10-print-pattern-forked-from-saneef?collection=@observablehq/error-page-imagery) or [Tessellated-Tangrams](https://observablehq.com/@saneef/067-tessellated-tangrams) and really wanted to know how it works. Since this is my first approach of doing some pattern artsy I’ll try a very simple approach of mirroring squared tangram patterns and repeating the pattern of partial shapes.
+  </script>
+  <script id="524" type="text/markdown">
+    ## The tangram square
+
+    The easy part first, we need to define a square with all the tangram pieces inside. We can name it `a` to `g` so we’ll later know where each piece is.
+  </script>
+  <script id="36" type="module" pinned="" hidden="">
+    const square = getSquare(d3.min([640, width]))
+    display(square)
+  </script>
+  <script id="525" type="text/markdown">
+    This square is now our main playground. Depending on which pieces you tick in the `pattern` radio list below this base square is changing and repeated at the bottom.
+  </script>
+  <script id="5" type="module" hidden="">
+    const basic = () => {
+      // This cell generates the default tangram square
+      const margin = 1;
+      const w = d3.min([640, width]) + margin;
+      const height = w + margin;
+      const svg = d3
+        .create("svg")
+        .attr("width", w)
+        .attr("height", height)
+        .attr("viewBox", [0, 0, w, height]);
+
+      const path = d3
+        .line()
+        .x((d) => d[0])
+        .y((d) => d[1])
+        .curve(d3.curveLinearClosed)
+
+      const groupTransform = `translate(${margin / 2}, ${margin / 2})`;
+
+      const g = svg.append("g").attr("transform", groupTransform);
+      const glabels = svg.append("g").attr("transform", groupTransform);
+
+      g.selectAll("path")
+        .data(square)
+        .join("path")
+        .attr("stroke", ({ key }) => (letters.includes(key) ? "black" : "black"))
+        .attr("fill", ({ key }) => (letters.includes(key) ? "black" : "white"))
+        .attr("d", ({ poly }) => path(poly));
+
+      glabels
+        .selectAll("text")
+        .data(square.map(({ cent }) => cent))
+        .join("text")
+        .attr("text-anchor", "middle")
+        .attr("x", ({ x }) => x)
+        .attr("y", ({ y }) => y)
+        .attr("fill", ({ k }) => (letters.includes(k) ? "white" : "black"))
+        .text(({ k }) => k);
+
+      return svg.node();
+    }
+  </script>
+  <script id="531" type="text/x-typescript">
+    basic()
+  </script>
+  <script id="533" type="text/markdown">
+    At this point we can add a few more options, like lines to show, number of cells or the size of the final svg.
+    We can also build a random mode, in case anyone simply doesn’t want a repeating pattern but more chaos.
+  </script>
+  <script id="74" type="module">
+    const letters = view(Inputs.checkbox(patternLetters, {
+      label: "Pattern",
+      value: ["d", "f", "g"]
+    }))
+  </script>
+  <script id="196" type="module">
+    const form = view(
+        Inputs.form({
+        lines: Inputs.toggle({ label: "Show lines", value: true }),
+        cells: Inputs.range([4, 40], { label: "Cells", step: 2, value: 24 }),
+        rand: Inputs.toggle({ label: "Random mode", value: false }),
+        threshold: Inputs.range([0, 1], {
+          label: "Rand. threshold",
+          step: 0.05,
+          value: 0.5
+        }),
+        size: Inputs.range([200, width], {
+          label: "Size",
+          step: 50,
+          value: width - 200
+        }),
+        fill: Inputs.color({ label: "Fill", value: "#ffffff" }),
+        background: Inputs.color({ label: "Background", value: "#e32400" })
+      })
+    )
+  </script>
+  <script id="528" type="text/x-typescript">
+    pattern()
+  </script>
+  <script id="529" type="text/markdown">
+    ## The code
+
+    If you are interested in how this is actually done, either look at the notebooks of other people I linked above, or you can dig through the following code. The whole thing is simply the `pattern` function which makes use of `getTransform` which handles the mirroring for each tile. If you want to explore it interactively the code is also available on [Observable](https://observablehq.com/@arrrrrmin/tangram-mosaic-patterns).
+  </script>
+  <script id="191" type="module" pinned="">
+    const pattern = () => {
+      const margin = 1;
+      const width = form.size + margin;
+      const height = form.size + margin;
+      const svg = d3
+        .create("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", [0, 0, width, height]);
+
+      const g = svg
+        .append("g")
+        .attr("transform", `translate(${margin / 2}, ${margin / 2})`);
+
+      const data = grid.grid;
+      const size = grid.size;
+
+      const path = d3
+        .line()
+        .x((d) => d[0])
+        .y((d) => d[1])
+        .curve(d3.curveLinearClosed)
+
+      g.selectAll("g")
+        .data(data)
+        .join("g")
+        .attr("id", ({ i, j }) => `${i}-${j}`)
+        .attr("transform", ({ i, j }) => getTransforms(i, j, size, form.cells))
+        .selectAll("path")
+        .data((d) => d.square)
+        .join("path")
+        .attr("stroke", ({ key }) => (form.lines ? form.fill : form.background))
+        .attr("fill", ({ key }) => getElementFill(key))
+        .attr("d", ({ poly }) => path(poly));
+
+      return svg.node();
+    }
+  </script>
+  <script id="491" type="module" pinned="">
+    function getElementFill(key) {
+      let colour = form.background;
+      if (form.rand && getRandomLetters()) {
+        colour = form.fill;
+      } else if (!form.rand && letters.includes(key)) {
+        colour = form.fill;
+      }
+      return colour;
+    }
+  </script>
+  <script id="446" type="application/vnd.observable.javascript">
+    function getRandomLetters() {
+      if (!form.rand) return false;
+      return d3.randomUniform(1)() < form.threshold;
+    }
+  </script>
+  <script id="475" type="module" pinned="" hidden="">
+    const patternLetters = ["a", "b", "c", "d", "e", "f", "g"]
+  </script>
+  <script id="297" type="module">
+    function getTransforms(i, j, size, cells) {
+      const translate = { x: i * size, y: j * size };
+      let scale = { x: 1, y: 1 };
+      if ((i + 1) % 2 == 0) {
+        scale.x = -1;
+        translate.x += size;
+      }
+      if ((j + 1) % 2 == 0) {
+        scale.y = -1;
+        translate.y += size;
+      }
+      return `translate(${translate.x}, ${translate.y}) scale(${scale.x}, ${scale.y})`;
+    }
+  </script>
+  <script id="78" type="application/vnd.observable.javascript">
+    combinations = [
+      "c",
+      "f",
+      "ae",
+      "bc",
+      "ce",
+      "cf",
+      "ef",
+      "eg",
+      "fg",
+      "abf",
+      "acg",
+      "aef",
+      "bef",
+      "bcd",
+      "cde",
+      "ceg",
+      "cef",
+      "acef",
+      "bdef"
+    ]
+  </script>
+  <script id="259" type="application/vnd.observable.javascript" pinned="">
+    grid = getSquaresGrid()
+  </script>
+  <script id="239" type="application/vnd.observable.javascript" pinned="">
+    function getSquaresGrid() {
+      const size = form.size / form.cells;
+
+      let data = [];
+      for (let i = 0; i < form.cells; i++) {
+        for (let j = 0; j < form.cells; j++) {
+          data.push({ square: getSquare(size), i, j });
+        }
+      }
+      return { grid: data, size };
+    }
+  </script>
+  <script id="9" type="application/vnd.observable.javascript" pinned="">
+    function getSquare(w) {
+      const l = w * 0.75;
+      const m = w * 0.5;
+      const s = w * 0.25;
+      const data = {
+        a: { v1: [0, 0], v2: [w, 0], v3: [m, m] },
+        b: {
+          v1: [0, w],
+          v2: [0, 0],
+          v3: [m, m]
+        },
+        c: { v1: [w, 0], v2: [w, m], v3: [l, s] },
+        d: {
+          v1: [l, s],
+          v2: [w, m],
+          v3: [l, l],
+          v4: [m, m]
+        },
+        e: {
+          v1: [l, l],
+          v2: [s, l],
+          v3: [m, m]
+        },
+        f: {
+          v1: [l, l],
+          v2: [s, l],
+          v3: [0, w],
+          v4: [m, w]
+        },
+        g: {
+          v1: [m, w],
+          v2: [w, m],
+          v3: [w, w]
+        }
+      };
+
+      return Object.entries(data).map(([k, v]) => {
+        const cent = d3.polygonCentroid(Object.values(v));
+        return {
+          key: k,
+          poly: Object.values(v),
+          cent: { k, x: cent[0], y: cent[1] }
+        };
+      });
+    }
+  </script>
+</notebook>

@@ -1,0 +1,211 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Climate blobs by Anna Lombardi</title>
+  <script id="2" type="text/markdown">
+    # Climate blobs by Anna Lombardi
+  </script>
+  <script id="1" type="text/markdown" hidden="">
+    <!-- @meta {
+      "date": "2026-05-03",
+      "image": "public/climate-blobs.png",
+      "tags": ["climate", "global warming", "d3js", "datavis"],
+      "blurb": "Radial temperature-anomaly blobs for any country, 1979 – 2025."
+    } -->
+  </script>
+  <script id="60" type="text/markdown">
+    On the 4th to 6th November of 2026 the Visualising Climate 2026 will take place in Bologna, Italy:
+    > _[Visualising climate](https://visualisingclimate.com) is the first global conference on data visualisation for climate and environmental sciences. Bringing together scientists, artists, communicators, and journalists, the event is surposed to serve as a meeting point between data and storytelling, evidence and perception, art and science._
+
+    What you see on this page is inspired by the conference logo which is originally made by [Dr. Anna Lombardi](https://bsky.app/profile/annalombardi.bsky.social). She’s a well known climate data visualiser and journalist and physicist.
+  </script>
+  <script id="41" type="module">
+    const entities = Array.from(entityNames);
+
+    const form = view(Inputs.form({
+      selectedCountry: Inputs.select(entityNames, {label: "Country", format: d => d.entity, value: entities.find(d => d.entity === "Italy")}),
+      peakLabel: Inputs.toggle({label: "Show peak", value: false}),
+    }))
+  </script>
+  <script id="58" type="module">
+    const chart = ClimateAnomalyRadial({width: 650, animate: false});
+    display(chart.node);
+  </script>
+  <script id="59" type="module">
+    chart.update({
+      temperature_anomalies: Array.from(localAnomalies),
+      peakLabel: form.peakLabel,
+    });
+  </script>
+  <script id="57" type="text/x-typescript" hidden="">
+    ClimateAnomalyRadial({temperature_anomalies: Array.from(localAnomalies), width: 650, animate: false, peakLabel: form.peakLabel })
+  </script>
+  <script id="44" type="module">
+    function ClimateAnomalyRadial({width, compare, animate}) {
+        const svg = d3.create("svg")
+            .attr("id", "climate-blobs")
+            .attr("class", animate ? "visclimate-logo" : "")
+            .attr("width", width)
+            .attr("height", width)
+            .attr("viewBox", [-width / 2, -width / 2, width, width])
+            .attr("style", "max-width: 100%; height: auto;");
+
+        const gRoot = svg.append("g");            // stable container
+        const gLabel = svg.append("g");           // peak label lives outside the year groups
+
+        function update({temperature_anomalies, peakLabel}) {
+          const _anomalies = prepareClimateAnomalyData(temperature_anomalies);
+          const years = d3.groups(_anomalies, (d) => d.day.getFullYear()).reverse();
+          const fixed = d3.min(years, (d) => d[0]);
+          const data = climateAnomalyScales({width, fixed, years, anomalies: _anomalies, compare});
+
+          gRoot.selectAll("g.year")
+            .data(data, (d) => d.year)            // key by year — same 47 keys every time
+            .join(
+              (enter) => {
+                const g = enter.append("g").attr("class", "year").attr("id", (d) => `_${d.year}`);
+                g.append("path")
+                    .attr("data-name", (d) => d.year)
+                    .attr("fill", (d) => d.fill)
+                    .attr("fill-opacity", 1)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 0.5)
+                    .attr("d", (d) => d.d);
+                return g;
+              },
+              (update) => update,
+              (exit) => exit.transition().duration(500).style("opacity", 0).remove()
+            )
+            .select("path")
+              .transition().duration(750).ease(d3.easeCubicInOut)
+              .attr("fill", (d) => d.fill)
+              .attr("d", (d) => d.d);
+
+          const peakOverYears = d3.greatest(data, (d) => d.yearPeak.entry.temperature_anomaly);
+          console.log(data);
+          console.log(peakOverYears)
+          gLabel.selectAll("text")
+            .data(peakLabel ? [peakOverYears] : [])
+            .join("text")
+              .attr("x", d => d.yearPeak.cartesian.x)
+              .attr("y", d => d.yearPeak.cartesian.y)
+              .attr("text-anchor", "middle")
+              .attr("dy", -9)
+              .attr("fill", "black")
+              .attr("font-size", 18)
+              .selectAll("tspan")
+              .data((d) => [
+                {...d, text: `${d.yearPeak.entry.temperature_anomaly.toFixed(3)}°C`},
+                {...d, text: `${d.yearPeak.entry.year}/${d.yearPeak.entry.month}`}
+              ])
+              .join("tspan")
+                .attr("x", d => d.yearPeak.cartesian.x)
+                .attr("dy", (d, i) => i === 0 ? 0 : "1.2em")   // line height
+                .text((d) => d.text);
+        }
+
+        return {node: svg.node(), update};
+      }
+  </script>
+  <script id="45" type="text/x-typescript">
+    function prepareClimateAnomalyData(temperature_anomalies) {
+        const year_columns = d3.range(2025, 1978, -1).map(year => `_${year}`);
+        return temperature_anomalies.flatMap((row_month) =>
+            year_columns
+                .map((year_col_name) => {
+                    return {
+                        entity: row_month.entity,
+                        code: row_month.code,
+                        day: new Date(Date.UTC(year_col_name.slice(1), row_month.month - 1, 15)),
+                        month: row_month.month,
+                        year: parseInt(year_col_name.slice(1)),
+                        temperature_anomaly: row_month[year_col_name]
+                    };
+                })
+                .sort((a, b) => a.day - b.day)
+        )
+    }
+  </script>
+  <script id="47" type="module">
+    function climateAnomalyScales({ width, fixed, years, anomalies, compare }) {
+      // Everything needed to interpret the temperature anomaly and time values
+      const margin = 20;
+      const rInner = 10;
+      const rOuter = width / 2 - margin;
+
+      const minMaxYears = d3.extent(years.map((d) => d[0]));
+
+      const x = d3
+        .scaleUtc()
+        .domain([
+            new Date(Date.UTC(fixed, 0, 1)),
+            new Date(Date.UTC(fixed, 11, 31)),
+        ])
+        .range([0, 2 * Math.PI]);
+
+      const anomalyMin = d3.min([-1, d3.min(anomalies, d => d.temperature_anomaly)])
+      const anomalyMax = d3.max(anomalies, d => d.temperature_anomaly)
+      const y = d3.scaleLinear().domain(
+        compare ? [anomalyMin, 1] : [anomalyMin, anomalyMax]
+      ).range([rInner, rOuter]);
+
+      // A helper function to make the line's `angle` function look cleaner
+      const dateOnRing = (d) => {
+        const isoDateMonth = d.day.toISOString().slice(5, 7);
+        const isoDateDay = "01";
+        return x(new Date(`${fixed}-${isoDateMonth}-${isoDateDay}`));
+      };
+
+      const l = d3
+        .lineRadial()
+        .curve(d3.curveCardinalClosed.tension(0.1))
+        .angle((D) => dateOnRing(D))
+        .radius((D) => y(D.temperature_anomaly));
+
+      const c = d3.scaleSequential([...minMaxYears].reverse(), d3.interpolateRdYlBu);
+      const a = Object.fromEntries([...years].reverse().map(([year, _], i) => [year, i * 20]));
+
+      const toCartesian = (anomaly) => {
+        const theta = dateOnRing(anomaly);
+        const r = y(anomaly.temperature_anomaly);
+        const [a, b] = d3.pointRadial(theta, r);
+        return { x: a, y: b };
+      };
+
+      const peakEntry = anomalies.sort((a, b) => b.temperature_anomaly - a.temperature_anomaly)[0];
+
+      // We calculate the values so the visualisation becomes more tidy
+      return years.map(([year, anoms]) => ({
+        year,
+        d: l(anoms),
+        fill: c(year),
+        delay: a[year],
+        anoms: anoms.map((a) => ({
+          ...a,
+          ...toCartesian(a),
+          fill: c(a.year),
+        })),
+        yearPeak: {
+          entry: peakEntry,
+          cartesian: toCartesian(peakEntry),
+        }
+      }));
+    }
+  </script>
+  <script id="40" type="application/sql" hidden="" database="var:db" output="localAnomalies">
+    SELECT entity, code, month, "_2025","_2024","_2023","_2022","_2021","_2020","_2019","_2018","_2017","_2016","_2015","_2014","_2013","_2012","_2011","_2010","_2009","_2008","_2007","_2006","_2005","_2004","_2003","_2002","_2001","_2000","_1999","_1998","_1997","_1996","_1995","_1994","_1993","_1992","_1991","_1990","_1989","_1988","_1987","_1986","_1985","_1984","_1983","_1982","_1981","_1980","_1979"
+    FROM sta WHERE entity = ${form.selectedCountry.entity};
+  </script>
+  <script id="25" type="application/sql" hidden="" database="var:db" output="entityNames">
+    SELECT distinct(entity) as entity FROM sta;
+  </script>
+  <script id="5" type="module" hidden="">
+    const db = await DuckDBClient.of({ sta: FileAttachment("data/surface_temperatures_anomalies.csv") });
+  </script>
+  <script id="50" type="text/markdown">
+    ## What is this?
+    This site let’s you generate interesting looking blobs that are build from climate data in your selected region. Read the blob as a year clock, where January is 0 o’clock, Febuary 1 o’clock and so on. The blobs are stacked from 1979 to 2025 where 1979 is on top and 2025 is in the back, to show where we came from and where we are now. Blobs are uniformly coloured, referencing the global climate change all of these countries already face or will do so in a not so distant future.
+
+    ## Data used
+    Original data provided by [European Centre for Medium-Range Weather Forecasts](https://www.ecmwf.int) (ECMWF) or the [Copernicus Programm](https://www.copernicus.eu/en), here I use a distribution by [Our World In Data](https://ourworldindata.org/grapher/annual-temperature-anomalies?time=1979..2025).
+  </script>
+</notebook>

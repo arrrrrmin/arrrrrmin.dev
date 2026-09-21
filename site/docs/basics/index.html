@@ -1,0 +1,64 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Untitled</title>
+  <script id="6" type="text/markdown" hidden="">
+    <!-- @meta {
+      "tags": ["blog", "charts", "datavis"],
+      "blurb": "Learning the fundamentals of good charting by example. A large portion is dedicated to misleading patterns in data visualisation. To train myself in spotting the concepts and tricks that mislead viewers."
+    } -->
+  </script>
+  <script id="7" type="text/markdown">
+    Learning the fundamentals is important, which is why I want to dedicate a bit of my time to learn them properly. To spice it up I decided to couple it with misleading patterns in datavis. Maybe just to know I’m not accidentally do bad charting. Regarding manipulative/misleading charts I reference a lot of [Alberto Cairo - How charts lie](https://wwnorton.com/books/9781324001560) and try to adapt his taught principles when I can. But it’s not only about the bad actors, this is also a place to simply try things and have fun.
+  </script>
+  <script id="3" type="application/vnd.node.javascript" hidden="" output="posts" format="json">
+    import {readdir, readFile} from "node:fs/promises";
+    import {sep} from "node:path";
+
+    const currentSlug = "basics";
+
+    const files = (await readdir(".", {recursive: true}))
+      .map((f) => f.split(sep).join("/"))
+      .filter((f) => f.endsWith(".html"))
+      .filter((f) => !f.startsWith(".observable/"))
+      .filter((f) => !f.endsWith("index.html"));
+
+    let posts = await Promise.all(files.map(async (file) => {
+      const src = await readFile(file, "utf-8");
+      const meta = src.match(/@meta\s*(\{[\s\S]*?\})/)?.[1];
+      const slug = file.replace(/\.html$/, "");
+      return {
+        href: `./${slug}`,
+        slug: currentSlug,
+        // section: slug.includes("/") ? slug.slice(0, slug.lastIndexOf("/")) : null,
+        section: currentSlug,
+        title: src.match(/<title>([\s\S]*?)<\/title>/)?.[1].trim() ?? file,
+        ...(meta ? JSON.parse(meta) : {})
+      };
+    }));
+
+    posts = posts.filter((p) => !p.draft)
+    posts.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+    process.stdout.write(JSON.stringify(posts));
+  </script>
+  <script id="5" type="module">
+    const query = view(Inputs.search(posts, {
+      placeholder: "Search",
+      columns: ["title", "blurb", "tags"]
+    }));
+  </script>
+  <script id="8" type="module">
+    import {postPreview, postList, bindPreview} from "/components/utils.js";
+  </script>
+  <script id="10" type="text/x-typescript">
+    const sections = [
+      ["basics", "Basic charting"]
+    ];
+    const list = postList(query, posts, {sections});
+    bindPreview(list, preview);
+    display(list);
+  </script>
+  <script id="4" type="module">
+    const preview = postPreview();
+    display(preview.element);
+  </script>
+</notebook>

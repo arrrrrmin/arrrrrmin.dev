@@ -1,0 +1,485 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Arte - A map of open maps</title>
+  <script id="1" type="text/markdown">
+    # Arte - A map of open maps
+  </script>
+  <script id="3" type="text/markdown" hidden="">
+    <!-- @meta {
+      "date": "2026-05-29",
+      "image": "public/arte-open-maps.png",
+      "tags": ["datavis", "maps", "geopolitics"],
+      "blurb": "The ARTE map is a visualisation of the 'With open maps' of geopolitical aspects on ARTE as a map. Currently in prototyping stage, the map allows to explore the format interactivly and geographically."
+    } -->
+  </script>
+  <script id="6" type="text/markdown">
+    Up front, this is a WIP (_work in progress_) project. I'm not sure where this project goes, but I like it.
+    Originally I started this project in [October 2025](https://chaos.social/@arrrrrmin/115434464469706882), but life took me elsewhere and it moved into the back of my head. Now in May 2026 I want to continue with it.
+  </script>
+  <script id="7" type="text/markdown">
+    ## The idea
+
+    Since I like to consume [ARTE](https://arte.tv) (a German-French cooperative public broadcasting TV station), I noticed that there is a lot of potential to one of their formats for a DataVis. The format is called _With Open Maps_ translated from the German original _Mit offenen Karten_ where _Karten_ can mean a game card or map. It's available in German, French and Polish and covers certain geo-political aspects each episode. A usual episode ranges between 12 to 20 minutes of video time. Here's a random example of what such an episode can look like, in this case it's about gun violence in Brazil and the episodes title [_From Bolsonaro to Lula: Where is Brazil heading?_](https://www.arte.tv/de/videos/125533-026-A/mit-offenen-karten/)
+
+    ![A map of southamerica provided by the ARTE fromat "with open maps", showing Brazil yellow coloured, venezuela in red and argentina in blue. Images of Luiz Inácio Lula da Silva, Javier Milei and an image of fifth January 2026 event where Nicolás Maduro was taken arrested in USA military intervention, show the political context surrounding Brazil.](./images/ARTE-open-maps-example-brazil-2025-05-30.png)
+
+    > **💡** Why not make a map of their maps?
+
+    Like some metadata map, where you can find episodes linked to geolocations and coocuring locations inside an episode. This way we could navigate their geopolitical coverage on a map.
+
+  </script>
+  <script id="8" type="text/markdown">
+    ## Data landscape
+
+    Since ARTE is a public broadcasting TV station open to everyone, I don't need to click an account or pass any paywalls. To link episodes to regions of interests (ROIs), we need to find out which episode concerns which region. Inspecting metadata of each page tells us that each episode comes with a description tag, which does exactly that. For the scope of the map we need to decide, do we want to:
+    1. Present each and every mentioned region, city, river, ...
+    2. or do we want to navigate the geo-political context?
+
+    I want to go with the second option. The latter would require to label locations manually. Making the map fine-granular would make it visually overloaded and it doesn't really serve the navigation purposes of a geopolitical format which in most cases will at some point be interstate/intercontinental. Also transcribing each and every episode is tidious and AI transcripts are still to flawed for a data correctness goal of > 90%. 90 sounds much but it’s not. 10% errors is much to correct by hand. For this project I'd like to have as much _correct_ or at least reasonable data as possible.
+  </script>
+  <script id="9" type="text/markdown">
+    ## Collect data
+
+    Originally I started using Obsidian Web Clipper, but it’s not automatable properly. The browser extensions is a manual click tool and I did this mistake with [Lanz Mining](https://lanz-mining.arrrrrmin.dev) the last time too. I thought I’ll go there and back fill the data entries from time to time, but I didn’t. Life always get’s you off track so automation is required. We’r asking the ARTE content api for a few json outputs directly. This is the ground truth for ARTE so why shouldn’t it be enough for this project.
+
+    Per episode we get a wonderfully structured json with everything we’ll need to get our little project running:
+    ```json
+    {
+      "program_id": "125533-026-A",
+      "collection_id": "125533",
+      "language": "de",
+      "title": "Mit offenen Karten",
+      "subtitle": "Von Bolsonaro zu Lula: Wohin steuert Brasilien?",
+      "short_description": "Geopolitik einordnen und die Welt verstehen: Zusammenhänge der Globalisierung einfach erklärt anhand von Karten. In dieser Ausgabe von \"Mit offenen Karten\" werden anlässlich der Präsidentschaftswahlen im Oktober 2026 die Stärken und Schwächen Brasiliens beleuchtet.",
+      "description": "Geopolitik einordnen und die Welt verstehen: Zusammenhänge der Globalisierung einfach erklärt anhand von Karten. In dieser Ausgabe von \"Mit offenen Karten\" werden anlässlich der Präsidentschaftswahlen im Oktober 2026 die Stärken und Schwächen Brasiliens beleuchtet.",
+      "url": "https://www.arte.tv/de/videos/125533-026-A/mit-offenen-karten/",
+      "image_url": "https://api-cdn.arte.tv/img/v2/image/kpZ2Gxsmx65gqdTb28CHEh/940x530",
+      "duration_seconds": 727,
+      "episode": 26,
+      "season": null,
+      "genre": "Dokus und Reportagen",
+      "audio_languages": [
+        "DE"
+      ],
+      "available_from": "2026-05-22T14:16:07Z",
+      "available_until": "2033-05-20T03:00:00Z"
+    }
+    ```
+  </script>
+  <script id="12" type="text/markdown">
+    ## Geocoding
+    But as you can see we got no geo locations at this point. Which means we need to find them. I used SpaCy a natural language processing (NLP) toolkit in Python. SpaCy provides you with pretrained german Name Entity Recognition (NER) models. NER models are simple that try to recognise if a word is a place, person, org or something else. The large version I use here is 610MB large and easily fits a Docker container on lambda or any other serverless service.
+
+    As soon as we extracted potential location names from `title`, `subtitle` and `description` we can go ahead and take these words that may correspond to geolocations and ask a geocoding service like Open Streetmap - Nominatim.
+    Since we don’t want to annoy the OS infrastructure with unneeded questioning we can set up a cache, where we note each word as a key every time Nominatim responds with “not found”.
+  </script>
+  <script id="13" type="module">
+    let data = await FileAttachment("./data/arte-maps-latest.json").json().then(d => ({
+      ...d,
+      episodes: d.episodes.map(episode => ({
+        ...episode,
+        available_from: new Date(episode.available_from)
+      }))
+    }));
+    const nolocationEpisodes = data.episodes.filter(o => o.places.length < 1);
+    const episodesTotal = data.episodes.length;
+    const [minDate, maxDate] = d3.extent(data.episodes, d => d.available_from)
+  </script>
+  <script id="15" type="text/markdown">
+    Currently there are some episodes (${nolocationEpisodes.length} out of ${episodesTotal}) where no geolocation was found, neither in the title or description. I'll need to find a solution to represent these as well. Although the actual problem is the NER (Name Entity Recognition) model, which sometimes misses entities where we humans instantly see them. For this project I'm not going to try to improve existing NLP model, just to get a few more episodes mapped to locations.
+    You can inspect the _no location_ candidates in the following table:
+  </script>
+  <script id="34" type="text/x-typescript">
+    display(Inputs.table(nolocationEpisodes))
+  </script>
+  <script id="16" type="text/markdown">
+    ## Country overview
+
+    Before we go straight ahead to build the map, I'd like to take a little time to give an overview over the coverage.
+    Over the ${episodesTotal} episodes in the dataset we got two types of episodes either long ones or short narrowly scoped episodes.
+    The shorter ones are a subformat inside _With open maps_ and are called _In focus_. These are usually around 4-5 minutes in length and care more about recent events, while the longer episodes are around 12 minutes in length and sometimes come with literature recommendations regarding the episodes topic. Giving recommendations on literature is a feature I don’t usually follow up on, but I really like it, because it takes me serious as a viewer. It doesn’t tell me _that’s enough for you_, it tells me _if you want to go further here is where_.
+    For this analysis I excluded the short versions.
+  </script>
+  <script id="21" type="text/x-typescript">
+    const places = Object.entries(data.places).map(([key, values]) => ({place: key, ...values}));
+    const _places = places.filter((d) => d.program_ids.length > 1)
+    const placesDist = Plot.plot({
+      title: "Frequently mentioned geo-location",
+      subtitle: `Data state of ${new Date(data.built_at).toISOString().split('T')[0]}. Mentionings of geolocations over ${data.episodes.length} episodes of ARTE le dessous des cartes (with open cards). Frequently excludes the tailing locations with the less than two mentions. Geolocations can co-occure.`,
+      width,
+      marginLeft: 16,
+      marginRight: 16,
+      y: {label: "Locations", ticks: []},
+      x: {grid: true, axis: "both", label: "Episodes"},
+      marks: [
+        Plot.barX(_places, {x: d => d.program_ids.length, y: "place", sort: {y: "-x"}, fill: arteRed, rx: 4, tip: true}),
+        Plot.textX(_places, {x: d => d.program_ids.length, y: "place", text: "place", sort: {y: "-x"}, fill: "currentColor", textAnchor: "end", fontWeight: 600, dx: -4})
+      ]
+    })
+
+    display(placesDist);
+  </script>
+  <script id="24" type="text/markdown">
+    As expected the most episodes circle around the three countries most relevant to all geopolitical aspect in our world, China, Russia and the United States. Not surprising at all. Europe is next most relevant and the rest cascades into finer geolocation grades like countries or specific geopolitical regions like the Mediterranean Sea.
+  </script>
+  <script id="22" type="text/markdown">
+    ## Continental distribution
+
+    The continental scale is a little more interesting. Which continents are subject to the geopolitical format of ARTE?
+  </script>
+  <script id="27" type="text/x-typescript">
+    let continentDist = d3.groups(
+      places.filter(d => d.continent != null),
+      d => d.continent
+    ).map(([key, children]) => ({continent: key, program_ids: new Array(...new Set(children.map(c => c.program_ids).flat())), children}));
+
+    continentDist = continentDist.map((d) => ({...d, count: d.program_ids.length}))
+
+    const continentalChart = Plot.plot({
+      width,
+      marginLeft: 3,
+      y: {label: "Continent", ticks: []},
+      x: {grid: true, axis: "top", label: "Episodes"},
+      marks: [
+        Plot.barX(continentDist, {x: "count", y: "continent", fill: arteRed, sort: {y: "-x"}, rx: 3, tip: true}),
+        Plot.textX(continentDist, {x: "count", y: "continent", text: "continent", sort: {y: "-x"}, fill: "currentColor", textAnchor: "end", fontWeight: 600, dx: -4})
+      ]
+    })
+
+    display(continentalChart);
+  </script>
+  <script id="37" type="text/markdown">
+    Given all locations with respective continent information – which is not the case for oceans – we can see what the actual scope is. No surprise again for Europe. ARTE is a French-German project, so the european bias is explainable. South America and Ocania are surprisingly low compared to North America. Let’s have a look what these episodes actually mention on a map.
+  </script>
+  <script id="29" type="application/sql" hidden="" database="duckdb" output="countries_110m">
+    SELECT content FROM read_text('../shared/geo/countries-110m.json');
+  </script>
+  <script id="30" type="text/x-typescript" hidden="">
+    const country110Json = JSON.parse(Array.from(countries_110m)[0].content);
+    const countries = topojson.feature(country110Json, country110Json.objects.countries);
+  </script>
+  <script id="33" type="text/x-typescript">
+    const arteRed = "#FA481C";
+    const darkBlue = "#3D405B";
+    const lightBrown = "#F4F1DE";
+  </script>
+  <script id="32" type="module">
+    function bubbleMap (width) {
+      const numEpisodes = (d) => d.program_ids.length;
+      const radiusRange = width > 550 ? [1, 24] : [1, 16]
+      const radius = d3.scaleSqrt([0, d3.max(places, numEpisodes)], radiusRange);
+      const height = parseInt(width / 2);
+
+      const projection = d3.geoEquirectangular().fitSize([width, height], countries);
+      const path = d3.geoPath().projection(projection);
+      const svg = d3.create("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", [0, 0, width, height])
+        .attr("style", "width: 100%; height: auto; height: intrinsic;");
+
+      const point = (d) => projection([d.coordinates.lon, d.coordinates.lat]);
+
+      svg.append("path")
+        .datum(countries)
+        .attr("fill", "#ddd")
+        .attr("stroke", "#ccc")
+        .attr("d", path);
+
+      const legend = svg.append("g")
+        .attr("fill", "#777")
+        .attr("transform", `translate(${width-30},${height-10})`)
+        .attr("text-anchor", "middle")
+        .style("font", "10px sans-serif")
+        .selectAll()
+          .data(radius.ticks(3).slice(1))
+          .join("g");
+
+      legend.append("circle")
+        .attr("fill", "none")
+        .attr("stroke", arteRed)
+        .attr("cy", d => -radius(d))
+        .attr("r", radius);
+
+      legend.append("text")
+          .attr("y", d => -2 * radius(d))
+          .attr("dy", "1em")
+          .text(radius.tickFormat(4, "s"));
+
+      const circleContainer = svg.append("g")
+        .attr("fill", arteRed)
+        .attr("fill-opacity", 0.5)
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 0.5)
+
+      svg.append("g").attr("id", "tip")
+        .attr("transform", `translate(${0}, ${height - 28})`)
+        .style("pointer-events", "none")
+        .append("text");
+
+      circleContainer.selectAll()
+        .data(places)
+        .join("circle")
+          .attr("transform", d => `translate(${point(d)[0]}, ${point(d)[1]})`)
+          .attr("r", d => radius(numEpisodes(d)))
+          .on("pointerenter", function (e, d){
+            const numEps = numEpisodes(d);
+            const label = numEps > 1 ? "episodes" : "episode";
+            const tspans =  [`${d.place}`, `adressed in ${numEpisodes(d)} ${label}`];
+            //svg.select("g#tip").attr("transform", `translate(${point(d)[0]}, ${point(d)[1]})`)
+            svg.select("g#tip text")
+              .selectAll("tspan")
+              .data(tspans)
+              .join("tspan")
+              .attr("x", 0)
+              .attr("dy", (d, i) => i === 0 ? "0em" : "1.2em")
+              .attr("font-size", 14)
+              .attr("font-family", "var(--sans-serif)")
+              .text(d => d)
+          })
+          .on("pointerleave", function (e, d){
+            svg.selectAll("g#tip text tspan").text("")
+          })
+          .append("title")
+          .text(d => `${d.place} Episodes ${numEpisodes(d)}`);
+
+      return svg.node();
+    }
+  </script>
+  <script id="41" type="text/x-typescript">
+    const formatTime = d3.utcFormat("%b %Y")
+  </script>
+  <script id="40" type="text/html">
+    <figure style="max-width: initial">
+      <h2>ARTE open card geo mentions</h2>
+      <h3>Date in time range of ${formatTime(minDate)} to ${formatTime(maxDate)}. Bubble size shows number of episodes where this geolocation was addressed.</h3>
+      ${bubbleMap(width)}
+    </figure>
+  </script>
+  <script id="43" type="text/markdown">
+    The map above makes the bar charts we had before a little more real. We can see straight away that South America isn’t represented as much as we’d expect it to. The numbers don’t line up exactly since a single episode can mantion mutliple countries, in the above horizontal bar chart at the start of this section [continental distribution](#continental-distribution) I did the deduplication for the raw numbers. Here it’s more intuative to see what is addressed in episodes.
+
+    But not only South America it’s also Australia. At this point I want to be cautions, since this data relies on the title, subtitle and description to geocode locations. It is absolutely possible that some episodes so indeed address Australia, but it’s not in any of the texts we use.
+
+    Looking at the raw map distribution of the bubbles I think that we can say that South America and Australia aren’t as often addressed – with some uncertainty we can’t eliminate without watching and documenting every single episode.
+  </script>
+  <script id="44" type="text/markdown">
+    ## Browsing for episodes on a map
+  </script>
+  <script id="61" type="text/markdown">
+    One of my initial ideas was to think about this map as a navigation tool for ARTEs _Le dessouse des cartes_ format. Since geopolitics usually links between countries and rarly only a single country is mentioned on it’s own in the geopolitical contexts, the visualisation feature is clear. We need to draw links between places where each episode links to one or more places and list the available ARTE episodes for a selected country, region or city.
+  </script>
+  <script id="58" type="text/x-typescript" hidden="">
+    const customCSS = await FileAttachment("./styles/arte-open-maps.css");
+  </script>
+  <script id="56" type="text/html">
+    <link rel="stylesheet" href="./styles/arte-open-maps.css">
+  </script>
+  <script id="46" type="module">
+    async function ArteMap(data, cmap) {
+      let land = topojson.feature(cmap, cmap.objects.land);
+      let countries = topojson.feature(cmap, cmap.objects.countries);
+
+      const svg = d3.create("svg")
+        .attr("id", "map-content")
+        .attr("overflow", "hidden")
+        .attr("style", "background-color: #eee; border-radius: 11px;");
+
+      const root = svg.append("g");
+      const g = { basemap: root.append("g"), dots: root.append("g") }
+
+      function zoomed(event) {
+        const { transform } = event;
+        root.attr("transform", transform);
+      }
+      const zooming = d3.zoom()
+        .scaleExtent([1, 10])
+        .on("zoom", zoomed);
+
+      const radiusScale = d3.scaleLinear()
+        .domain([1, d3.max(Object.values(data.places), (d) => d.program_ids.length)])
+        .range([1, 12])
+
+      svg.call(zooming);
+
+      function render({ source, related, width, height }) {
+        svg.attr("viewBox", [0, 0, width, height])
+
+        // Projection updates through width on resize
+        const projection = d3.geoEqualEarth()
+          .translate([width / 2, height / 2]);
+
+        function zoomingCenterOn({ lon, lat }, k = 2) {
+            const [x, y] = projection([lon, lat]);
+
+            const transform = d3.zoomIdentity
+              .translate(width / 2, height / 2)
+              .scale(k)
+              .translate(-x, -y);
+
+            svg.transition()
+              .duration(700)
+              // Fires "zoom" event which in turn calls zoomed
+              .call(zooming.transform, transform);
+        }
+
+        const path = d3.geoPath().projection(projection);
+
+        const link = d3.line()
+          .x(d => projection([d.lon, d.lat])[0])
+          .y(d => projection([d.lon, d.lat])[1])
+          .curve(d3.curveBundle.beta(0.9));
+
+        g.basemap.selectAll("path.land")
+          .data([land])
+          .join("path")
+          .attr("class", "land")
+          .attr("d", path);
+
+        g.basemap.selectAll("path.country-interior")
+          .data([countries])
+          .join("path")
+          .attr("class", "country-interior")
+          .attr("d", path);
+
+        function checkHightlight(name) {
+          let className = "location";
+          if (name === source.name || related.filter((r) => r.name === name).length > 0) {
+              className = "location-highlight";
+          }
+          return className;
+        }
+
+        const t = svg.transition().duration(700).ease(d3.easeCubic);
+
+        const circleData = Object.entries(data.places).map(
+            ([key, values]) => {
+              return ({
+                title: key,
+                r: radiusScale(values.program_ids.length),
+                xy: projection([values.coordinates.lon, values.coordinates.lat])
+              })
+            }
+        );
+
+        g.dots.selectAll("circle")
+          .data(circleData)
+          .join(
+            (enter) => enter.append("circle")
+              .attr("class", ({ title }) => checkHightlight(title))
+              .attr("title", ({ title }) => title)
+              .transition(t)
+              .attr("r", ({ title, r }) => checkHightlight(title).includes("highlight") ? r : 1)
+              .attr("cx", ({ xy }) => xy[0])
+              .attr("cy", ({ xy }) => xy[1]),
+            (update) => update
+              .attr("class", ({ title }) => checkHightlight(title))
+              .attr("title", ({ title }) => title)
+              .attr("r", 1)
+              .transition(t)
+              .attr("r", ({ title, r }) => checkHightlight(title).includes("highlight") ? r : 1)
+              .attr("cx", ({ xy }) => xy[0])
+              .attr("cy", ({ xy }) => xy[1]),
+            (exit) => exit
+          )
+
+        g.dots.selectAll("path.link")
+          .data(related.map(target => [source.coordinates, target.coordinates]))
+          .join("path")
+          .attr("class", "link")
+          .attr("stroke", arteRed)
+          .attr("stroke-opacity", 0.85)
+          .attr("d", link)
+
+        const labelsData = [source, ...related].map(
+          (d) => ({ ...circleData.find(c => c.title === d.name) })
+        )
+        g.dots.selectAll("text.label")
+          .data(labelsData)
+          .join(
+              (enter) => {
+                enter.append("text")
+                  .attr("class", "label")
+                  .attr("x", d => d.xy[0])
+                  .attr("y", d => d.xy[1])
+                  .attr("dy", 0)
+                  .transition(t)
+                  .delay(350)
+                  .attr("font-size", 8)
+                  .attr("font-weigth", 600)
+                  .attr("dy", d => -(d.r + 1))
+                  .attr("text-anchor", "middle")
+                  .text(d => d.title)
+              },
+              (update) => {
+                update.attr("x", d => d.xy[0])
+                  .attr("y", d => d.xy[1])
+                  .attr("dy", 0)
+                  .transition(t)
+                  .delay(350)
+                  .attr("dy", d => -(d.r + 1))
+                  .text(d => d.title)
+              },
+              (exit) => {
+                exit.transition()
+                  .duration(350)
+                  .remove()
+              }
+          )
+
+        zoomingCenterOn(source.coordinates);
+
+        return svg.node();
+      }
+      return { render };
+    }
+  </script>
+  <script id="48" type="module">
+    const height = width > 600 ? width * (2/4) : width * (4/5);
+    const map = ArteMap(data, country110Json);
+  </script>
+  <script id="50" type="module">
+    function filterEpisodes(name) {
+      return data.episodes.filter(episode => episode.places.filter(
+        (gl) => gl.name === name).length > 0
+      )
+    }
+
+    function findRelatedLocations(name) {
+      const episodes = filterEpisodes(name);
+      const source = episodes.map(episode => episode.places).flat().filter(p => p.name === name)[0]
+      const related = episodes.map(episode => episode.places).flat().filter(p => p.name !== name);
+      return { episodes, related, source }
+    }
+
+    const {episodes, related, source} = findRelatedLocations(locationName);
+  </script>
+  <script id="49" type="text/x-typescript">
+    const locationName = view(Inputs.select(Object.keys(data.places).sort(), {value: "Canada"}));
+  </script>
+  <script id="47" type="text/html">
+    <div style="margin-bottom: 1rem">
+    ${map.render({ source, related, width, height })}
+    </div>
+  </script>
+  <script id="59" type="text/x-typescript">
+    function renderResultEpisodes (episodes) {
+      const formatDate = (date) => formatTime(new Date(date));
+      const episodesSorted = episodes.sort(
+        (a, b) => new Date(b.available_from) - new Date(a.available_from)
+      );
+      const containers = episodesSorted.map(e => html`<div class="card result-card">
+          <h3><a href="${e.source}" target="_blank">${e.title} - ${e.subtitle}</a></h3>
+          <div><span>${formatDate(e.available_from)}</span> - <span>${formatDate(e.available_until)}</span></div>
+          <div><p class="truncated" title="${e.description}">${e.description}</p></div>
+          <div class="preview"><img src="${e.image_url}" /></div>
+        </div>`
+      );
+      return html`<div class="arte-result-container" style="margin:0;">
+        ${containers}
+      </div>`
+    }
+
+    display(renderResultEpisodes(episodes))
+  </script>
+</notebook>

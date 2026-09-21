@@ -1,0 +1,563 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Charting - Misleading axis</title>
+  <script id="1" type="text/markdown">
+    # Charting - Misleading axis
+  </script>
+  <script id="2" type="text/markdown" hidden="">
+    <!-- @meta {
+      "date": "2026-03-14",
+      "tags": ["charting", "misleading axis", "chart reading"],
+      "blurb": "Exploring techniques that bad actors use to mislead their audiance through badly design axis design in charts."
+    } -->
+  </script>
+  <script id="3" type="text/markdown">
+    Let's discover how bad actory are using their tooling to manipulate or mislead us.
+    **Disclaimer: It's not only on them**.
+  </script>
+  <script id="6" type="text/markdown">
+    ## A sense of objectivity
+
+    Authors of a study ([the perceptual power of data visualisations](https://vis.cs.ucdavis.edu/vis2014papers/TVCG/papers/2211_20tvcg12-pandey-2346419.pdf)) found that a data visualisation increases the sense of objectivity because the presented numbers carry evidence. Also people are more likely to change their mind on a subject, if they see a data visualisation and when they do not have a strong opinion on the subject. There is a problem, because researchers cannot tell if it's visual representation or the numbers themselves are the reason for the viewers impressions. (via [Alberto Cairo - How charts lie](https://wwnorton.com/books/9781324001560))
+  </script>
+  <script id="7" type="text/markdown">
+    ## Two attack vectors per coin
+
+    But since there is this sense of objectivity, people become prone to believe data visualisation are more accurate and more evidence based compared to written text or spoken words. This presumed evidence is also the reason why some bad actors can apply tricks like:
+
+    1. display wrong data
+    2. inappropriate amount of data
+    3. bad design
+    4. textual context bias
+    5. statistical confusion
+
+    But readers also play a role in this game, because they have their own attack vectors like:
+
+    1. Not being used to read charts (graphicacy/numeracy)
+    2. Reading with their own confirmation bias
+    3. Consumption patterns like (attention spans)
+
+    It's both ways imho we need an informed society, but also need to acknowledge that there is a level of effort you have to invest to get to the ground of what’s shown. An example how large the investment/effort/skill-level can be is [learning from pros](/learning-from-pros/index.html), where I try to get to some ground of what I see. For most people it's impossible to look up the data in their daily lives.
+
+    To be honest people are flooded in social media so they can either live with it and take what they are served (in times of AI the content we get is becoming average at best) or reduce the media consumption to a level where they can actually parse the information and think about it – sometimes **less is more**.
+
+    We should avoid the impression that every single one of us has to have at least an oppinion on every topic. Imho this is one cause why we don't actually look things up, we'r missing the time and skills to do so.
+
+  </script>
+  <script id="8" type="text/markdown">
+    ## Bad design
+
+    Designing charts in a bad way may have different reasons. Maybe designers don't know better. Proofing bad intention could be a very challenging task. We will have an for just how hard it is to proof. Here is a check list **what you shouldn't do**:
+
+    1. Classic axis trickery
+    2. Choosing an inappropriate symbol
+    3. Misleading visual guidance
+    4. Introduce confusion through statistics (that is it’s own topic)
+    5. Droping information
+    6. Inadequite conclusions
+
+    A bad visualisation design is usually one where you'r getting a false impression through the use of data. There are classics most people have experienced themselves like the _cherrypicker_, _base stealer_ or the _time gap_ ticks to mislead people. There is an extensive list with fun names for the bad chart design patterns collected by [flowingdata.com](https://flowingdata.com/projects/dishonest-charts/).
+  </script>
+  <script id="9" type="module">
+    const pmk_colours = {
+      "PMK Right": "#936639",
+      "PMK Left": "#c1121f",
+      "PMAK": "#6a994e",
+      "PMK Foreign Ideology": "#386641",
+      "PMK Religious Ideology": "#a7c957",
+    };
+  </script>
+  <script id="11" type="text/markdown">
+    There are many ways you can adjust the axis to give a false impression.
+    Let me pull up an example from the German statistic on politically motivated crime.
+    The federal criminal police department (BKA) publishes a yearly report on this statistics.
+    Let me try to mislead you by comparing <span style="color: #936639; text-decoration: underline">right</span> and <span style="color: #c1121f; text-decoration: underline">left</span> motivated crimes:
+  </script>
+  <script id="13" type="text/x-typescript">
+    const pmkData = await FileAttachment("./data/pmk-cases-2024.json").json();
+  </script>
+  <script id="14" type="text/x-typescript">
+    const form_degrees = [
+      { level: 1, label: "Misleading" }, { level: 2, label: "Dangerous" }, { level: 3, label: "Absurd" },
+    ];
+    const form1 = view(
+      Inputs.form({
+        degree: Inputs.select(
+          form_degrees,
+          { format: (d) => d.label, label: "Level of mislead", value: form_degrees[0] }
+        ),
+      }),
+    );
+  </script>
+  <script id="16" type="text/x-typescript">
+    function MisleadingCriminalCases1({ data, filter_type, degree, width, height }) {
+      const localdata = data
+        .filter((d) => d.type === filter_type)
+        .map((d) => ({ ...d, color: pmk_colours[d.type] }));
+      const value_label = localdata.find((d) => d.year === 2024);
+      const y = degree.level > 1 ? { ticks: 0, label: null } : { label: "Cases" };
+      return Plot.plot({
+        width,
+        height,
+        color: { legend: true },
+        marginTop: 30,
+        x: { tickFormat: "d", label: null, grid: true},
+        y: { tickFormat: "s", label: "Cases", axis: degree.level > 1 ? null : true },
+        marks: [
+          Plot.line(localdata, { x: "year", y: "value", stroke: "color", strokeWidth: 3 }),
+          ...(degree.level < 3
+            ? [
+              Plot.text([value_label], {
+                x: value_label.year,
+                y: value_label.value,
+                text: (d) => `${(d.value / 1000).toFixed(1)}k`,
+                fill: "color",
+                dy: -15,
+              }),
+            ]
+            : []),
+          Plot.text([value_label], {
+            x: 2020,
+            y: localdata.find((d) => d.year === 2020).value,
+            text: "type",
+            fill: "color",
+            fontSize: 14,
+            fontWeight: 600,
+            dy: -15,
+          }),
+        ],
+      });
+    }
+  </script>
+  <script id="17" type="text/markdown">
+    <h2>Misleading representation of polically motivated criminal cases in Germany</h2>
+
+    ${MisleadingCriminalCases1({data: pmkData, filter_type: "PMK Right", ...form1, width, height: 250})}
+    ${MisleadingCriminalCases1({data: pmkData, filter_type: "PMK Left", ...form1, width, height: 250})}
+  </script>
+  <script id="18" type="text/markdown">
+    The chart above is one that could cause trouble when you lazily gaze over it or if the actual case labels are even dropped.
+    Sure this is an extreme case and we all know if no axis the chart says basically nothing. But for inexperienced or naive people this might become dangerous. The example above was actually a little challenge to me. I wanted to build it quickly using Observable Plot and there is no way I found to make independent facets of the y axis. It would always like to link the right and left axis, so you cannot make them separate. Now I know why.
+
+    [The original chart](https://www.bka.de/DE/UnsereAufgaben/Deliktsbereiche/PMK/PMKZahlen2024/PMKZahlen2024_node.html)
+    published by the federal department, with one exception I excluded the total cases, because I think it's
+    a bad habbit to publish data and it's sums in the same plot. Summing all up will add another line that will skew the y scale and make comparison harder – for which the chart was originally designed btw.
+  </script>
+  <script id="19" type="text/x-typescript">
+    const include_total = await view(Inputs.toggle({ label: "Include total", value: false }));
+  </script>
+  <script id="21" type="text/x-typescript">
+    function OriginalCriminalCases({ data, include_total, width, height }) {
+      const localdata = data.map((d) => ({ ...d, color: pmk_colours[d.type] }));
+      if (include_total) {
+        pmk_colours.Total = "#00b4d8";
+      } else {
+        delete pmk_colours.Total;
+      }
+      return Plot.plot({
+        title: "Original report of politically motivated cases German Federal Criminal Office (BKA)",
+        subtitle:
+          "PMAK was split into foreign and religious ideology in 2017. Data provieded by bka.de",
+        width,
+        height,
+        marginLeft: 30,
+        marginRight: 12,
+        color: { legend: true, range: Object.values(pmk_colours), domain: Object.keys(pmk_colours) },
+        y: { grid: true, tickFormat: "s", label: "Number of cases" },
+        x: { tickFormat: "d", label: "Year" },
+        marks: [
+          Plot.line(localdata, { x: "year", y: "value", z: "type", stroke: "color" }),
+          Plot.dot(localdata, { x: "year", y: "value", fill: "color" }),
+          // Plot.text(localdata, { x: "year", y: "value", fill: "color", text: "type" }),
+          ...(include_total ?
+            [Plot.line(localdata, Plot.groupX({ y: "sum" }, { x: "year", y: "value", stroke: d => "Total" })),
+            Plot.dot(localdata, Plot.groupX({ y: "sum" }, { x: "year", y: "value", fill: d => "Total" }))
+            ] : []
+          )
+        ],
+      });
+    }
+    display(OriginalCriminalCases({data: pmkData, include_total, width}))
+  </script>
+  <script id="23" type="text/markdown">
+    ## When to start y at 0?
+
+    This was something that confused me a while. I felt somewhat confident that I'm not doing any harm, but I wasn't exactly sure when to start at 0 and when not to. For bar charts yes sure start at 0 no problem there. But do I have to do it for lines too?
+
+    In short: _No start where reasonable, but make sure it really makes sense._
+
+    The long answer, at least as far as Alberto Carlo (who wrote _How charts lie_) takes the topic, it's a bit more complex then just one or the other side. He's doing an example that is compareble with the following.
+  </script>
+  <script id="25" type="text/x-typescript">
+    const colours = {light: "#ccc",  accent: "#000"}
+  </script>
+  <script id="24" type="text/x-typescript">
+    function ScalingPopulation({ data, alterY, width }) {
+      const localdata = data.map((d) => ({ ...d, time: new Date(d.time).getFullYear() }));
+      const domain = alterY ? [0, d3.max(localdata, (d) => d.value)] : d3.extent(localdata, (d) => d.value);
+      const tipdata = [
+        {
+          ...localdata.find((d) => d.time === 2011),
+          text: "Eu-wide census resulted more than 1 million people diff for population counts",
+        },
+      ];
+      return Plot.plot({
+        title: "German population since 1990",
+        subtitle:
+          "In 2011 an eu-wide census was carried out and is since then used as a new baseline. Data provided by destatis.",
+        width,
+        x: { label: "Time", tickFormat: "d" },
+        y: { tickFormat: "s", label: "Population", domain },
+        marks: [
+          Plot.line(localdata, { x: "time", y: "value", stroke: colours.accent }),
+          Plot.dot(localdata, { x: "time", y: "value", fill: colours.accent }),
+          Plot.tip(tipdata, {
+            x: "time",
+            y: "value",
+            title: "text",
+            anchor: alterY ? "top" : "right",
+          }),
+        ],
+      });
+    }
+  </script>
+  <script id="30" type="text/x-typescript">
+    const db = await DuckDBClient.of({
+      ger_population: FileAttachment("data/12411-degen.parquet"),
+      lifeexpect_and_gdp: FileAttachment("data/lifeexpect_and_gdp.parquet"),
+      ger_microcensus: FileAttachment("data/12211-degen.parquet"),
+      trafficdeaths: FileAttachment("data/23211.parquet"),
+    });
+  </script>
+  <script id="26" type="application/sql" hidden="" database="var:db" output="population_">
+    SELECT time, gender, value FROM 'ger_population' WHERE gender = 'Insgesamt' AND time >= '1990-01-01' ORDER by time;
+  </script>
+  <script id="29" type="text/x-typescript">
+    const alterY = view(Inputs.toggle({ label: "Zero y-scale", value: false }));
+  </script>
+  <script id="31" type="text/x-typescript">
+    const population = Array.from(population_);
+  </script>
+  <script id="27" type="text/x-typescript">
+    ScalingPopulation({data: population, alterY, width})
+  </script>
+  <script id="32" type="text/markdown">
+    The above example is a bit extreme, but it illustrates the whole problem with all these _it should always be this way_-rules, but mostly it's situational. Sometimes what's good practise can turn out to be bad behaviour. If you'r not quite sure, take the middle way and give the axis a bit more value room.
+  </script>
+  <script id="34" type="application/sql" hidden="" database="var:db" output="regions_">
+    SELECT distinct(owid_region) FROM lifeexpect_and_gdp WHERE year = '2023' AND owid_region NOT NULL;
+  </script>
+  <script id="38" type="text/x-typescript">
+    const regions = Array.from(regions_);
+  </script>
+  <script id="35" type="application/sql" hidden="" database="var:db" output="years_">
+    SELECT distinct(year) FROM lifeexpect_and_gdp WHERE owid_region NOT NULL ORDER BY year;
+  </script>
+  <script id="39" type="module">
+    const years = Array.from(years_);
+  </script>
+  <script id="37" type="application/sql" hidden="" database="var:db" output="lexpect_and_gdp_">
+    SELECT * FROM lifeexpect_and_gdp WHERE year = ${lexpInputs.year} AND owid_region NOT NULL AND life_expectancy_0 > 50;
+  </script>
+  <script id="40" type="text/x-typescript">
+    const lexpectAndGdp = Array.from(lexpect_and_gdp_)
+  </script>
+  <script id="33" type="text/markdown">
+    ## No axis is right if we see nothing
+
+    Beyond these simple axis topics, we can also have an example like the following, where data diverges strongly. Let's put up an example before we make the point. Here is a life expectancy vs GDP per capita chart.
+  </script>
+  <script id="36" type="text/x-typescript">
+    const lexpInputs = view(
+      Inputs.form({
+        use_logarithm: Inputs.toggle({ label: "Use log", value: false }),
+        highlight_region: Inputs.select(regions, {
+          format: (d) => d.owid_region,
+          label: "Highlight region",
+          value: regions.find((d) => d.owid_region === "Africa"),
+        }),
+        year: Inputs.range(
+          d3.extent(years, (d) => d.year),
+          { label: "Year", step: 1, value: years[years.length - 1].year },
+        ),
+      }),
+    );
+  </script>
+  <script id="41" type="text/x-typescript">
+    function ScaleLogarithmicExample({ data, inputs, width }) {
+      const year_of_data = data[0].year;
+      const fillOrHighlight = (d) =>
+        d.owid_region === inputs.highlight_region.owid_region ? colours.accent : colours.light;
+      return Plot.plot({
+        title: `Life expectancy at birth (in ${year_of_data}) compared to GDP, per country`,
+        subtitle:
+          "GDP scale is in logarithm to actually see the highlighted countries of Africa. " +
+          "Data provided by owerworldindata.org.",
+        width,
+        height: parseInt(width * 0.7),
+        marginLeft: 20,
+        marginRight: 10,
+        x: {
+          label: "GDP (USD) per person",
+          type: inputs.use_logarithm ? "log" : "linear",
+          base: inputs.use_logarithm ? 10 : null,
+          grid: true,
+        },
+        y: { label: "Life expectancy (years)" },
+        color: { legend: true },
+        marks: [
+          Plot.dot(data, {
+            x: "gdp_per_capita",
+            y: "life_expectancy_0",
+            fill: fillOrHighlight,
+            r: 3,
+          }),
+          ...(
+            width > 500 ? [Plot.text(
+              data.filter((d) => d.owid_region === inputs.highlight_region.owid_region),
+              {
+                x: "gdp_per_capita",
+                y: "life_expectancy_0",
+                text: "entity",
+                dy: -10,
+                fill: fillOrHighlight,
+              },
+            )] : []
+          ),
+          Plot.tip(
+            data,
+            Plot.pointer({
+              x: "gdp_per_capita",
+              y: "life_expectancy_0",
+              title: (d) =>
+                `Country: ${d.entity}\nGDP: ${(d.gdp_per_capita / 1000).toFixed(2)}k\nLife expectancy: ${d.life_expectancy_0.toFixed(2)}\nYear:${d.year}`,
+            }),
+          ),
+        ],
+      });
+    }
+    display(ScaleLogarithmicExample({data: lexpectAndGdp, inputs: lexpInputs, width}))
+  </script>
+  <script id="42" type="text/markdown">
+    Sometimes we need to change axis such that we can show certain things, but we need to take care what it suggests. With the logarithm toggle above the chart turned on we'll be able to see better how the data is behaving for Africa, select it in the region, you'll see what I mean when you toggle the logarithm on and off. On the other hand when we put up this chart it visually suggests a linear trend (turn on the trend line). But that's not true. Even though the logarithm is useful to see countries like Uganda, Zimbabwe, Niger or Togo it can suggest something which is not actually true.
+
+    What I want to say is that the visual appreance can trick people with less experience on statistics or math in general, which makes the chart designers responsible to choose the right tool at the right time, depending on audiance.
+
+    > "_Like this we can not show what we want to show_" might be one of the most frequent reasons why designers perform data digging voodoo. In reality data often looks odd or is nearly uninspectable because of very few outliers.
+
+    For example in the GDP vs life expectancy chart above I excluded entries that have a life expectancy lower than 50, because of reasons the Central African Republic has a life expectancy of 18 in 2022. In 2023 it's back to 57. In 2022 this chart would be so heavily scewed, we would not be able to read it.
+  </script>
+  <script id="43" type="text/markdown">
+    ## Color gaze
+  </script>
+  <script id="54" type="text/x-typescript">
+    const gerStates = await FileAttachment("data/german-states.geo.json").json();
+  </script>
+  <script id="46" type="application/sql" hidden="" database="var:db" output="employ_states">
+    SELECT distinct(employ_state) FROM ger_microcensus WHERE year = '2024';
+  </script>
+  <script id="47" type="application/sql" hidden="" database="var:db" output="income_labels">
+    SELECT distinct(income_label) FROM ger_microcensus WHERE year = '2024';
+  </script>
+  <script id="48" type="application/sql" hidden="" database="var:db" output="microcensus_">
+    SELECT * FROM ger_microcensus WHERE year = '2024' AND employ_state = ${censusForm.employState.state} AND gender = 'Insgesamt';
+  </script>
+  <script id="57" type="text/x-typescript">
+    const employStates = Array.from(employ_states);
+  </script>
+  <script id="56" type="text/x-typescript">
+    const incomeLabels = Array.from(income_labels);
+  </script>
+  <script id="55" type="text/x-typescript">
+    const microcensus = Array.from(microcensus_);
+  </script>
+  <script id="53" type="text/x-typescript">
+    const povertyRisked = ["1000 bis unter 1250 EUR", "500 bis unter 1000 EUR", "unter 500 EUR"];
+
+    let microcensusData = d3
+      .groups(microcensus, (d) => d.state)
+      .map(([state, group]) => ({
+        state,
+        total: group.find((d) => d.income_label === "Insgesamt").value,
+        children: d3
+          .groups(group, (d) => d.income_label)
+          .map(([income_label, income_group]) => ({
+            income_label: income_label,
+            value: income_group[0].value,
+            ...income_group[0],
+          })),
+      }));
+    microcensusData = microcensusData.map((state) => ({
+      ...state,
+      children: state.children
+        .filter((d) => d.income_label !== "Insgesamt")
+        .map((d) => ({ percent: (d.value / state.total) * 100, ...d })),
+      poverty:
+        d3.sum(
+          state.children.filter((d) => povertyRisked.includes(d.income_label)),
+          (d) => d.value,
+        ) / state.total,
+    }));
+
+    const newFeatures = gerStates.features.map((feature) => ({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        poverty: (
+          microcensusData.find((d) => feature.properties.state === d.state).poverty * 100
+        ).toFixed(2),
+      },
+    }));
+
+    let updatedStates = { ...gerStates, features: newFeatures };
+  </script>
+  <script id="50" type="text/x-typescript">
+    const selectLabels = [
+      "3500 EUR und mehr",
+      "3000 bis unter 3500 EUR",
+      "2500 bis unter 3000 EUR",
+      "2000 bis unter 2500 EUR",
+      "1750 bis unter 2000 EUR",
+      "1500 bis unter 1750 EUR",
+      "1250 bis unter 1500 EUR",
+      "1000 bis unter 1250 EUR",
+      "500 bis unter 1000 EUR",
+      "unter 500 EUR",
+    ];
+
+    const selectEmployState = [
+      { state: "Erwerbslose aus Hauptwohnsitzhaushalten", label: "Unemployed" },
+      { state: "Erwerbstätige aus Hauptwohnsitzhaushalten", label: "Employed" },
+      { state: "Bevölkerung in Hauptwohnsitzhaushalten", label: "All (including others)" },
+    ];
+  </script>
+  <script id="49" type="text/x-typescript">
+    const censusForm = view(
+      Inputs.form({
+        scaleSettings: Inputs.select(["Quantile", "Fixed 0 start", "Custom"], {
+          label: "Color settings",
+        }),
+        employState: Inputs.select(
+          selectEmployState,
+          {label: "Employment", format: (d) => d.label, value: selectEmployState.find(d => d.label === "Unemployed"), disabled: true}),
+      }),
+    );
+  </script>
+  <script id="51" type="module">
+    const scaleStart = view(
+      Inputs.range(
+        [0, 50],
+        {step: 1, label: "Scale start", value: 30, disabled: censusForm.scaleSettings !== "Custom"}
+      )
+    );
+  </script>
+  <script id="52" type="text/x-typescript">
+    function ScaleDiscreteColors({ geo, inputs, scaleStart, width }) {
+      const color_params = {};
+      if (inputs.scaleSettings === "Fixed 0 start") {
+        color_params.domain = [0, d3.max(geo.features, (d) => d.properties.poverty)];
+      } else if (inputs.scaleSettings === "Custom") {
+        color_params.domain = [scaleStart, d3.max(geo.features, (d) => d.properties.poverty)];
+      }
+
+      return Plot.plot({
+        title: `Poverty rates of ${inputs.employState.label.toLowerCase()} persons based on the German micro-census`,
+        subtitle:
+          "A person in risk of poverty is by German definition earning  less then 1378€ monthly, as of 2024.",
+        width,
+        projection: { type: "mercator", domain: geo },
+        color: {
+          type: "quantile",
+          n: 6,
+          scheme: "reds",
+          label: `% of ${inputs.employState.label.toLowerCase()} in risk of poverty`,
+          legend: true,
+          tickFormat: ".1f",
+          ...color_params,
+        },
+        marks: [
+          Plot.geo(geo, {
+            fill: (d) => d.properties.poverty,
+            title: (d) => `${d.properties.state} ${d.properties.poverty}%`,
+            tip: true,
+            stroke: "black",
+          }),
+        ],
+      });
+    }
+    display(ScaleDiscreteColors({geo: updatedStates, inputs: censusForm, scaleStart, width: d3.min([640, width])}))
+  </script>
+  <script id="58" type="text/markdown">
+    See for yourself how the chart changes if you set the custom setting and move the scale start. The colors will be recalculated. When turning the scale start to 0 all the chart is in dark colours. Likewise if we turn it the other way the chart looks like everything is good and a low risk of poverty is expected. Since the top part is fixed,
+    some states will still look darker red. If we'd also increase the scale end, this will also change.
+    This is just like the population chart in [When to start y at 0](#when-to-start-y-at-0).
+    Personally I'd go with something like 25 to 30, even though it's a hard call to see a 33% of unemployed people are in risk of poverty in the state of Schleswig-Holstein labeled light red.
+  </script>
+  <script id="59" type="text/markdown">
+    ## Please don't yell at readers
+
+    Strong wording is a very strong suggestive pattern, that tries to influence the readers mindset, before looking at the data itself. To explain the effect I'd need to read into cognative science or psychology literature and to be honest that's hard. So I just want to mention that there are sciencists, that knows how this psychological trick works and when I get to it I may read into this aswell, but for now I leave it there and just illustrate an example.
+
+    If you'r not aware in Germany we have a long history of driving fast. We are one of the very few countries on earth where people are allowed to drive up to 200+ km/h.
+    You can imagine that there's an emotional debate about speed limits going in Germany. With the debate in mind, take a look at the following yelling chart:
+  </script>
+  <script id="60" type="application/sql" hidden="" database="var:db" output="traffic_">
+    select *, value::BIGINT from trafficdeaths WHERE age_label = 'Total' ORDER BY year
+  </script>
+  <script id="63" type="module">
+    const traffic = Array.from(traffic_);
+  </script>
+  <script id="64" type="module">
+    function DeadlyTrafficAccidents({ width }) {
+      const totals = traffic.filter((d) => d.gender === "total");
+      const [tmin, tmax] = d3.extent(totals, (d) => d.value);
+      const total_in_2024 = totals.find((d) => d.year === 2024);
+      const percentage_label = (((tmax - total_in_2024.value) / tmax) * 100).toFixed(2);
+      const extent_entries = totals.filter((d) => [1980, 2024].includes(d.year));
+
+      return Plot.plot({
+        subtitle: "Yearly traffic accidents are on 40+ years historic lows",
+        width,
+        marginLeft: 10,
+        y: { label: null, tickFormat: "s", ticks: 0 },
+        x: { label: "Year", tickFormat: "d" },
+        marks: [
+          Plot.line(totals, { x: "year", y: "value", strokeWidth: 2 }),
+          Plot.text(["⚠️ This chart is misleading"], {
+            frameAnchor: "top-right", fontSize: 14, fontWeight: 600,
+          }),
+          Plot.text([`${percentage_label}% less\n accidents`], {
+            x: 2003, y: tmax / 2, fill: "#29bf12", dy: -20, fontSize: 20, fontWeight: 600,
+          }),
+          Plot.dot(extent_entries, { x: "year", y: "value", fill: "black" }),
+          Plot.text([extent_entries[0]], {
+            x: "year", y: "value", fontSize: 14,
+            dy: -10, fontWeight: 600, textAnchor: "start",
+            text: (d) => d3.format("d")(d.value),
+          }),
+          Plot.text([extent_entries[1]], {
+            x: "year", y: "value", fontSize: 14, dy: 10,
+            fontWeight: 600, textAnchor: "end", text: (d) => d3.format("d")(d.value),
+          })
+        ]
+      });
+    }
+  </script>
+  <script id="65" type="text/html">
+    <h2 style="font-size: 24px">Never before in history has driving been so save!</h2>
+    ${DeadlyTrafficAccidents({width})}
+  </script>
+  <script id="66" type="text/markdown">
+    There is a simple trick that can be resolved by careful reading, <span class="underline green">traffic accidents</span> or
+    in the long version **accidents involving vehicles** includes bicycles, cars, trains, airplain and so on. This is a simple example, but illustrates how the title or the charts inner design influences how we preceive data shown to us. An y axis that surprisingly stops right where the designer want's to make the point. Also a good example for situations where one should start y at 0. The full height of the chart is also used to make the point: **Line goes down**, paired with the oversized chart heading and a limited width (emphasize the steep decline) readers view is heavily guided towards what they should preceive, not what the actual data tells.
+
+    I like to emphasize that this yelling chart pattern is important, because when you hide data as a data expert, you need to distract readers from what you did, so they focus on the yelled section, not the data or the context.
+  </script>
+  <script id="67" type="text/markdown">
+    # Conclusion
+
+    If we go back to the list in [Bad design](#bad-design), we only touched on the first and to be honest we'r not even close to having completed all common axis tricks that might be used to suggest false conclusions.
+    As soon as I get to it I'll add more examples to new pages to get more perspective.
+
+  </script>
+</notebook>

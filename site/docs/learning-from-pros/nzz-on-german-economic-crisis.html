@@ -1,0 +1,789 @@
+<!doctype html>
+<notebook theme="air">
+  <title>NZZ scrolly telling German economic crisis</title>
+  <script id="1" type="text/markdown">
+    # NZZ scrolly telling German economic crisis
+  </script>
+  <script id="3" type="text/markdown" hidden="">
+    <!-- @meta {
+      "date": "2025-12-09",
+      "tags": ["economy", "scrolly telling", "ddj", "datavis"],
+      "blurb": "Radial temperature-anomaly blobs for any country, 1979 – 2025."
+    } -->
+  </script>
+  <script id="2" type="text/markdown">
+    I stumbled over [this NZZ data story](https://www.nzz.ch/visuals/die-deutsche-industrie-schrumpft-diese-zahlen-belegen-wie-dramatisch-der-abstieg-wirklich-ist-ld.1911067) of November 2025, because I was looking through the NZZ's data visualisation department.
+    Out of curiousity I sometimes look through the works of DDJ (data driven journalism) teams even when I didn't subscribed to it. Sometimes there are free articles like in this case.
+  </script>
+  <script id="4" type="module">
+    const helpers = {
+      colors: {
+        original: {
+          orange: { light: "#F8E3E0", dark: "#CE4631" },
+          red: { light: "#F3D9E5", dark: "#AC004F" },
+          green: { light: "#E3EEE6", dark: "#478C5B" },
+          blue: { light: "#DDEDF2", dark: "#1B87AA" },
+        },
+        alter: {
+          orange: { light: "#F7E9DF", dark: "#F59D4B" },
+          red: { light: "#F3D9E5", dark: "#CE4760" },
+          green: { light: "#E3EEE6", dark: "#78BC61" },
+          blue: { light: "#DDEDF2", dark: "#6290C8" },
+        },
+      },
+    };
+
+    const labels = {
+      key: html`<span
+        style="background: ${helpers.colors.original.orange.light}; color: ${helpers.colors.original
+          .orange.dark}; text-decoration: underline; padding: 0px 4px; border-radius: 4px;"
+        >key</span
+      >`,
+      traditional: html`<span
+        style="background: ${helpers.colors.original.red.light}; color: ${helpers.colors.original.red
+          .dark}; text-decoration: underline; padding: 0px 4px; border-radius: 4px;"
+        >traditional</span
+      >`,
+      surprise: html`<span
+        style="background: ${helpers.colors.original.green.light}; color: ${helpers.colors.original
+          .green.dark}; text-decoration: underline; padding: 0px 4px; border-radius: 4px;"
+        >surprise</span
+      >`,
+      structural: html`<span
+        style="background: ${helpers.colors.original.blue.light}; color: ${helpers.colors.original.blue
+          .dark}; text-decoration: underline; padding: 0px 4px; border-radius: 4px;"
+        >structural</span
+      >`,
+    };
+  </script>
+  <script id="5" type="text/markdown">
+    ## What is it about
+
+    The German economy is crumbling according to the article at hand and they can proof just how bad it is with data: "_The decline began gradually—and long before the pandemic. The following charts show how industrial production in Germany has evolved since 1995—across nine sectors, ranging from the automotive industry to the arms industry._"
+
+    The authors chose to present the largest portion of the story as a _scrolly telly_. Meaning you get data and facts as you scroll through the page. Using this navigation pattern users are told a story, as the name suggests. It's a very popular web presentation pattern (as of March 2026).
+
+    ## The story at scroll
+
+    This is a longer section since there are different chart layouts due to the scrolly telling format. First we are introduced to the data and as we scroll we go through the following steps. **You can [skip this section](#about-the-data) as it's very long and tedious (like the original)**.
+
+    1. We are shown five line/area charts
+       - three in a red color (labeled ${labels.key} industries)
+       - two in dark red color (${labels.traditional} industries)
+       - below we find four hidden lines
+    2. The upper lines are hidden now and the lower ones are introduced as:
+       - two green lines (labeled as ${labels.surprise} industries)
+       - two more for ${labels.structural} industries (meaning sucessors) in blue
+    3. The bottom lines are hidden again and the key industries take over the space
+       - This time they get more space since the two traditional are hidden too
+       - Axis appear y are percentages, x is time/year spanning from 1995 to 2025
+       - Also we got two dashed vertical lines appearing in 2008 (financial crisis) and 2020 (corona pandemic)
+       - At first glace all these chart behave the same
+       - Line charts are growing until 2008 and stay almost static until before 2020
+       - We also get a fixed bottom div with an question mark icon labeled "Whats the percentages about?", we get to this one later.
+    4. The first chart is highlighted and reveals it's the car industry
+       - employs 720k people at 24% industry revenue share
+    5. The car industry chart is seperated with a vertical line that highlights the section since 2018.
+       - It tells electic cars hits the classic supply chain and 120k jobs are gone.
+    6. The car industry chart moves forward to 2023 (_next shock_)
+       - China produces subsidized cars, shock stays to today and energy prices and CO₂ regualtion hit this industry the text box says.
+    7. Next mechanical engineering
+       - Another text box informs us 930k people employsed with 11% revenue share
+    8. Next highlight section, again in 2018
+       - Industry slows down, demand goes back, china strong and low energy and labor costs, as a result 70k jobs are gone, the text box informs us
+    9. Moving on to the third key industry we now know is the chemical industry
+       - 320k jobs at 6.7% industry share
+    10. You guessed it we hightlight another section but no! It's 2022.
+        - CO₂ pricing, energy transformation and nuclear phase-out make energy expensive
+        - Even worse environment and climate regulations also target this industry, we are told by a lovely text box
+        - Another text box, just to shake it a bit up plants are closed in Frankfurt and Ludwigshafen. China in contrast keeps growing.
+    11. We surpassed the key- and move on the the traditional industries. First: clothing and textiles
+        - More text boxing 64k employees, ...
+        - Textiles once been a heavy weight for the German industry, ...
+        - This is the first line/area chart we see that is degrowing heavily
+
+    At this point I'm already asleep. At this point I'm just writing for achivements sake. Let's scroll on:
+
+    12. Next text box, ... breweries
+        - Not as rapidly degrowing but noticable. 23k employees in the beer industry, ...
+        - Oh another text box informs us that demographic change makes older drink less younger differently
+        - Exports static, while netherlands companies dominate interationally
+        - Interesting I always had the impression young people drink way less compared to older, but anyways.
+    13. the former charts are hidden now and we are shown the latter 4 charts. But the labels have changed
+        - blue is now "against the trend" are post crisis better than before
+        - green "just risen" industries are rising through tax money, unknown if they succeed asia is strong the text box tells us
+    14. Scrolling on we see the batterie industry
+        - Another variant this chart (an the other green one) is not sharing the space with other expanded charts thus it's larger.
+        - The first rising chart this lightly growing until 2020
+    15. Highlight section at 2020, our loyal companion the horizontally centered text box is speaking:
+        - Rapid growth due to e-car boom, drop in 2023 due to governmental funding is running out.
+        - Past 2023 the line is continuing to grow on a volatile coarse
+    16. Next green chart: Weapons industry 15k employees, 0.6 global revenue share
+        - Since cold war manufacturing of weapons and ammunition was drifts along states the text box
+        - The chart is the most volatile shape and inceases lately
+    17. Highlight section at 2022 Ukrain war, weapon industry grows at steep angle
+        - Tank industry is not included (often confidential, thus not included)
+
+    We almost got it, now hang in there.
+
+    18. Shared view next we get the last two (blue) lines (logically at half height)
+        - First highlighted _chip industry_ 77k employees, 1.7% total revenue share
+        - Car and instry chips produced by Bosch and Infineon. TSMC also coming to Germany
+        - Thanks to a billions (1000k, German and English billion differ) in funding program
+        - The blue lines both growing at a stable rate
+    19. Medical tech industry - 110k employees, 1.3% industry revenue share - increasingly older people make this sector grow reliably over the shown time
+
+  </script>
+  <script id="6" type="text/markdown">
+    ## About the data
+
+    Sorry If this bothered you a little, but I had to finish this an for me it felt exactly the same way it reads. At one point I even felt like in an IKEA store walking the indended way when you don't know where the shortcut is. You get the point of beeing guided. But I want to analyse and learn from their work so first I want to see what we got without the scrolling.
+
+    Therefore we need to find out what data was used, the authors added a note at the bottom of their data story, which says the used destatis data (data from federal statistics office). If you go to the [destatis database](https://www-genesis.destatis.de/datenbank/online) and type in 'production index', you get the statistics they used.
+    More precisely it's the statistics code [42153-0003](https://www-genesis.destatis.de/datenbank/online/statistic/42153/). You can find the way I processed the data in the [repos datawork folder](https://github.com/arrrrrmin/arrrrrmin.dev/tree/main/dataworks).
+
+    The authors additionally said: _The figures are adjusted for price, calendar and seasonal effects_. So we know we need to get the corrected X13 series. Make a few adjustments so we get a date type in DuckDB by concating `year` and `month`. This comes handy now because we need to reduce the data to the articles time span. Which I believe is around May or July. It doesn't really matter in this case since a few months won't make much of a difference in a 35 year scope.
+  </script>
+  <script id="8" type="module">
+    const db = await DuckDBClient.of({
+      prodindexes: FileAttachment("data/42153-minimal.parquet"),
+      grossvalueadded: FileAttachment("data/gross_value_by_sector.parquet"),
+    });
+  </script>
+  <script id="7" type="application/sql" hidden="" database="var:db" output="windowedindexes">
+    SELECT *, concat(year, '-', month, '-01')::DATE as time, avg("value") OVER seven AS moving_avrg FROM prodindexes WHERE processed_level_code = 'X13JDKSB' AND year >= 1995 AND year < 2026 AND time < '2025-09-01'::DATE AND industry_code IN ('WZ08-29', 'WZ08-28', 'WZ08-20', 'WZ08-13', 'WZ08-1105', 'WZ08-272', 'WZ08-254', 'WZ08-261', 'WZ08-325')
+    WINDOW seven AS (
+        PARTITION BY "industry_code"
+        ORDER BY "time" ASC
+        RANGE BETWEEN INTERVAL 3 MONTH PRECEDING
+                  AND INTERVAL 3 MONTH FOLLOWING)
+    ORDER BY 1, 2;
+  </script>
+  <script id="14" type="module" hidden="">
+    const codes = [
+      "WZ08-29", // Kraftwagen und Kraftwagenteilen
+      "WZ08-28", // Maschinenbau
+      "WZ08-20", // chemischen Erzeugnissen
+      "WZ08-13", // Textilien
+      "WZ08-1105", // Bier
+      "WZ08-272", // Batterien
+      "WZ08-254", // Waffen
+      "WZ08-261", // elektronischen Bauelementen und Leiterplatten
+      "WZ08-325", // med. u. zahnmed. Apparaten und Materialien
+    ];
+  </script>
+  <script id="16" type="module">
+    let windowedIndexes = Array.from(windowedindexes);
+    const y_domains = codes.map((code) => {
+      return [0, d3.max(windowedIndexes.filter((d) => d.industry_code === code), (d) => d.moving_avrg)];
+    });
+    const en_labels = [
+      "Automotive",
+      "Mech. Engineering",
+      "Chemicals",
+      "Textile",
+      "Breweries",
+      "Batteries",
+      "Weapons and ammunition",
+      "Chip industry",
+      "Medical technologies",
+    ];
+    const color_labels = ["orange", "orange", "orange", "red", "red", "green", "green", "blue", "blue"];
+    const en_labels_map = Object.fromEntries(d3.zip(codes, en_labels));
+    const y_domains_map = Object.fromEntries(d3.zip(codes, y_domains));
+    const colors_map = Object.fromEntries(d3.zip(codes, color_labels));
+    const scaling_per_sector_map = Object.fromEntries(
+      codes.map((c) => [c, d3.scaleLinear(y_domains_map[c], [0, 100])]),
+    );
+    const getIndexByCode = (code) => codes.indexOf(code);
+    const isInCodes = (code) => codes.includes(code);
+  </script>
+  <script id="17" type="text/x-typescript">
+    const sector_events = [
+      {
+        time: new Date(Date.UTC(2018, 0, 1)),
+        text: "In 2018 the need for electric cars made different for formerly good running supply chains unneeded",
+        value: 60,
+        industry_code: "WZ08-29",
+      },
+      {
+        time: new Date(Date.UTC(2023, 0, 1)),
+        text: "The exports to china where crumbling. China produces cars, especially electric cars themselves.",
+        value: 30,
+        industry_code: "WZ08-29",
+      },
+      {
+        time: new Date(Date.UTC(2018, 0, 1)),
+        text: "The mechanical engineering sector has also been struggling since 2018. Demand is falling, and China is emerging as an increasingly formidable competitor",
+        value: 50,
+        industry_code: "WZ08-28",
+      },
+      {
+        time: new Date(Date.UTC(2022, 0, 1)),
+        text: "With the end of Russian supplies, the chemical industry is losing its locational advantage.",
+        value: 50,
+        industry_code: "WZ08-20",
+      },
+      {
+        time: new Date(Date.UTC(2020, 0, 1)),
+        text: "German batteries are primarily used in electric cars – and with the boom in the sector, production is skyrocketing. But this growth is fragile: production is set to plummet in 2023, partly due to the phasing out of electric car subsidies.",
+        value: 70,
+        industry_code: "WZ08-272",
+      },
+      {
+        time: new Date(Date.UTC(2022, 0, 1)),
+        text: "Since the war in Ukraine, production has picked up significantly—even more so than in other defense-related sectors such as aerospace. Tank production falls into a separate, partly confidential category and is not included in these figures.",
+        value: 70,
+        industry_code: "WZ08-254",
+      },
+    ];
+    const major_events = [
+      { name: "Financial crisis", time: new Date(Date.UTC(2008, 0, 1)) },
+      { name: "Corona pandemic", time: new Date(Date.UTC(2020, 0, 1)) },
+    ];
+  </script>
+  <script id="18" type="text/markdown">
+    ## Without the scrolly
+
+    After a little while of searching I found the actual codes used in the visualisations, so we can filter for these and reduce the data further. We create for colors, english labels and the maximas. We need the maximas because of a small thing the authors did to the y axis. Remember the percentage scale? This is why. When we hover the question mark icon on the bottom of the original article we'r informed that the 100% tick on y axis corresponds to maximum value of each industry sector in the given time span. Further it reads the percentages are not compareable amongst each other.
+    In short the authors mapped `max(car_industry)` to 100%. We can replicate that by using a linear scaling.
+
+    The basic plot outside a scrolly telling scenario would look like so:
+
+  </script>
+  <script id="19" type="module">
+    function prepareData(normalize = false) {
+      return windowedIndexes
+        .filter((d) => isInCodes(d.industry_code))
+        .map((d) => ({
+          ...d,
+          // replace the value with the moving average
+          value: normalize ? scaling_per_sector_map[d.industry_code](d.moving_avrg) : d.moving_avrg,
+          time: new Date(Date.UTC(d.year, d.month - 1, 1)),
+          index: getIndexByCode(d.industry_code),
+          industry_label: en_labels_map[d.industry_code],
+          color: colors_map[d.industry_code],
+        }))
+        .sort((a, b) => b.time - a.time);
+    }
+  </script>
+  <script id="20" type="text/x-typescript">
+    await windowedIndexes;
+    const sector_data = prepareData(true);
+  </script>
+  <script id="21" type="text/x-typescript">
+    const basic_facet_chart = () => {
+      const tip_data = sector_events.map((d) => ({
+        ...d,
+        label: en_labels_map[d.industry_code],
+        index: getIndexByCode(d.industry_code),
+        color: colors_map[d.industry_code],
+      }));
+      const xticks = [
+        new Date(Date.UTC(1995, 0, 1)),
+        new Date(Date.UTC(2010, 0, 1)),
+        new Date(Date.UTC(2025, 0, 1)),
+      ];
+
+      return Plot.plot({
+        title:
+          "Reproduced production indexes for different industry sectors in Germany",
+        subtitle:
+          "Industry type labeled by the original authors of NZZ over 35 years from 1995 to 2025. Original work by NZZ authors. Data provided by destatis.de.",
+        width: 1000,
+        height: 1800,
+        x: { ticks: xticks },
+        y: {
+          ticks: [0, 100],
+          label: "Production index (%)",
+          tickFormat: (d) => `${d}%`,
+        },
+        fy: { label: null, axis: null },
+        marks: [
+          Plot.areaY(
+            sector_data,
+            {
+              x: "time",
+              y: "value",
+              fill: (d) => helpers.colors.original[d.color].light,
+              fy: "index",
+            },
+          ),
+          Plot.lineY(
+            sector_data,
+            {
+              x: "time",
+              y: "value",
+              stroke: (d) => helpers.colors.original[d.color].dark,
+              strokeWidth: 2,
+              fy: "index",
+            }
+          ),
+          Plot.text(
+            d3
+              .groups(sector_data, (d) => d.industry_label)
+              .map(([label, group]) => ({ text: label, index: group[0].index })),
+            {
+              fy: "index",
+              frameAnchor: "top-left",
+              dx: 4,
+              dy: 4,
+              fontSize: 14,
+              fontWeight: 600,
+              text: "text",
+            },
+          ),
+          Plot.ruleX(major_events, { x: "time", strokeDasharray: [4, 5] }),
+          Plot.textX(major_events, {
+            x: "time",
+            text: "name",
+            y: 0,
+            dx: -4,
+            dy: -10,
+            textAnchor: "end",
+            fontSize: 12,
+          }),
+          // Per sector events
+          Plot.ruleX(tip_data, {
+            x: "time",
+            fy: "index",
+            stroke: (d) => helpers.colors.original[d.color].dark,
+            strokeWidth: 2,
+            tip: true,
+            title: "text",
+            anchor: "right",
+          }),
+        ],
+      });
+    };
+  </script>
+  <script id="22" type="text/x-typescript">
+    basic_facet_chart()
+  </script>
+  <script id="24" type="text/markdown">
+    ### Looking at the scales
+
+    We got three different types of scales: (1) y which shows the performance of this sector in %, (2) a classic time scale on x and (3) a colour palette of four colours.
+    The **x axis** ranges from 1995 to 2025, which are 30 years of data.
+    We can also note that the only tick we get is 2010, so we can suspect
+    that we don't need much more than that context (at least for the time scale).
+  </script>
+  <script id="25" type="module">
+    const xAxisStandAlone = ({ width }) => Plot.plot({
+      width,
+      height: 60,
+      y: { ticks: 0 },
+      marks: [Plot.axisX([1995, 2010, 2025], { anchor: "bottom", tickFormat: "d" })],
+    });
+    display(xAxisStandAlone({width}))
+  </script>
+  <script id="29" type="text/markdown">
+    The **y axis** ranges from 0 to 100, which obviously correspond to the percentages, mapped to the maximum value of each sector. The authors also state that the values are only comparable inside one graphic. We'll later explore why (also why you should).
+  </script>
+  <script id="30" type="text/x-typescript">
+    const yAxisStandAlone = ({ width }) => Plot.plot({
+        width,
+        height: 160,
+        marks: [
+          Plot.axisY([0, 100], {
+            anchor: "left",
+            tickFormat: (d) => `${d}%`,
+          }),
+       ],
+    });
+    display(yAxisStandAlone({width}))
+  </script>
+  <script id="31" type="module">
+    const cAxisStandAlone = ({original}) =>{
+      const pallet = original ? helpers.colors.original : helpers.colors.alter;
+      return Plot.plot({
+        width: 400,
+        height: 160,
+        margin: 20,
+        marginLeft: 40,
+        marginTop: 0,
+        y: { label: null },
+        marks: [
+          Plot.rect(
+            Object.entries(pallet).map(([name, d], i) => ({
+              name,
+              color: d.dark,
+              type: "dark",
+              index: i,
+            })),
+            { x: (d) => `${d.name}`, y: "type", fill: "color", r: 6 },
+          ),
+          Plot.rect(
+            Object.entries(pallet).map(([name, d], i) => ({
+              name,
+              color: d.light,
+              type: "light",
+              index: i,
+            })),
+            { x: (d) => `${d.name}`, y: "type", fill: "color", r: 4 },
+          ),
+        ],
+      });
+    }
+  </script>
+  <script id="32" type="text/markdown">
+    Original colours and an alternative:
+  </script>
+  <script id="33" type="module">
+    display(cAxisStandAlone({original: true}));
+    display(cAxisStandAlone({original: false}));
+  </script>
+  <script id="35" type="text/markdown">
+    Imho this colour pallet is pretty dark and matches the article title "_... figures show just how dramatic the decline really is_". A pallet like the following in contrast would not suite the story's tone, but give a better contrast.
+  </script>
+  <script id="36" type="text/markdown">
+    ## Tone
+
+    My impression is that if you read through the text boxes the basic gist is _everything bad_ and if something is good it's either war or subsidised by tax payers (implicitly suggesting it's not actually good performance - _free market_ you know). The authors mention regulations or political decision as negative factors: environmental and climate regulations, energy transformation, CO₂ pricing and energy prices in general.
+
+    But I'm not experienced enough to finally rate a tone here. That's journalists work. I'm a visualisation nerd with an impression.
+
+  </script>
+  <script id="37" type="text/markdown">
+    ## Percentages on Y
+
+    The authors have chosen to normalise the production index values to a scale of 0 to 100%. This causes every line chart to start at 0 and end at 100.
+    The production indecies are originally normalised anyways since each series corresponds to a anchor value (2021=100) which is a value measured in a reference year. So normalising to % is a good pattern since users understand percentages easily. I was first wondering why they didn't choose to compare the values, but because each series is normalised by it's own 2021 value (2021=100 production index) as baseline 100 for mechanincal engineering means something different then a battery industries 100. Percent is also a bit misleading since one cannot explain of to which total this percentage share corresponds to. But this is nitty gritty stuff.
+
+    I'm annoyed by the way they present it and make you scroll through 27k pixels just to get a dozend of textboxes with minimal informativness that throw market values at you without putting them into context.
+  </script>
+  <script id="39" type="text/markdown">
+    ## A few updates
+
+    1. Added more ticks on x and y plus a grid for the y axis. It does not look as clean anymore but users are able to find their way around a little bit better.
+    2. Next we have some fun interactive things, like the tip that shows you time and value on hover.
+    3. The line plus dot indicators on hover show you where you are, again increased readability.
+    4. You can toggle a trend line to see the regression trend for yourself.
+    5. Also comments are toggleable you'r not forced to go through every single comment one after another.
+    6. The trend start control let's you define the start of regression trend line. Move it around and see for yourself.
+    7. Over all this is more explorative but the same navigation pattern - scrolly.
+  </script>
+  <script id="42" type="module">
+    const xticks = [
+        new Date(Date.UTC(1990, 0, 1)),
+        new Date(Date.UTC(1995, 0, 1)),
+        new Date(Date.UTC(2000, 0, 1)),
+        new Date(Date.UTC(2005, 0, 1)),
+        new Date(Date.UTC(2010, 0, 1)),
+        new Date(Date.UTC(2015, 0, 1)),
+        new Date(Date.UTC(2020, 0, 1)),
+        new Date(Date.UTC(2025, 0, 1)),
+    ];
+    const SingleFacetChart = ({ height, sector_data, sector_code, sector_events, labels_map, getIndexByCode, colors_map, helpers, controls }) => {
+        const data = sector_data.filter(d => d.industry_code === sector_code)
+        const tips = sector_events.filter(d => d.industry_code === sector_code).map((d) => ({
+            ...d,
+            label: labels_map[d.industry_code],
+            index: getIndexByCode(d.industry_code),
+            color: colors_map[d.industry_code],
+        }));
+
+        return Plot.plot({
+            title:
+                `${labels_map[sector_code]} production indexes in Germany`,
+            subtitle:
+                `Original work by original by NZZ authors. Data provided by destatis.de`,
+            width: 800,
+            height,
+            x: { ticks: xticks },
+            y: {
+                ticks: [0, 25, 50, 75, 100],
+                grid: true,
+                label: "Production index (%)",
+                tickFormat: (d) => `${d}%`,
+            },
+            fy: { label: null, axis: null },
+            marks: [
+                Plot.areaY(
+                    data,
+                    {
+                        x: "time",
+                        y: "value",
+                        fill: (d) => helpers.colors.alter[d.color].light,
+                        opacity: 0.5,
+                    },
+                ),
+                Plot.lineY(
+                    data,
+                    {
+                        x: "time",
+                        y: "value",
+                        stroke: (d) => helpers.colors.alter[d.color].dark,
+                        strokeWidth: 2,
+                    },
+                ),
+                // Per sector events
+                ...(controls.comments ?
+                    [Plot.ruleX(tips, {
+                        x: "time",
+                        stroke: (d) => helpers.colors.alter[d.color].dark,
+                        strokeWidth: 2,
+                        title: "text",
+                        anchor: "right",
+                    }),
+                    Plot.tip(tips, {
+                        x: "time",
+                        y: "value",
+                        title: "text",
+                        fontSize: 12,
+                    })] : []),
+                ...(controls.trend
+                    ? [
+                        Plot.linearRegressionY(
+                            data.filter((d) => d.time.getFullYear() >= controls.year),
+                            { x: "time", y: "value" }
+                        ),
+                    ]
+                    : []),
+                Plot.ruleX(data, Plot.pointerX({
+                    x: "time",
+                    y: "value",
+                    stroke: (d) => helpers.colors.alter[d.color].dark,
+                    strokeWidth: 2,
+                })),
+                Plot.dot(data, Plot.pointerX({
+                    x: "time",
+                    y: "value",
+                    stroke: (d) => helpers.colors.alter[d.color].dark,
+                    strokeWidth: 2,
+                })),
+                Plot.text(data, Plot.pointerX(
+                    {
+
+                        px: "time",
+                        py: "value",
+                        strokeWidth: 2,
+                        dy: 10,
+                        dx: 20,
+                        frameAnchor: "top",
+                        fontVariant: "tabular-nums",
+                        fontSize: 12,
+                        text: (d) => [
+                            `Date ${Plot.formatIsoDate(d.time)}`,
+                            `Index (%) ${d.value.toFixed(2)}`].join("  "),
+                    }
+                ))
+            ],
+        });
+    };
+  </script>
+  <script id="44" type="module">
+
+    const controls = view(Inputs.form({
+      comments: Inputs.toggle({ label: "Show comments", value: true }),
+      trend: Inputs.toggle({ label: "Show trend", value: false }),
+      year: Inputs.range(
+        [d3.min(sector_data, (d) => d.year), d3.max(sector_data, (d) => d.year - 2)],
+        {
+          label: "Trend start",
+          step: 1,
+          value: d3.min(sector_data, (d) => d.year),
+        },
+      ),
+      selectedSector: Inputs.select(en_labels.map((d, i) => ({label: d, code: codes[i]})), {label: "Chart", format: (d) => d.label})
+    }));
+  </script>
+  <script id="43" type="module">
+    const chart = SingleFacetChart({height: 370, sector_data, sector_code: controls.selectedSector.code, sector_events, labels_map: en_labels_map, getIndexByCode, colors_map, helpers, controls});
+    display(chart)
+  </script>
+  <script id="55" type="text/markdown">
+    Over all this chart is more explorative, but not better then the original one. I try to workaround their mistake. The basic problem is the monotonious scrolling. Scrolly telling imho only works for a few sections before it becomes tidious. My version tries to give the user the choice what he or she wants to see, but that’s a different version of bad, since users should stay on the site and giving them an option may cause them to go elsewhere since selecting a genre and memorizing the other genres is _too tiring_ for most users I guess.
+  </script>
+  <script id="56" type="text/markdown">
+    ## A bigger picture attempt
+
+    In the nutshell the NZZ authors claim that they can show how bad the economy is doing. For this they show production indexes, my first question was: _How about the services, Germany doesn't only consist of the manufacturing business_. I guess they are interconnected to some degree, but it's not representative to the whole economy, only showing the production indexes of selected sectors. So I asked the GENSIS database again and after a while of searching I found out that there is a metric called _Gross Value Added_, which accounts for different types of services sectors like:
+
+    - Public Services, Education, and Health Care
+    - Trade, Transportation, and Hospitality
+    - Information and Communication
+
+    Additionally to the manufacturing sector it makes an economic accounting. In the following chart we see the depelopment of gross value added per year per sector, where color coding is split between the manufacturing sectors (blue) and the service sectors (red). Using the percentage toggle you can see how the distribution changed among the sectors.
+
+  </script>
+  <script id="50" type="module">
+    const sector_labels = {
+        "Baugewerbe": "Construction",
+        "Dienstleistungsbereiche": "Service Sectors",
+        "Erbringung v. Finanz- u. Versicherungsdienstleist.": "Financial and Insurance Services",
+        "Grundstücks- und Wohnungswesen": "Real Estate and Housing",
+        "Handel, Verkehr, Gastgewerbe": "Trade, Transportation, and Hospitality",
+        "Information und Kommunikation": "Information and Communication",
+        "Insgesamt": "Total",
+        "Land- und Forstwirtschaft, Fischerei": "Agriculture, Forestry, and Fishing",
+        "Produzierendes Gewerbe": "Production sector (total industry)",
+        "Produzierendes Gewerbe ohne Baugewerbe": "Manufacturing (excluding construction)",
+        "Sonstige Dienstleister": "Other Service Providers",
+        "Unternehmensdienstleister": "Business Services",
+        "Verarbeitendes Gewerbe": "Manufacturing",
+        "Öffentliche Dienstleister, Erziehung, Gesundheit": "Public Services, Education, and Health Care"
+    }
+    const production_sector_labels = [
+        "Baugewerbe",
+        "Verarbeitendes Gewerbe",
+    ];
+    const service_sector_labels = [
+        "Sonstige Dienstleister",
+        "Erbringung v. Finanz- u. Versicherungsdienstleist.",
+        "Information und Kommunikation",
+        "Grundstücks- und Wohnungswesen",
+        "Unternehmensdienstleister",
+        "Handel, Verkehr, Gastgewerbe",
+        "Öffentliche Dienstleister, Erziehung, Gesundheit",
+    ];
+    const useful_sectors = [
+        ...production_sector_labels, ...service_sector_labels
+    ]
+
+    const InteractiveGrossDevelopmentChart = ({ data, width, height, sectorFocus, percentages }) => {
+        const _data = data.filter(d => useful_sectors.includes(d.sector)).map(
+            (d) => {
+                return {
+                    ...d,
+                    date: new Date(d.date),
+                    sector: sector_labels[d.sector],
+                    original_sector: d.sector,
+                    is_service_sector: service_sector_labels.includes(d.sector),
+                }
+            }
+        )
+        const _width = width ?? 800;
+        const _height = height ?? 500;
+        const marginTop = percentages ? 20 : 40;
+        const margins = { left: 40, top: marginTop, right: 10, bottom: 30 };
+        const en_production_sector_labels = production_sector_labels.map((l) => sector_labels[l]);
+        const en_service_sector_labels = service_sector_labels.map((l) => sector_labels[l]);
+
+        const keys = [...new Set(_data.map(d => d.sector))];
+
+        const stacking = d3.stack()
+            .keys([...en_service_sector_labels, ...en_production_sector_labels])
+            .value(([, D], key) => D.get(key).value)
+            .order(d3.stackOrderNone)
+
+        if (percentages) {
+            stacking.offset(d3.stackOffsetExpand)
+        }
+        const series = stacking(d3.index(_data, d => d.date, d => d.sector))
+
+        const x = d3.scaleUtc()
+            .domain(d3.extent(_data, d => d.date))
+            .range([margins.left, width - margins.right]);
+
+        const yDomain = percentages ? [0, 1] : [0, d3.max(series, d => d3.max(d, d => d[1]))];
+        const y = d3.scaleLinear()
+            .domain(yDomain)
+            .rangeRound([height - margins.bottom, margins.top]);
+
+        const svg = d3.create("svg")
+            .attr("width", _width)
+            .attr("height", _height)
+            .attr("viewBox", [0, 0, _width, _height])
+            .attr("style", "max-width: 100%; height: auto;");
+
+        const interpolator = d3.interpolateGreens;
+        const n = series.length;
+        const productionColors = d3.quantize(d3.interpolateBlues, en_production_sector_labels.length)
+        const seriveColors = d3.quantize(d3.interpolateOranges, en_service_sector_labels.length)
+        const colorCategories = {
+            "Production": d3.scaleOrdinal().domain(en_production_sector_labels).range(["#9ecae1", "#1f4e79"]),
+            "Service": d3.scaleOrdinal().domain(en_service_sector_labels).range(seriveColors),
+        };
+
+        const area = d3.area()
+            .x(d => x(d.data[0]))
+            .y0(d => y(d[0]))
+            .y1(d => y(d[1]));
+
+        function getColorFromKey(key) {
+            const category = en_service_sector_labels.includes(key) ? "Service" : "Production";
+            return colorCategories[category](key)
+        }
+
+        function getLabelColorFromKey(key) {
+            const c = getColorFromKey(key);
+            return d3.lab(c).l < 50 ? d3.rgb("#fff").darker(0.5) : d3.rgb("#000").brighter(0.5)
+        }
+
+        svg.append("g")
+            .selectAll()
+            .data(series)
+            .join("path")
+            .attr("fill", d => getColorFromKey(d.key))
+            .attr("d", area)
+            .append("title")
+            .text(d => d.key);
+
+        const labels = series.map(s => {
+            const d = s[s.length - 1];                 // last timestep
+            return { key: s.key, y: (y(d[0]) + y(d[1])) / 2 };
+        });
+
+        svg.append("g")
+            .attr("font-size", 12).attr("font-weight", 600)
+            .selectAll("text").data(labels).join("text")
+            .attr("x", width)
+            .attr("dx", -12)
+            .attr("y", d => d.y)
+            .attr("dy", "0.32em")
+            .attr("fill", d => getLabelColorFromKey(d.key))
+            .attr("text-anchor", "end")
+            .text(d => d.key);
+
+        svg.append("g")
+            .attr("transform", `translate(0,${_height - margins.bottom})`)
+            .call(d3.axisBottom(x).ticks(width < 300 ? 5 : 8).tickSizeOuter(0));
+
+        svg.append("g")
+            .attr("transform", `translate(${margins.left}, 0)`)
+            .call(d3.axisLeft(y).tickFormat(d3.format(percentages ? ".0%" : "")).tickSizeOuter(0))
+            .call(g => g.append("text")
+                .attr("x", -margins.left)
+                .attr("y", margins.top - 10)
+                .attr("fill", "currentColor")
+                .attr("text-anchor", "start")
+                .text(percentages ? "" : "↑ Mrd. €"));
+
+        return Object.assign(svg.node(), { scales: { colorCategories } });
+    }
+  </script>
+  <script id="54" type="application/sql" hidden="" database="var:db" output="gross_by_sector">
+    SELECT *, make_date(year::INT, month::INT, 1) as date FROM grossvalueadded WHERE value_type = 'X13 JDemetra+  kalender- und saisonbereinigt' AND price_type = 'preisbereinigt, verkettete Volumenang. (Mrd. EUR)' AND date >= make_date(1995, 1, 1) AND date < '2025-09-01'::DATE ORDER BY date;
+
+  </script>
+  <script id="51" type="text/x-typescript">
+    const gross_control = view(Inputs.form({
+      showShares: Inputs.toggle({label: "Shares in %", value: false}),
+      year: Inputs.range(
+        [1995, 2020],
+        {
+          label: "Trend start",
+          step: 1,
+          value: 1995,
+        },
+      ),
+    }));
+  </script>
+  <script id="53" type="text/x-typescript">
+    const grossDevelopment = InteractiveGrossDevelopmentChart({data: Array.from(gross_by_sector).filter(d => d.year > gross_control.year), width, height: 550, sectorFocus: "Manufacturing", percentages: gross_control.showShares});
+    display(grossDevelopment);
+  </script>
+  <script id="57" type="text/markdown">
+    In this chart we can see the dips, that the original authors have highlighted in 2008 and 2020. We can see that manufacturing indeed slowly decreases since 2023 and the recovery from the corona crisis, has slowly been eaten. But the rest of the economy sectors are not as heavily hit as manufacturing is. All service sectors (except _Trade, Transportation, and Hospitality_) are still growing, slowly but they are. Partly these are connected, since manufacturing are large service sector customers. Over all the overview chart above does not read as dramatic as their graphs do, but I'm not an economic expert, I can't tell if not growing economy is as dramatic as they report it to be.
+  </script>
+  <script id="58" type="text/markdown">
+    ## Conclusion
+
+    I learned that when building scrolly tellings one should be cautions about the number of scroll states to chain. Another thing is that I got the impression that giving people the tools to explore data themselves instead of telling them a story it feels more honest. But it's based on the assumption that users are willing to do exploration themselves. This might be true for people I know, but as a journalistic publication you'd want to reach many people and there I think my assumption would fall apart.
+
+    A very awesome example for well used scrolly telling is the wonderful work of [Nadieh Bremer & Emily Barone: Searching for Birds](https://searchingforbirds.visualcinnamon.com). I got to mention that the comparison is a unfair. First these two are absolute professionals in what they do and second they have time to their piece. A DDJ team usually want's to publish fast and can't affort to publish after the attention peak. But anyways it's a wonderful piece of art.
+
+    **I do want to acknowledge that this story part was fully reproducible so that's really nice and helps me to learn from their work**. Although I think it's not intended that random guys on the internet can learn from their content, it's more about the credibility as journalists. Please note that there is more but I didn't want to check on the rest of the story, where the authors show a chart to argue that government is growing while industry is shrinking, that's a part of journalism I don't want to get into. There may be a part of a relation but that would require me to dig far deeper into the matter - again journalists work.
+  </script>
+</notebook>

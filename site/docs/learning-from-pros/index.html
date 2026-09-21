@@ -1,0 +1,69 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Learning from professionals</title>
+  <script id="8" type="text/markdown">
+    # Learning from professionals
+  </script>
+  <script id="6" type="text/markdown" hidden="">
+    <!-- @meta {
+      "title": "Learning from professionals",
+      "tags": ["blog", "d3js", "datavis", "DDJS"],
+      "blurb": "Learning data and visualisation by reconstructing or interpreting professional work from datavis creators or DDJ teams."
+    } -->
+  </script>
+  <script id="7" type="text/markdown">
+    From time to time I stumple upon great datavis that somehow catches me. Sometimes it’s the data, sometimes I’m encouraged by the design of what people do. When I have enough time I look into data and how authors and designers have chosen their decisions. But in the end digging through the data and finding out how it was done is simply fun.
+  </script>
+  <script id="3" type="application/vnd.node.javascript" hidden="" output="posts" format="json">
+    import {readdir, readFile} from "node:fs/promises";
+    import {sep} from "node:path";
+
+    const currentSlug = "learning-from-pros";
+
+    // Recursive walk of docs/. Paths come back relative to cwd, which is the
+    // notebook's own directory, so they can be read and linked to as-is.
+    const files = (await readdir(".", {recursive: true}))
+      .map((f) => f.split(sep).join("/"))
+      .filter((f) => f.endsWith(".html"))
+      .filter((f) => !f.startsWith(".observable/"))
+      .filter((f) => !f.endsWith("index.html"));
+
+    let posts = await Promise.all(files.map(async (file) => {
+      const src = await readFile(file, "utf-8");
+      const meta = src.match(/@meta\s*(\{[\s\S]*?\})/)?.[1];
+      const slug = file.replace(/\.html$/, "");
+      return {
+        href: `./${slug}`,
+        slug: currentSlug,
+        section: slug.includes("/") ? slug.slice(0, slug.lastIndexOf("/")) : null,
+        title: src.match(/<title>([\s\S]*?)<\/title>/)?.[1].trim() ?? file,
+        ...(meta ? JSON.parse(meta) : {})
+      };
+    }).filter(p => !p.draft));
+
+    posts = posts.filter((p) => !p.draft)
+    posts.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+    process.stdout.write(JSON.stringify(posts));
+  </script>
+  <script id="5" type="module">
+    const query = view(Inputs.search(posts, {
+      placeholder: "Search",
+      columns: ["title", "blurb", "tags"]
+    }));
+  </script>
+  <script id="9" type="module">
+    import {postPreview, postList, bindPreview} from "/components/utils.js";
+  </script>
+  <script id="10" type="text/x-typescript">
+    const sections = [
+      ["learning-from-pros", "Learning from professionals"]
+    ];
+    const list = postList(query, posts, {sections});
+    bindPreview(list, preview);
+    display(list);
+  </script>
+  <script id="4" type="module">
+    const preview = postPreview();
+    display(preview.element);
+  </script>
+</notebook>
