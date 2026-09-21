@@ -10,8 +10,8 @@
   "scripts": {
     "clean-old": "rm -rf docs/.observable/cache",
     "clean": "find docs -type d -path '*/.observable/cache' -exec rm -rf {} +",
-    "preview": "npm run clean && notebooks preview --root docs --template docs/blog.tmpl",
-    "build": "npm run clean && notebooks build --root docs --template docs/blog.tmpl -- $(find docs -path 'docs/.observable' -prune -o -name '*.html' -print)"
+    "preview": "npm run clean && notebooks preview --root docs --template docs/main.tmpl",
+    "build": "npm run clean && notebooks build --root docs --template docs/main.tmpl -- $(find docs -path 'docs/.observable' -prune -o -name '*.html' -print)"
   },
   "keywords": [],
   "author": "",
