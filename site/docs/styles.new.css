@@ -30,7 +30,6 @@ ol,
 dl,
 dd {
   font: 16px/1.5 var(--serif);
-  
 }
 
 table,
@@ -199,7 +198,7 @@ a.social-icon:hover svg {
 .preview-card {
   position: fixed;
   inset: auto;
-  margin: 0;
+  margin: 0 16px;
   max-width: 400px;
   font-family: var(--serif);
   font-size: 12px;
@@ -228,23 +227,40 @@ a.social-icon:hover svg {
 
   .post-meta {
     display: flex;
+    justify-items: start;
+    margin: -1px;
+  }
+
+  .post-meta .post-preview-toggle {
+    order: 3;
+  }
+
+  .post-meta .post-preview-spacer {
+    order: 3;
   }
 
   .month-dots {
+    order: 2;
+  }
+
+  .post-meta .post-date {
+    order: 1;
   }
 }
 
 @media (max-width: 700px) {
   body {
-    padding: 16px 12px;
+    padding: 0;
   }
 
   .container {
     display: block;
+    padding: 16px 0px;
+    margin: 0;
   }
 
   main {
-    margin: 8px 0;
+    margin: 4px;
   }
 
   /* #site-header {
@@ -259,7 +275,7 @@ a.social-icon:hover svg {
     z-index: 10;
     background: var(--theme-background); /* required — it's transparent now */
     border-bottom: 1px solid var(--theme-foreground-faintest);
-    padding: 0 0 4px;
+    padding: 0 8px 4px 8px;
     margin: 0 0 8px;
   }
 
@@ -273,5 +289,17 @@ a.social-icon:hover svg {
   #site-footer {
     flex-wrap: wrap;
     gap: 8px;
+  }
+
+  .preview-card {
+    position: fixed;
+    margin: 0 8px 0 0;
+    max-width: 400px;
+    font-family: var(--serif);
+    font-size: 12px;
+  }
+
+  blockquote {
+    margin: 1rem 0.5rem;
   }
 }

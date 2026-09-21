@@ -80,10 +80,6 @@ export const postList = (query, posts, { sections } = {}) => {
 
   if (!sections) return html`<div class="sections">${group(null, query, filtering)}</div>`;
 
-  // A subpage's walk only sees its own directory, so every post comes back with
-  // section: null. When the page declares exactly one section, that is the one
-  // they belong to — otherwise "Other" swallows the whole list. With several
-  // sections declared there is nothing to infer from, so null stays "Other".
   const fallback = sections.length === 1 ? sections[0][0] : null;
   const sectionOf = (p) => p.section ?? fallback;
 
@@ -95,9 +91,6 @@ export const postList = (query, posts, { sections } = {}) => {
     .filter(([, items]) => items.length || !filtering) // hide empty sections while searching
     .map(([label, items]) => group(label, items, filtering));
 
-  // if (other.length) groups.push(group("Other", other, filtering));
-
-  // Every section hidden and nothing left over: say so rather than render blank.
   if (!groups.length) groups.push(group(null, [], filtering));
 
   return html`<div class="sections">${groups}</div>`;
@@ -125,7 +118,7 @@ export function postPreview() {
     const r = row.getBoundingClientRect();
     const { offsetWidth: w, offsetHeight: h } = card;
     const fitsBelow = r.bottom + GAP + h <= innerHeight - GAP;
-    card.style.left = `${Math.max(GAP, Math.min((x ?? r.left + r.width / 2) - w / 2, innerWidth - w - GAP))}px`;
+    //card.style.left = `${Math.max(GAP, Math.min((x ?? r.left + r.width / 2) - w / 2, innerWidth - w - GAP))}px`;
     card.style.top = `${fitsBelow ? r.bottom + GAP : Math.max(GAP, r.top - GAP - h)}px`;
   }
 
