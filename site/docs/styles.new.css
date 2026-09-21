@@ -188,7 +188,29 @@ a.social-icon:hover svg {
 }
 
 .post-preview-toggle {
-  padding: 1px;
+  /* reset */
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+
+  /* 14px icon, 20px grid col */
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: opacity 120ms ease;
+}
+
+/* ≥24px hit target (WCAG 2.5.8) */
+.post-preview-toggle::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
 }
 
 .post-preview-toggle svg {
@@ -199,6 +221,19 @@ a.social-icon:hover svg {
   width: 20px;
 }
 
+[popover] {
+  position: fixed;
+  inset: 0;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+  border: 1px solid var(--theme-foreground-faint);
+  padding: 0;
+  overflow: auto;
+  color: CanvasText;
+  background-color: Canvas;
+}
+
 .preview-card {
   position: fixed;
   inset: auto;
@@ -206,10 +241,15 @@ a.social-icon:hover svg {
   max-width: 400px;
   font-family: var(--serif);
   font-size: 12px;
+  border-radius: 2px;
 }
 
 .preview-image {
   aspect-ratio: 16 / 9;
+}
+
+.preview-blurb {
+  padding: 0.25em;
 }
 
 #site-header-list a[aria-current="page"]::after {
